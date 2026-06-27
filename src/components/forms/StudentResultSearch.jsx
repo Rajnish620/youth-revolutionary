@@ -39,7 +39,7 @@ function StudentResultSearch() {
                             <div className="bg-[#028CD4] p-10 text-white">
 
                                 <h2 className="text-4xl font-bold mb-3">
-                                     Your Certificate
+                                    Your Certificate
                                 </h2>
 
                                 <p className="mb-8 text-blue-100">
@@ -139,15 +139,20 @@ function StudentResultSearch() {
                             )}
 
                             {student && (
-                                <div>
-                                    <div ref={printableRef} className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-2xl border border-yellow-200" style={{
-                                        width: "210mm",
-                                        height: "297mm",
-                                        padding: "15mm",
-                                        boxSizing: "border-box",
-                                        overflow: "hidden",
-                                        background: "linear-gradient(135deg, #ffffff 0%, #fefce8 50%, #fef3c7 100%)"
-                                    }}>
+                                <div className="w-full overflow-x-auto overflow-y-hidden pb-4">
+                                    <div
+                                        ref={printableRef}
+                                        className="relative mx-auto overflow-hidden rounded-2xl shadow-2xl border border-yellow-200 shrink-0"
+                                        style={{
+                                            width: "210mm",
+                                            minWidth: "210mm",
+                                            height: "297mm",
+                                            padding: "15mm",
+                                            boxSizing: "border-box",
+                                            overflow: "hidden",
+                                            background: "linear-gradient(135deg, #ffffff 0%, #fefce8 50%, #fef3c7 100%)"
+                                        }}
+                                    >
 
 
 
