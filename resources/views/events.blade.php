@@ -136,29 +136,30 @@
         </div>
     </section>
 
+    @if(isset($featuredEvent) && $featuredEvent)
     <!-- Featured Event -->
     <section class="bg-white py-24" x-data="{ show: false }" x-intersect.once="show = true">
         <div class="mx-auto max-w-7xl px-6">
             <div class="grid items-center gap-10 md:grid-cols-2">
-                <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="overflow-hidden rounded-3xl shadow-2xl">
-                    <img src="{{ asset('images/NIKON Z 502317.JPG.jpeg') }}" alt="Talent Search Festival" class="h-full w-full object-cover" />
+                <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="overflow-hidden rounded-3xl shadow-2xl aspect-[4/3] bg-slate-100">
+                    <img src="{{ str_starts_with($featuredEvent->image, 'http') ? $featuredEvent->image : asset($featuredEvent->image ?? 'images/NIKON Z 502317.JPG.jpeg') }}" alt="{{ $featuredEvent->title }}" class="h-full w-full object-cover" />
                 </div>
 
                 <div x-show="show" x-transition:enter="transition ease-out duration-700 delay-200" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0">
                     <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">FEATURED EVENT</span>
-                    <h2 class="mt-4 text-4xl font-extrabold leading-tight text-slate-900 md:text-5xl">Talent Search Festival Nashariganj</h2>
+                    <h2 class="mt-4 text-4xl font-extrabold leading-tight text-slate-900 md:text-5xl">{{ $featuredEvent->title }}</h2>
                     <p class="mt-6 text-lg font-light leading-8 text-gray-600">
-                        प्रतिभा खोज महोत्सव एक ऐसा मंच है, जहाँ बच्चों, युवाओं एवं प्रतिभाशाली व्यक्तियों को अपनी कला, ज्ञान, कौशल और रचनात्मकता प्रदर्शित करने का अवसर प्रदान किया जाता है। इस महोत्सव का उद्देश्य विभिन्न क्षेत्रों में छिपी हुई प्रतिभाओं की पहचान करना, उन्हें प्रोत्साहित करना तथा उनके आत्मविश्वास और व्यक्तित्व का विकास करना है। इसमें गायन, नृत्य, चित्रकला, भाषण, कविता-पाठ, अभिनय, सामान्य ज्ञान तथा अन्य रचनात्मक प्रतियोगिताओं का आयोजन किया जाता है। यह महोत्सव प्रतिभागियों को अपनी क्षमता दिखाने, नई प्रेरणा प्राप्त करने और उज्ज्वल भविष्य की ओर आगे बढ़ने का अवसर प्रदान करता है।
+                        {{ $featuredEvent->description }}
                     </p>
                     <div class="mt-8 flex flex-wrap gap-3">
-                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">Education</span>
-                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">Culture</span>
-                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">Talent Search</span>
+                        <span class="rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-[#340C6F] border border-purple-100">{{ $featuredEvent->category }}</span>
+                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> {{ $featuredEvent->location }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Event Categories -->
     <section class="bg-white py-20" x-data="{ show: false }" x-intersect.once="show = true">

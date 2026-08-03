@@ -52,12 +52,19 @@
                 <a href="{{ url('/gallery') }}" class="focus:text-[#028CD4] font-medium">Gallery</a>
                 <a href="{{ url('/contact') }}" class="focus:text-[#028CD4] font-medium">Contact</a>
 
-                <div class="relative transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95">
-                    <span class="absolute inline-flex h-3 w-3 left-34 bottom-7 animate-ping rounded-full bg-[#3c19d8]"></span>
-                    <span class="absolute inline-flex h-3 w-3 left-34 bottom-7 rounded-full bg-[#3c19d8]"></span>
-                    <a href="{{ url('/register') }}" class="px-5 py-3 rounded-xl bg-[#F1400C] text-white font-bold shadow-lg border-2 border-[#F1400C] hover:bg-white hover:text-[#F1400C] transition-all duration-300">
-                        Register Now
-                    </a>
+                <div class="flex gap-4 items-center">
+                    <div class="relative transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95">
+                        <span class="absolute inline-flex h-3 w-3 left-34 bottom-7 animate-ping rounded-full bg-[#3c19d8]"></span>
+                        <span class="absolute inline-flex h-3 w-3 left-34 bottom-7 rounded-full bg-[#3c19d8]"></span>
+                        <a href="{{ url('/register') }}" class="px-5 py-3 rounded-xl bg-[#F1400C] text-white font-bold shadow-lg border-2 border-[#F1400C] hover:bg-white hover:text-[#F1400C] transition-all duration-300">
+                            Register Now
+                        </a>
+                    </div>
+                    <div class="relative transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95">
+                        <a href="{{ url('/login') }}" class="px-4 py-2 text-sm rounded-xl bg-blue-600 text-white font-bold shadow-lg border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300">
+                            Admin
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -97,9 +104,14 @@
             <a href="{{ url('/gallery') }}">Gallery</a>
             <a href="{{ url('/contact') }}">Contact</a>
 
-            <a href="{{ url('/register') }}" class="text-center py-3 rounded-xl bg-[#F1400C] text-white font-bold">
-                Register Now
-            </a>
+            <div class="flex flex-col gap-3">
+                <a href="{{ url('/register') }}" class="text-center py-3 rounded-xl bg-[#F1400C] text-white font-bold">
+                    Register Now
+                </a>
+                <a href="{{ url('/login') }}" class="text-center py-2 rounded-xl bg-blue-600 text-white font-bold text-sm">
+                    Admin
+                </a>
+            </div>
         </div>
     </div>
 </nav>
