@@ -15,6 +15,10 @@ class EventGroup extends Model
         'class_range',
         'fee',
         'max_participants',
+        'roll_sequence_start',
+        'centre_name',
+        'reporting_time',
+        'exam_time_duration',
     ];
 
     public function event()

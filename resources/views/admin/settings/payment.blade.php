@@ -7,9 +7,12 @@
 
     <!-- Header Section -->
     <div>
-        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Payment QR & UPI Settings</h1>
-        <p class="text-xs text-gray-500 mt-1">Configure UPI ID and upload Payment QR Code displayed to students during event registration</p>
+        <h1 class="text-2xl font-black text-gray-800 tracking-tight">System Settings</h1>
+        <p class="text-gray-500 text-sm mt-1">Configure UPI ID and upload Payment QR Code displayed to students during event registration</p>
     </div>
+
+    <!-- Navigation Tabs -->
+    <x-admin-settings-nav />
 
     <!-- Alert Flash Messages -->
     @if(session('success'))
@@ -21,7 +24,7 @@
 
     <!-- Form Container -->
     <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200/80 shadow-sm space-y-6">
-        <form method="POST" action="{{ route('admin.settings.payment.update') }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.settings.payment.update') }}" class="space-y-6" enctype="multipart/form-data">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -40,22 +43,10 @@
                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:bg-white focus:border-[#340C6F] outline-none transition-all">
                 </div>
 
-                <!-- QR Code Image URL -->
+                <!-- QR Code Image Upload -->
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Payment QR Code Image URL / Path *</label>
-                    <input type="text" name="qr_code_image" value="{{ old('qr_code_image', $setting->qr_code_image) }}" required placeholder="images/qr_code.png or https://..."
-                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 focus:bg-white focus:border-[#340C6F] outline-none transition-all">
-                    <p class="text-[11px] text-gray-400 mt-1">Provide full URL or relative path from public folder for QR image</p>
-                </div>
-
-                <!-- QR Code Preview Box -->
-                <div class="md:col-span-2 bg-gray-50 p-4 rounded-2xl border border-gray-200 flex flex-col sm:flex-row items-center gap-4">
-                    <img src="{{ str_starts_with($setting->qr_code_image, 'http') ? $setting->qr_code_image : asset($setting->qr_code_image ?? 'images/quize.jpg') }}" 
-                         alt="QR Preview" class="w-32 h-32 object-contain rounded-xl bg-white p-2 border border-gray-300 shadow-sm">
-                    <div>
-                        <div class="font-extrabold text-sm text-gray-900">Current QR Code Preview</div>
-                        <div class="text-xs text-gray-500 mt-1">This is the exact QR code students will scan on the registration page to make their event fee payment.</div>
-                    </div>
+                    <x-image-upload name="qr_code_image" label="Payment QR Code Image" :existing="$setting->qr_code_image" />
+                    <p class="text-[11px] text-gray-400 mt-1">Upload the QR Code image that students will scan on the registration page to make their event fee payment.</p>
                 </div>
 
                 <!-- Instructions -->

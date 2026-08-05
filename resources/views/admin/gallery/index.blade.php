@@ -69,23 +69,21 @@
 
     <!-- Category Filter Bar -->
     <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            <a href="{{ route('admin.gallery.index') }}" 
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ !request('category') || request('category') === 'All' ? 'bg-[#340C6F] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                All Photos
-            </a>
-            @foreach($categories as $cat)
-                <a href="{{ route('admin.gallery.index', ['category' => $cat]) }}" 
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request('category') === $cat ? 'bg-[#340C6F] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                    {{ $cat }}
-                </a>
-            @endforeach
-        </div>
+        
+        <form method="GET" action="{{ route('admin.gallery.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <!-- Season Filter Dropdown -->
+            <select name="season_id" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none">
+                <option value="All">All Photos</option>
+                @foreach($seasons as $s)
+                    <option value="{{ $s->id }}" {{ request('season_id') == $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
+                @endforeach
+            </select>
+        </form>
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('admin.gallery.index') }}" class="relative w-full md:w-72">
-            @if(request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
+            @if(request('season_id'))
+                <input type="hidden" name="season_id" value="{{ request('season_id') }}">
             @endif
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title..." 
                 class="w-full bg-gray-100/80 text-xs pl-9 pr-4 py-2.5 rounded-xl border border-transparent focus:border-[#340C6F] focus:bg-white outline-none transition-all">
@@ -118,7 +116,7 @@
                     <h4 class="polaroid-caption-admin truncate px-1">{{ $photo->title ?? 'Untitled Photo' }}</h4>
                     
                     <div class="flex items-center justify-between border-t border-gray-100 pt-2 mt-2">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">{{ $photo->category }}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">{{ $photo->season->name ?? 'No Season' }}</span>
                         
                         <form method="POST" action="{{ route('admin.gallery.destroy', $photo->id) }}" onsubmit="return confirm('Delete this photo from gallery?')">
                             @csrf

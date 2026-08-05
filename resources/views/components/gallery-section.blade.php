@@ -50,7 +50,7 @@ $galleryImages = [
         <!-- Stats -->
         <div x-data="{ show: false }" x-intersect.once="show = true" class="grid md:grid-cols-3 gap-6 mt-16">
             <div x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 translate-y-24" x-transition:enter-end="opacity-100 translate-y-0" class="bg-blue-50 p-8 rounded-3xl text-center">
-                <h3 class="text-4xl font-bold text-blue-600">5000+</h3>
+                <h3 class="text-4xl font-bold text-blue-600">10000+</h3>
                 <p class="text-gray-600 mt-2">Student Participants</p>
             </div>
             <div x-show="show" x-transition:enter="transition ease-out duration-1000 delay-150" x-transition:enter-start="opacity-0 translate-y-24" x-transition:enter-end="opacity-100 translate-y-0" class="bg-orange-50 p-8 rounded-3xl text-center">

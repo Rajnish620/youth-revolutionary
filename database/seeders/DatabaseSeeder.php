@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             GallerySeeder::class,
             EventSeeder::class,
             EventRegistrationSeeder::class,
+            AboutUsSeeder::class,
         ]);
     }
 }

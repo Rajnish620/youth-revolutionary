@@ -15,7 +15,7 @@
                     </p>
                     
                     <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-2xl font-black shadow-lg">
-                        ROLL NO: <span class="text-[#F1400C]">{{ $reg->roll_no }}</span>
+                        ROLL NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
                     </div>
 
                     <div class="text-xs text-emerald-100 font-medium pt-2">
@@ -41,65 +41,118 @@
                 </div>
 
                 <!-- Registration Form -->
-                <div 
-                    x-data="{
-                        events: {{ json_encode($events ?? []) }},
-                        selectedEventId: '{{ $events->first()->id ?? '' }}',
-                        selectedGroupId: '',
-                        photoType: 'upload', // 'upload' or 'camera'
-                        
-                        get selectedEvent() {
-                            return this.events.find(e => e.id == this.selectedEventId) || null;
-                        },
+                <script>
+                    document.addEventListener('alpine:init', () => {
+                        Alpine.data('registrationForm', () => ({
+                            events: @json($events ?? []),
+                            selectedEventId: '{{ $events->first()->id ?? '' }}',
+                            selectedGroupId: '',
+                            photoType: 'upload', // 'upload' or 'camera'
+                            
+                            get selectedEvent() {
+                                return this.events.find(e => e.id == this.selectedEventId) || null;
+                            },
 
-                        get availableGroups() {
-                            return this.selectedEvent ? (this.selectedEvent.groups || []) : [];
-                        },
+                            get availableGroups() {
+                                return this.selectedEvent ? (this.selectedEvent.groups || []) : [];
+                            },
 
-                        get currentFee() {
-                            if(!this.selectedGroupId) return 100;
-                            const grp = this.availableGroups.find(g => g.id == this.selectedGroupId);
-                            return grp ? grp.fee : 100;
-                        },
+                            get currentFee() {
+                                if(!this.selectedGroupId) return 100;
+                                const grp = this.availableGroups.find(g => g.id == this.selectedGroupId);
+                                return grp ? grp.fee : 100;
+                            },
 
-                        showCamera: false,
-                        capturedImage: null,
-                        stream: null,
+                            get availableClasses() {
+                                const allClasses = [
+                                    'Class 5th', 'Class 6th', 'Class 7th', 'Class 8th', 
+                                    'Class 9th', 'Class 10th', 'Class 11th', 'Class 12th'
+                                ];
+                                if(!this.selectedGroupId) return allClasses;
+                                
+                                const grp = this.availableGroups.find(g => g.id == this.selectedGroupId);
+                                if(!grp) return allClasses;
+                                
+                                const rangeStr = (grp.class_range || grp.group_name || '').toLowerCase();
+                                const numbers = rangeStr.match(/\d+/g);
+                                
+                                if (!numbers || numbers.length === 0) return allClasses;
+                                
+                                // If they typed something like "5th, 6th, 8th" or "5 & 6"
+                                if(rangeStr.includes(',') || rangeStr.includes('&') || rangeStr.includes('and')) {
+                                    return allClasses.filter(c => {
+                                        const cNum = c.match(/\d+/)[0];
+                                        return numbers.includes(cNum);
+                                    });
+                                }
+                                
+                                // If they typed a range like "9 to 12" or single class "5"
+                                let start = parseInt(numbers[0]);
+                                let end = numbers.length > 1 ? parseInt(numbers[numbers.length - 1]) : start;
+                                
+                                if (start && end) {
+                                    return allClasses.filter(c => {
+                                        const cNum = parseInt(c.match(/\d+/)[0]);
+                                        return cNum >= Math.min(start, end) && cNum <= Math.max(start, end);
+                                    });
+                                }
+                                
+                                return allClasses;
+                            },
 
-                        openCamera() {
-                            this.showCamera = true;
-                            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                                .then(stream => {
-                                    this.stream = stream;
-                                    this.$refs.video.srcObject = stream;
-                                })
-                                .catch(err => {
-                                    alert('Could not access camera.');
-                                    this.showCamera = false;
+                            get classOptionsHtml() {
+                                let html = '<option value="">Select Class</option>';
+                                this.availableClasses.forEach(c => {
+                                    html += `<option value="${c}">${c}</option>`;
                                 });
-                        },
+                                return html;
+                            },
 
-                        capturePhoto() {
-                            const canvas = document.createElement('canvas');
-                            canvas.width = this.$refs.video.videoWidth;
-                            canvas.height = this.$refs.video.videoHeight;
-                            canvas.getContext('2d').drawImage(this.$refs.video, 0, 0);
-                            this.capturedImage = canvas.toDataURL('image/jpeg');
-                            this.stopCamera();
-                            this.showCamera = false;
-                        },
+                            showCamera: false,
+                            capturedImage: null,
+                            stream: null,
 
-                        stopCamera() {
-                            if(this.stream) {
-                                this.stream.getTracks().forEach(track => track.stop());
-                                this.stream = null;
+                            openCamera() {
+                                this.showCamera = true;
+                                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+                                    .then(stream => {
+                                        this.stream = stream;
+                                        this.$refs.video.srcObject = stream;
+                                    })
+                                    .catch(err => {
+                                        alert('Could not access camera.');
+                                        this.showCamera = false;
+                                    });
+                            },
+
+                            capturePhoto() {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = this.$refs.video.videoWidth;
+                                canvas.height = this.$refs.video.videoHeight;
+                                canvas.getContext('2d').drawImage(this.$refs.video, 0, 0);
+                                this.capturedImage = canvas.toDataURL('image/jpeg');
+                                this.stopCamera();
+                                this.showCamera = false;
+                            },
+
+                            stopCamera() {
+                                if(this.stream) {
+                                    this.stream.getTracks().forEach(track => track.stop());
+                                    this.stream = null;
+                                }
                             }
-                        }
-                    }" 
+                        }));
+                    });
+                </script>
+                <div 
+                    x-data="registrationForm()" 
                     class="p-6 sm:p-10 space-y-10"
                 >
-                    <form method="POST" action="{{ url('/register') }}" class="space-y-10">
+                    <form method="POST" action="{{ url('/register') }}" class="space-y-10" enctype="multipart/form-data">
                         @csrf
+                        
+                        <!-- Hidden Input for Live Photo -->
+                        <input type="hidden" name="live_photo_base64" :value="capturedImage">
 
                         <!-- SECTION 1: EVENT & CLASS GROUP SELECTION -->
                         <div class="space-y-5 bg-blue-50/50 p-6 sm:p-8 rounded-3xl border border-blue-100">
@@ -165,32 +218,47 @@
 
                                 <!-- Email -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
-                                    <input type="email" name="email" placeholder="student@gmail.com"
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address *</label>
+                                    <input type="email" name="email" required placeholder="student@gmail.com"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                                 </div>
 
                                 <!-- Class Level -->
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Class *</label>
-                                    <select name="student_class" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
-                                        <option value="">Select Class</option>
-                                        <option value="Class 5th">Class 5th</option>
-                                        <option value="Class 6th">Class 6th</option>
-                                        <option value="Class 7th">Class 7th</option>
-                                        <option value="Class 8th">Class 8th</option>
-                                        <option value="Class 9th">Class 9th</option>
-                                        <option value="Class 10th">Class 10th</option>
-                                        <option value="Class 11th">Class 11th</option>
-                                        <option value="Class 12th">Class 12th</option>
+                                    <select name="student_class" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all" x-html="classOptionsHtml">
                                     </select>
                                 </div>
 
                                 <!-- Date of Birth -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Date of Birth</label>
-                                    <input type="date" name="dob"
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Date of Birth *</label>
+                                    <input type="date" name="dob" required
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
+                                </div>
+
+                                <!-- Gender -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Gender *</label>
+                                    <select name="gender" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
+                                        <option value="">-- Select Gender --</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <!-- Category -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Category *</label>
+                                    <select name="category" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
+                                        <option value="">-- Select Category --</option>
+                                        <option value="General">General</option>
+                                        <option value="OBC">OBC</option>
+                                        <option value="SC">SC</option>
+                                        <option value="ST">ST</option>
+                                        <option value="EWS">EWS</option>
+                                    </select>
                                 </div>
 
                                 <!-- School Name -->
@@ -202,8 +270,8 @@
 
                                 <!-- Address -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Address</label>
-                                    <input type="text" name="address" placeholder="e.g. Patna Nashariganj"
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Address *</label>
+                                    <input type="text" name="address" required placeholder="e.g. Patna Nashariganj"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                                 </div>
 
@@ -224,11 +292,12 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Option A: Image URL/Path -->
+                                <!-- Option A: Image File Upload -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Photo URL / File Path</label>
-                                    <input type="text" name="photo" placeholder="images/student.jpg or https://..."
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Upload Photo File</label>
+                                    <input type="file" name="photo" accept="image/*"
                                         class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-3.5 text-sm outline-none focus:border-[#028CD4]">
+                                    <p class="text-[11px] text-slate-500 mt-1">Select an image from your device.</p>
                                 </div>
 
                                 <!-- Option B: Live Camera Capture -->
@@ -284,10 +353,10 @@
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Payment Screenshot URL / File Path *</label>
-                                        <input type="text" name="payment_screenshot" required placeholder="images/payment_ss.jpg or https://..."
+                                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Upload Payment Screenshot *</label>
+                                        <input type="file" name="payment_screenshot" required accept="image/*"
                                             class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:border-[#F1400C] outline-none transition-all">
-                                        <p class="text-[11px] text-slate-500 mt-1">Upload or paste the payment confirmation screenshot link</p>
+                                        <p class="text-[11px] text-slate-500 mt-1">Upload the payment confirmation screenshot image</p>
                                     </div>
                                 </div>
                             </div>

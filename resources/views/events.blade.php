@@ -1,7 +1,7 @@
 <x-app-layout>
     @php
     $stats = [
-        ["value" => "5000+", "label" => "Participants"],
+        ["value" => "10000+", "label" => "Participants"],
         ["value" => "50+", "label" => "Schools"],
         ["value" => "20+", "label" => "Competitions"],
         ["value" => "100+", "label" => "Awards"],
