@@ -48,6 +48,7 @@
                 </div>
 
                 <a href="{{ url('/events') }}" class="focus:text-[#028CD4] font-medium">Events</a>
+                <a href="{{ route('admit-card.index') }}" class="focus:text-[#028CD4] font-medium">Admit Card</a>
                 <a href="{{ url('/results') }}" class="focus:text-[#028CD4] font-medium">Results</a>
                 <a href="{{ url('/gallery') }}" class="focus:text-[#028CD4] font-medium">Gallery</a>
                 <a href="{{ url('/contact') }}" class="focus:text-[#028CD4] font-medium">Contact</a>
@@ -100,6 +101,7 @@
             </div>
 
             <a href="{{ url('/events') }}">Events</a>
+            <a href="{{ route('admit-card.index') }}">Admit Card</a>
             <a href="{{ url('/results') }}">Results</a>
             <a href="{{ url('/gallery') }}">Gallery</a>
             <a href="{{ url('/contact') }}">Contact</a>

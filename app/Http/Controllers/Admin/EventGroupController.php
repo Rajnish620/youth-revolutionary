@@ -23,9 +23,17 @@ class EventGroupController extends Controller
         }
 
         $groups = $query->latest()->paginate(15);
-        $events = Event::all();
+        $seasons = \App\Models\Season::all();
+        
+        $eventsQuery = Event::query();
+        if ($request->filled('season') && $request->season !== 'All') {
+            $eventsQuery->where('season', $request->season);
+        }
+        $events = $eventsQuery->get();
+        
+        $allEvents = Event::all();
 
-        return view('admin.groups.index', compact('groups', 'events'));
+        return view('admin.groups.index', compact('groups', 'events', 'seasons', 'allEvents'));
     }
 
     public function store(Request $request)
@@ -34,8 +42,9 @@ class EventGroupController extends Controller
             'event_id' => 'required|exists:events,id',
             'group_name' => 'required|string|max:255',
             'class_range' => 'nullable|string|max:255',
-            'fee' => 'required|numeric|min:0',
+            'fee' => 'nullable|numeric|min:0',
             'max_participants' => 'nullable|integer|min:1',
+            'roll_sequence_start' => 'nullable|integer|min:0',
         ]);
 
         EventGroup::create($validated);
@@ -49,8 +58,9 @@ class EventGroupController extends Controller
             'event_id' => 'required|exists:events,id',
             'group_name' => 'required|string|max:255',
             'class_range' => 'nullable|string|max:255',
-            'fee' => 'required|numeric|min:0',
+            'fee' => 'nullable|numeric|min:0',
             'max_participants' => 'nullable|integer|min:1',
+            'roll_sequence_start' => 'nullable|integer|min:0',
         ]);
 
         $group->update($validated);

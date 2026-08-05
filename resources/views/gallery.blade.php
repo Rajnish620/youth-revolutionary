@@ -1,9 +1,11 @@
 <x-app-layout>
     @php
-    $defaultCategories = ["Season 1", "Season 2", "Season 3", "Season 4"];
-    $dbCategories = isset($galleries) ? $galleries->pluck('category')->filter()->unique()->toArray() : [];
-    $allSeasons = array_values(array_unique(array_merge($defaultCategories, $dbCategories)));
-    $categories = array_merge(["All"], $allSeasons);
+    $categories = ['All'];
+    if (isset($seasons)) {
+        foreach($seasons as $season) {
+            $categories[] = $season->name;
+        }
+    }
 
     $allImages = [];
     if(isset($galleries) && $galleries->count() > 0) {
@@ -12,7 +14,7 @@
                 'id' => $item->id,
                 'image' => $item->image,
                 'title' => $item->title ?? 'Memorable Moment',
-                'session' => $item->category ?? 'Season 1',
+                'session' => $item->season ? $item->season->name : 'Uncategorized',
                 'description' => $item->description ?? 'Youth Revolutionary Event Gallery',
                 'date' => $item->created_at ? $item->created_at->format('M d, Y') : ''
             ];

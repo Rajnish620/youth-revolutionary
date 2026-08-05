@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         @media print {
+            @page { margin: 10mm; size: A4 portrait; }
             .no-print { display: none !important; }
-            body { background: white !important; }
-            .desk-slip { page-break-inside: avoid; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .desk-slip { page-break-inside: avoid; border-color: #9ca3af !important; }
         }
         body { font-family: 'Inter', sans-serif; }
     </style>
@@ -30,33 +31,18 @@
     </div>
 
     <!-- Desk Slips Grid -->
-    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="w-[210mm] mx-auto grid grid-cols-4 gap-1 no-print-margin" style="page-break-inside: auto;">
         @forelse($registrations as $index => $reg)
-            <div class="desk-slip bg-white p-4 rounded-xl border-2 border-dashed border-gray-400 shadow-sm relative flex flex-col justify-between h-48">
+            <div class="desk-slip bg-white p-1.5 border border-dashed border-gray-400 flex flex-col items-center justify-center text-center h-[52mm] overflow-hidden m-0.5">
+                <span class="text-[8px] font-black tracking-widest uppercase text-[#340C6F] mb-1">YOUTH REV</span>
                 
-                <!-- Header -->
-                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
-                    <span class="text-[10px] font-black tracking-wider uppercase text-[#340C6F]">YOUTH REVOLUTIONARY</span>
-                    <span class="text-[10px] font-bold text-[#F1400C] px-2 py-0.5 rounded bg-orange-50 border border-orange-200">SEAT #{{ $index + 1 }}</span>
-                </div>
-
-                <!-- Main Content -->
-                <div class="my-2 space-y-1">
-                    <div class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">ROLL NUMBER</div>
-                    <div class="text-2xl font-black text-[#340C6F] font-mono tracking-wider">{{ $reg->roll_no }}</div>
-                    
-                    <div class="font-extrabold text-sm text-gray-900 truncate mt-1">{{ $reg->student_name }}</div>
-                    <div class="text-xs font-semibold text-gray-600 flex items-center justify-between">
-                        <span>{{ $reg->student_class }}</span>
-                        <span class="text-[#F1400C] font-bold text-[11px]">{{ $reg->group->group_name ?? 'General' }}</span>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="border-t border-gray-200 pt-2 flex items-center justify-between text-[10px] text-gray-500 font-medium">
-                    <span class="truncate max-w-[140px]">{{ $reg->event->title ?? 'Competition' }}</span>
-                    <span class="font-bold text-gray-700">{{ $reg->school_name ?? 'School' }}</span>
-                </div>
+                <img src="{{ str_starts_with($reg->photo, 'http') ? $reg->photo : asset($reg->photo ?? 'images/quize.jpg') }}" 
+                     class="w-20 h-20 object-cover border border-gray-300 rounded mb-1.5 shadow-sm">
+                     
+                <div class="text-[14px] font-black text-[#F1400C] font-mono leading-none mb-1 tracking-wide">{{ $reg->roll_no }}</div>
+                
+                <div class="text-[11px] font-extrabold text-gray-900 leading-tight w-full truncate mb-0.5">{{ $reg->student_name }}</div>
+                <div class="text-[9px] font-bold text-gray-600 w-full truncate">{{ $reg->group->group_name ?? 'General' }}</div>
             </div>
         @empty
             <div class="col-span-full bg-white p-12 rounded-2xl text-center text-gray-400 font-semibold">

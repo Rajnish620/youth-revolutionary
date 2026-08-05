@@ -11,8 +11,14 @@ class Gallery extends Model
 
     protected $fillable = [
         'title',
+        'season_id',
         'category',
         'image',
         'description',
     ];
+
+    public function season()
+    {
+        return $this->belongsTo(Season::class);
+    }
 }

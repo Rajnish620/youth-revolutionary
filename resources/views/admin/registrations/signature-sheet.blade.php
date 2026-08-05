@@ -52,7 +52,13 @@
                     <th class="py-3 px-3 border border-gray-300">Student Name</th>
                     <th class="py-3 px-3 border border-gray-300 w-36">Group / Class</th>
                     <th class="py-3 px-3 border border-gray-300">School / Institution</th>
-                    <th class="py-3 px-3 border border-gray-300 text-center w-40">Student Signature</th>
+                    <th class="p-0 border border-gray-300 w-48 align-top">
+                        <div class="text-center py-1.5 border-b border-gray-400 w-full">Student Signature</div>
+                        <div class="flex w-full">
+                            <div class="flex-1 text-center py-1 border-r border-gray-400 text-[9px] text-gray-700">Hindi</div>
+                            <div class="flex-1 text-center py-1 text-[9px] text-gray-700">English</div>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-300 text-xs">
@@ -77,9 +83,12 @@
                         <td class="py-2.5 px-3 border border-gray-300 text-gray-700 font-medium">
                             {{ $reg->school_name ?? 'N/A' }}
                         </td>
-                        <td class="py-2.5 px-3 border border-gray-300 text-center bg-gray-50/50">
-                            <!-- Blank box for physical signature on event day -->
-                            <div class="h-9 w-full border border-dashed border-gray-400 rounded bg-white"></div>
+                        <td class="p-0 border border-gray-300 bg-white">
+                            <!-- Blank box for physical signature on event day divided (Solid Column) -->
+                             <div class="flex flex-col h-12 w-full">
+        <div class="h-1/2 border-b border-gray-400"></div>
+        <div class="h-1/2"></div>
+    </div>
                         </td>
                     </tr>
                 @empty

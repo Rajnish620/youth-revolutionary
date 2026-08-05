@@ -25,26 +25,31 @@
         </div>
     @endif
 
-    <!-- Category Filter Bar -->
+    <!-- Filters Bar -->
     <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            <a href="{{ route('admin.events.index') }}" 
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ !request('category') || request('category') === 'All' ? 'bg-[#340C6F] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                All Events
-            </a>
-            @foreach($categories as $cat)
-                <a href="{{ route('admin.events.index', ['category' => $cat]) }}" 
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request('category') === $cat ? 'bg-[#340C6F] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                    {{ $cat }}
-                </a>
-            @endforeach
-        </div>
+        <form method="GET" action="{{ route('admin.events.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto" id="filter-form">
+            @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+            
+            <select name="category" onchange="document.getElementById('filter-form').submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none focus:border-[#340C6F] focus:ring-1 focus:ring-[#340C6F]/20">
+                <option value="All">All Categories</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->name }}" {{ request('category') == $cat->name ? 'selected' : '' }}>{{ $cat->name }}</option>
+                @endforeach
+            </select>
+
+            <select name="season" onchange="document.getElementById('filter-form').submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none focus:border-[#340C6F] focus:ring-1 focus:ring-[#340C6F]/20">
+                <option value="All">All Seasons</option>
+                @foreach($seasons as $season)
+                    <option value="{{ $season->name }}" {{ request('season') == $season->name ? 'selected' : '' }}>{{ $season->name }}</option>
+                @endforeach
+            </select>
+        </form>
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('admin.events.index') }}" class="relative w-full md:w-72">
-            @if(request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
-            @endif
+            @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+            @if(request('season')) <input type="hidden" name="season" value="{{ request('season') }}"> @endif
+            
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search events..." 
                 class="w-full bg-gray-100/80 text-xs pl-9 pr-4 py-2.5 rounded-xl border border-transparent focus:border-[#340C6F] focus:bg-white outline-none transition-all">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
@@ -70,8 +75,8 @@
                         <tr class="hover:bg-gray-50/50 transition-colors">
                             <td class="py-4 px-6">
                                 <div class="flex items-center gap-3">
-                                    <img src="{{ str_starts_with($event->image, 'http') ? $event->image : asset($event->image ?? 'images/quize.jpg') }}" 
-                                         alt="Cover" class="w-12 h-12 rounded-xl object-cover border border-gray-200">
+                                    <img src="{{ str_starts_with($event->image ?? '', 'http') ? $event->image : ($event->image ? asset('storage/' . $event->image) : asset('images/quize.jpg')) }}" 
+                                         alt="Cover" class="w-12 h-12 rounded-xl object-cover border border-gray-200 bg-gray-50">
                                     <div>
                                         <div class="font-bold text-gray-900 line-clamp-1 flex items-center gap-1.5">
                                             <span>{{ $event->title }}</span>
@@ -89,8 +94,14 @@
                             <td class="py-4 px-6 text-xs text-gray-600 font-medium">
                                 <i class="fa-solid fa-location-dot text-red-500 mr-1"></i> {{ $event->location }}
                             </td>
-                            <td class="py-4 px-6 text-xs text-gray-500">
-                                {{ $event->event_date ? $event->event_date->format('M d, Y') : 'TBD' }}
+                            <td class="py-4 px-6 text-xs text-gray-500 font-medium">
+                                @if($event->event_date)
+                                    <span class="text-gray-900 font-bold"><i class="fa-regular fa-calendar-check text-emerald-600 mr-1"></i>{{ $event->event_date->format('M d, Y') }}</span>
+                                @elseif($event->start_event_date)
+                                    <span class="text-gray-900 font-bold">{{ $event->start_event_date->format('M d, Y') }}</span>
+                                @else
+                                    <span class="text-gray-400 font-normal">TBD</span>
+                                @endif
                             </td>
                             <td class="py-4 px-6">
                                 @if($event->status === 'upcoming')

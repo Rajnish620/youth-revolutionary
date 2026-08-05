@@ -21,9 +21,19 @@ class SettingController extends Controller
         $validated = $request->validate([
             'upi_id' => 'required|string|max:255',
             'account_holder' => 'required|string|max:255',
-            'qr_code_image' => 'required|string',
+            'qr_code_image' => 'nullable|image|max:5120',
             'instructions' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('qr_code_image')) {
+            $file = $request->file('qr_code_image');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/settings'), $filename);
+            $validated['qr_code_image'] = 'uploads/settings/' . $filename;
+        } else {
+            // Remove qr_code_image from validated array to keep existing if not uploaded
+            unset($validated['qr_code_image']);
+        }
 
         $setting->update($validated);
 

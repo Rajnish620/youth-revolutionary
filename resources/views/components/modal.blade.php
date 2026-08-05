@@ -19,7 +19,7 @@ $maxWidthClass = [
     x-on:keydown.escape.window="show = false"
     x-show="show"
     style="display: none;"
-    class="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0 flex items-center justify-center"
+    class="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 flex items-center justify-center"
 >
     <!-- Backdrop Blur -->
     <div
@@ -43,12 +43,12 @@ $maxWidthClass = [
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        class="relative bg-white rounded-3xl overflow-hidden shadow-2xl transform transition-all w-full {{ $maxWidthClass }} z-10 border border-gray-100"
+        class="relative bg-white rounded-3xl shadow-2xl transform transition-all w-full {{ $maxWidthClass }} z-10 border border-gray-100 max-h-[90vh] flex flex-col my-auto overflow-hidden"
     >
         @if($title)
             <!-- Modal Header -->
-            <div class="px-6 py-5 bg-gradient-to-r from-[#340C6F] to-[#24084f] text-white flex items-center justify-between">
-                <h3 class="font-extrabold text-lg tracking-wide flex items-center gap-2">
+            <div class="px-6 py-4 sm:px-8 sm:py-5 bg-gradient-to-r from-[#340C6F] to-[#1A0638] text-white flex items-center justify-between shrink-0">
+                <h3 class="font-extrabold text-base sm:text-lg tracking-wide flex items-center gap-2">
                     {{ $title }}
                 </h3>
                 <button @click="show = false" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors">
@@ -57,7 +57,7 @@ $maxWidthClass = [
             </div>
         @endif
 
-        <div class="p-6">
+        <div class="p-5 sm:p-6 overflow-y-auto max-h-[calc(90vh-70px)]">
             {{ $slot }}
         </div>
     </div>

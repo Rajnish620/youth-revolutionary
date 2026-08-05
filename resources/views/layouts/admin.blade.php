@@ -14,10 +14,10 @@
                 extend: {
                     colors: {
                         brand: {
-                            purple: '#340C6F',
-                            orange: '#F1400C',
+                            purple: '#7C3AED',
+                            orange: '#8B5CF6',
                             blue: '#028CD4',
-                            dark: '#1A0638',
+                            dark: '#1e1b4b',
                         }
                     }
                 }
@@ -28,6 +28,21 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -41,9 +56,9 @@
         <!-- Decorative Top Glow -->
         <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-brand-orange/20 to-transparent pointer-events-none"></div>
 
-        <div>
+        <div class="flex-1 overflow-y-auto overflow-x-hidden sidebar-scroll">
             <!-- Logo Section -->
-            <div class="h-20 flex items-center px-4 border-b border-white/10 gap-3 justify-between">
+            <div class="h-20 flex items-center px-4 border-b border-white/10 gap-3 justify-between sticky top-0 bg-brand-dark z-20">
                 <div class="flex items-center gap-3 overflow-hidden">
                     <img src="{{ asset('logo/logo.jpeg') }}" alt="Logo" class="w-10 h-10 rounded-full border-2 border-brand-orange shadow-md shrink-0">
                     <div x-show="!sidebarCollapsed" x-transition.opacity class="truncate">
@@ -65,26 +80,28 @@
                 <!-- Dashboard -->
                 <a href="{{ route('dashboard') }}" 
                    title="Dashboard"
-                   class="flex items-center gap-3.5 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5' }}">
+                   class="flex items-center gap-3.5 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5' }}">
                     <i class="fa-solid fa-chart-pie text-lg shrink-0 w-6 text-center"></i>
                     <span x-show="!sidebarCollapsed" class="truncate">Dashboard</span>
                 </a>
 
                 <!-- Competitions -->
+                {{-- 
                 <a href="{{ route('admin.competitions.index') }}" 
                    title="Competitions"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.competitions.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.competitions.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-trophy text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.competitions.*') ? 'text-white' : 'text-gray-400 group-hover:text-brand-orange' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Competitions</span>
                     </div>
                     <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.competitions.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
                 </a>
+                --}}
 
                 <!-- Events -->
                 <a href="{{ route('admin.events.index') }}" 
                    title="Events"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.events.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.events.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-calendar-check text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.events.*') ? 'text-white' : 'text-gray-400 group-hover:text-brand-orange' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Events</span>
@@ -95,7 +112,7 @@
                 <!-- Event Class Groups -->
                 <a href="{{ route('admin.groups.index') }}" 
                    title="Event Class Groups"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.groups.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.groups.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-layer-group text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.groups.*') ? 'text-white' : 'text-gray-400 group-hover:text-orange-400' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Event Class Groups</span>
@@ -103,10 +120,32 @@
                     <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.groups.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
                 </a>
 
+                <!-- Categories -->
+                <a href="{{ route('admin.categories.index') }}" 
+                   title="Categories"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-tags text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.categories.*') ? 'text-white' : 'text-gray-400 group-hover:text-green-400' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Categories</span>
+                    </div>
+                    <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.categories.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
+                </a>
+
+                <!-- Seasons -->
+                <a href="{{ route('admin.seasons.index') }}" 
+                   title="Seasons"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.seasons.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-calendar text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.seasons.*') ? 'text-white' : 'text-gray-400 group-hover:text-blue-400' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Seasons</span>
+                    </div>
+                    <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.seasons.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
+                </a>
+
                 <!-- Registrations -->
                 <a href="{{ route('admin.registrations.index') }}" 
                    title="Registrations & Payments"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.registrations.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.registrations.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-users text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.registrations.*') ? 'text-white' : 'text-gray-400 group-hover:text-green-400' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Registrations</span>
@@ -117,7 +156,7 @@
                 <!-- Marks & Certificates -->
                 <a href="{{ route('admin.marks.index') }}" 
                    title="Marks & Certificates"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.marks.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.marks.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-award text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.marks.*') ? 'text-white' : 'text-gray-400 group-hover:text-amber-400' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Marks & Certificates</span>
@@ -128,21 +167,34 @@
                 <!-- Gallery -->
                 <a href="{{ route('admin.gallery.index') }}" 
                    title="Gallery"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.gallery.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.gallery.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
                         <i class="fa-solid fa-images text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.gallery.*') ? 'text-white' : 'text-gray-400 group-hover:text-purple-400' }} transition-colors"></i>
                         <span x-show="!sidebarCollapsed" class="truncate">Gallery</span>
                     </div>
                 </a>
 
+                <!-- Inquiries -->
+                <a href="{{ route('admin.inquiries.index') }}" 
+                   title="Contact Inquiries"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.inquiries.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-inbox text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.inquiries.*') ? 'text-white' : 'text-gray-400 group-hover:text-cyan-400' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Contact Inquiries</span>
+                    </div>
+                </a>
+
                 <div x-show="!sidebarCollapsed" class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pt-6 mb-2">System</div>
 
-                <!-- Payment QR Settings -->
-                <a href="{{ route('admin.settings.payment.index') }}" 
-                   title="Payment & QR Settings"
-                   class="flex items-center gap-3.5 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-gradient-to-r from-brand-orange to-orange-600 text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
-                    <i class="fa-solid fa-qrcode text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.settings.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }} transition-colors"></i>
-                    <span x-show="!sidebarCollapsed" class="truncate">Payment & QR Settings</span>
+                <!-- Settings -->
+                <a href="{{ route('admin.settings.contact.index') }}" 
+                   title="Settings"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-gear text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.settings.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Settings</span>
+                    </div>
+                    <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.settings.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
                 </a>
             </nav>
         </div>

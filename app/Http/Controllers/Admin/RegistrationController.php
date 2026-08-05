@@ -14,6 +14,12 @@ class RegistrationController extends Controller
     {
         $query = EventRegistration::with(['event', 'group']);
 
+        if ($request->filled('season') && $request->season !== 'All') {
+            $query->whereHas('event', function ($q) use ($request) {
+                $q->where('season', $request->season);
+            });
+        }
+
         if ($request->filled('event_id') && $request->event_id !== 'All') {
             $query->where('event_id', $request->event_id);
         }
@@ -33,9 +39,15 @@ class RegistrationController extends Controller
         }
 
         $registrations = $query->latest()->paginate(15);
-        $events = Event::all();
+        
+        $seasons = \App\Models\Season::all();
+        $eventsQuery = Event::query();
+        if ($request->filled('season') && $request->season !== 'All') {
+            $eventsQuery->where('season', $request->season);
+        }
+        $events = $eventsQuery->get();
 
-        return view('admin.registrations.index', compact('registrations', 'events'));
+        return view('admin.registrations.index', compact('registrations', 'events', 'seasons'));
     }
 
     public function approvePayment(EventRegistration $registration)

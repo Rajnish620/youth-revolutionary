@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.events.update', $event->id) }}" class="space-y-5">
+<form method="POST" action="{{ route('admin.events.update', $event->id) }}" class="space-y-5" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
@@ -15,10 +15,21 @@
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Category *</label>
             <select name="category" required
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
-                <option value="Education" {{ old('category', $event->category) == 'Education' ? 'selected' : '' }}>🎓 Education</option>
-                <option value="Sports" {{ old('category', $event->category) == 'Sports' ? 'selected' : '' }}>⚽ Sports</option>
-                <option value="Cultural" {{ old('category', $event->category) == 'Cultural' ? 'selected' : '' }}>🎭 Cultural</option>
-                <option value="General" {{ old('category', $event->category) == 'General' ? 'selected' : '' }}>General</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->name }}" {{ old('category', $event->category) == $cat->name ? 'selected' : '' }}>{{ current(explode(' ', $cat->name)) == 'Education' ? '🎓 ' : (current(explode(' ', $cat->name)) == 'Sports' ? '⚽ ' : (current(explode(' ', $cat->name)) == 'Cultural' ? '🎭 ' : '')) }}{{ $cat->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Season -->
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Season</label>
+            <select name="season"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
+                <option value="">Select Season (Optional)</option>
+                @foreach($seasons as $season)
+                    <option value="{{ $season->name }}" {{ old('season', $event->season) == $season->name ? 'selected' : '' }}>{{ $season->name }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -42,16 +53,29 @@
 
         <!-- Event Date -->
         <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Event Date</label>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Event / Exam Date</label>
             <input type="date" name="event_date" value="{{ old('event_date', $event->event_date ? $event->event_date->format('Y-m-d') : '') }}"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
         </div>
 
-        <!-- Image URL -->
-        <div class="md:col-span-2">
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Image URL / Path</label>
-            <input type="text" name="image" value="{{ old('image', $event->image) }}"
+        <!-- Reporting Time -->
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Reporting Time</label>
+            <input type="text" name="reporting_time" value="{{ old('reporting_time', $event->reporting_time) }}" placeholder="e.g. 09:00 AM"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
+        </div>
+
+        <!-- Exam Timing (From - To) -->
+        <div class="md:col-span-2">
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Exam Timing</label>
+            <input type="text" name="exam_time" value="{{ old('exam_time', $event->exam_time) }}" placeholder="e.g. 10:00 AM - 12:00 PM"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
+            <p class="text-[11px] text-gray-400 mt-1">This timing and reporting time will be printed directly on candidate Admit Cards.</p>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="md:col-span-2">
+            <x-image-upload name="image" label="Event Cover Image" :existing="$event->image" />
         </div>
 
         <!-- Is Featured Checkbox -->

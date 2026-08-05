@@ -31,6 +31,12 @@
     <!-- Filters Bar -->
     <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <form method="GET" action="{{ route('admin.groups.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <select name="season" onchange="this.form.event_id.value='All'; this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none">
+                <option value="All">All Seasons</option>
+                @foreach($seasons as $s)
+                    <option value="{{ $s->name }}" {{ request('season') == $s->name ? 'selected' : '' }}>{{ $s->name }}</option>
+                @endforeach
+            </select>
             <select name="event_id" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none">
                 <option value="All">All Events</option>
                 @foreach($events as $e)
@@ -40,6 +46,7 @@
         </form>
 
         <form method="GET" action="{{ route('admin.groups.index') }}" class="relative w-full md:w-72">
+            @if(request('season')) <input type="hidden" name="season" value="{{ request('season') }}"> @endif
             @if(request('event_id')) <input type="hidden" name="event_id" value="{{ request('event_id') }}"> @endif
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search group or class..." 
                 class="w-full bg-gray-100/80 text-xs pl-9 pr-4 py-2.5 rounded-xl border border-transparent focus:border-[#340C6F] focus:bg-white outline-none transition-all">

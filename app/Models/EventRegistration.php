@@ -25,6 +25,11 @@ class EventRegistration extends Model
         'marks',
         'rank',
         'certificate_enabled',
+        'dob',
+        'email',
+        'gender',
+        'category',
+        'address',
     ];
 
     protected $casts = [

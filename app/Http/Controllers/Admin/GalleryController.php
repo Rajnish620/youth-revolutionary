@@ -10,10 +10,10 @@ class GalleryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Gallery::query();
+        $query = Gallery::with('season');
 
-        if ($request->filled('category') && $request->category !== 'All') {
-            $query->where('category', $request->category);
+        if ($request->filled('season_id') && $request->season_id !== 'All') {
+            $query->where('season_id', $request->season_id);
         }
 
         if ($request->filled('search')) {
@@ -22,22 +22,27 @@ class GalleryController extends Controller
 
         $galleries = $query->latest()->paginate(12);
 
-        // Fetch distinct seasons dynamically from database
-        $dbSeasons = Gallery::distinct()->pluck('category')->filter()->values()->toArray();
-        $defaultSeasons = ['Season 1', 'Season 2', 'Season 3', 'Season 4'];
-        $categories = array_unique(array_merge($defaultSeasons, $dbSeasons));
+        // Fetch seasons from database
+        $seasons = \App\Models\Season::all();
 
-        return view('admin.gallery.index', compact('galleries', 'categories'));
+        return view('admin.gallery.index', compact('galleries', 'seasons'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'category' => 'required|string|max:100',
-            'image' => 'required|string',
+            'season_id' => 'required|exists:seasons,id',
+            'image' => 'required|image|max:5120',
             'description' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $file->extension();
+            $file->move(public_path('uploads/galleries'), $filename);
+            $validated['image'] = 'uploads/galleries/' . $filename;
+        }
 
         Gallery::create($validated);
 

@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.events.store') }}" class="space-y-5">
+<form method="POST" action="{{ route('admin.events.store') }}" class="space-y-5" enctype="multipart/form-data">
     @csrf
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -14,10 +14,21 @@
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Category *</label>
             <select name="category" required
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
-                <option value="Education">🎓 Education</option>
-                <option value="Sports">⚽ Sports</option>
-                <option value="Cultural">🎭 Cultural</option>
-                <option value="General">General</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->name }}">{{ current(explode(' ', $cat->name)) == 'Education' ? '🎓 ' : (current(explode(' ', $cat->name)) == 'Sports' ? '⚽ ' : (current(explode(' ', $cat->name)) == 'Cultural' ? '🎭 ' : '')) }}{{ $cat->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Season -->
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Season</label>
+            <select name="season"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
+                <option value="">Select Season (Optional)</option>
+                @foreach($seasons as $season)
+                    <option value="{{ $season->name }}">{{ $season->name }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -41,16 +52,29 @@
 
         <!-- Event Date -->
         <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Event Date</label>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Event / Exam Date</label>
             <input type="date" name="event_date"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
         </div>
 
-        <!-- Image URL -->
-        <div class="md:col-span-2">
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Image URL / Path</label>
-            <input type="text" name="image" placeholder="images/photo.jpg or https://..."
+        <!-- Reporting Time -->
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Reporting Time</label>
+            <input type="text" name="reporting_time" placeholder="e.g. 09:00 AM"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
+        </div>
+
+        <!-- Exam Timing (From - To) -->
+        <div class="md:col-span-2">
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Exam Timing</label>
+            <input type="text" name="exam_time" placeholder="e.g. 10:00 AM - 12:00 PM"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
+            <p class="text-[11px] text-gray-400 mt-1">This timing and reporting time will be printed directly on candidate Admit Cards.</p>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="md:col-span-2">
+            <x-image-upload name="image" label="Event Cover Image" />
         </div>
 
         <!-- Is Featured Checkbox -->

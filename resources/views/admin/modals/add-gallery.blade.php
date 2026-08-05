@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.gallery.store') }}" class="space-y-5">
+<form method="POST" action="{{ route('admin.gallery.store') }}" class="space-y-5" enctype="multipart/form-data">
     @csrf
 
     <div class="space-y-4">
@@ -9,35 +9,23 @@
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
         </div>
 
-        <!-- Season Select or Create -->
+        <!-- Season Select -->
         <div>
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Gallery Season *</label>
-            <div class="space-y-1">
-                <input type="text" name="category" list="season-options" required placeholder="Select existing or type a NEW season (e.g. Season 5)"
-                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
-                
-                <datalist id="season-options">
-                    @if(isset($categories))
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}"></option>
-                        @endforeach
-                    @else
-                        <option value="Season 1"></option>
-                        <option value="Season 2"></option>
-                        <option value="Season 3"></option>
-                        <option value="Season 4"></option>
-                    @endif
-                </datalist>
-                <p class="text-[11px] text-gray-400">Type a new season name to automatically create a new Season category!</p>
-            </div>
+            <select name="season_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
+                <option value="">-- Select Season --</option>
+                @if(isset($seasons))
+                    @foreach($seasons as $s)
+                        <option value="{{ $s->id }}">{{ $s->name }}</option>
+                    @endforeach
+                @endif
+            </select>
         </div>
 
-        <!-- Image URL / Path -->
+        <!-- Image Upload -->
         <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Image URL or Local Path *</label>
-            <input type="text" name="image" required placeholder="https://images.unsplash.com/... or images/photo.jpg"
-                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
-            <p class="text-[11px] text-gray-400 mt-1">Provide full image URL or relative path from public folder</p>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo *</label>
+            <x-image-upload name="image" />
         </div>
 
         <!-- Description -->
