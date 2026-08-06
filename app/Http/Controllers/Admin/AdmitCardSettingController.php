@@ -11,7 +11,8 @@ class AdmitCardSettingController extends Controller
     public function index()
     {
         $setting = AdmitCardSetting::getSettings();
-        return view('admin.settings.admit-card', compact('setting'));
+        $categories = \App\Models\Category::all();
+        return view('admin.settings.admit-card', compact('setting', 'categories'));
     }
 
     public function update(Request $request)
@@ -20,6 +21,8 @@ class AdmitCardSettingController extends Controller
             'header_title' => 'nullable|string|max:255',
             'header_subtitle' => 'nullable|string|max:255',
             'instructions' => 'nullable|string',
+            'category_instructions' => 'nullable|array',
+            'category_instructions.*' => 'nullable|string',
             'logo' => 'nullable|image|max:2048',
             'signature' => 'nullable|image|max:2048',
         ]);
@@ -31,6 +34,15 @@ class AdmitCardSettingController extends Controller
             'header_subtitle' => $request->header_subtitle,
             'instructions' => $request->instructions,
         ];
+
+        // Save category-specific instructions
+        if ($request->has('category_instructions')) {
+            foreach ($request->category_instructions as $categoryId => $instructionText) {
+                \App\Models\Category::where('id', $categoryId)->update([
+                    'instructions' => $instructionText
+                ]);
+            }
+        }
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');

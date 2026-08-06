@@ -379,7 +379,16 @@
     <div class="inst-box">
         <div class="inst-head">IMPORTANT INSTRUCTIONS FOR CANDIDATES</div>
         <div class="inst-body">
-            {!! nl2br(e($setting->instructions)) !!}
+            @php
+                $categoryInstructions = null;
+                if (!empty($registration->event->category)) {
+                    $matchedCategory = \App\Models\Category::where('name', $registration->event->category)->first();
+                    if ($matchedCategory && !empty($matchedCategory->instructions)) {
+                        $categoryInstructions = $matchedCategory->instructions;
+                    }
+                }
+            @endphp
+            {!! nl2br(e($categoryInstructions ?? $setting->instructions)) !!}
         </div>
     </div>
 </div>

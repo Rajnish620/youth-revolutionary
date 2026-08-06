@@ -105,12 +105,33 @@
             <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
                 <i class="fa-solid fa-list-check text-[#340C6F]"></i> Important Examination Instructions
             </h3>
-            <p class="text-xs text-gray-500 mb-6">These points will be printed at the bottom section of every student's Admit Card PDF.</p>
+            <p class="text-xs text-gray-500 mb-6">These points will be printed at the bottom section of every student's Admit Card PDF based on their event category.</p>
             
-            <div>
-                <textarea name="instructions" rows="8" 
-                    placeholder="Enter instructions (One point per line)..."
-                    class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-medium focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all leading-relaxed">{{ old('instructions', $setting->instructions) }}</textarea>
+            <div class="space-y-6">
+                <!-- Default / Global Instructions -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Default Instructions (Fallback)</label>
+                    <textarea name="instructions" rows="6" 
+                        placeholder="Enter default instructions..."
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-medium focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all leading-relaxed">{{ old('instructions', $setting->instructions) }}</textarea>
+                </div>
+
+                <!-- Category Specific Instructions -->
+                @if(isset($categories) && $categories->count() > 0)
+                    <div class="pt-4 border-t border-gray-100">
+                        <h4 class="text-md font-bold text-gray-700 mb-4">Category-Specific Instructions</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @foreach($categories as $category)
+                                <div>
+                                    <label class="block text-sm font-bold text-[#F1400C] mb-2">{{ $category->name }} Events</label>
+                                    <textarea name="category_instructions[{{ $category->id }}]" rows="5" 
+                                        placeholder="Enter instructions for {{ $category->name }} events..."
+                                        class="w-full bg-orange-50/30 border border-orange-100 rounded-xl p-4 text-sm font-medium focus:bg-white focus:border-[#F1400C] focus:ring-2 focus:ring-[#F1400C]/20 outline-none transition-all leading-relaxed">{{ old('category_instructions.'.$category->id, $category->instructions) }}</textarea>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
 
