@@ -72,6 +72,39 @@
         </div>
     </section>
 
+    <!-- KEY LEADERS SECTION -->
+    @if($keyLeaders->count() > 0)
+        <section class="py-16 md:py-20 bg-slate-50 border-t border-slate-100 overflow-hidden" x-data="{ show: false }" x-intersect.once="show = true">
+            <div class="max-w-7xl mx-auto px-6 text-center mb-10 transition duration-700 opacity-0 translate-y-6" :class="{'opacity-100 translate-y-0': show}">
+                <span class="text-[10px] font-black uppercase tracking-widest text-[#0ea5e9] bg-sky-50 px-2.5 py-1 rounded-lg">Leadership</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2 tracking-tight">Key Leaders</h2>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 grid gap-6 sm:grid-cols-3 lg:grid-cols-4">
+                @foreach($keyLeaders as $index => $advisor)
+                    <div class="group overflow-hidden rounded-2xl border border-slate-200/60 bg-white hover:-translate-y-1.5 hover:shadow-xl transition duration-500 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: {{ $index * 100 }}ms;">
+                        <div class="h-56 w-full overflow-hidden bg-slate-100">
+                            @if(!empty($advisor->image) && file_exists(public_path($advisor->image)))
+                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-contain bg-slate-100 group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
+                            @else
+                                <div class="h-full w-full flex items-center justify-center bg-sky-50 text-[#0ea5e9] font-black text-3xl">
+                                    {{ substr($advisor->name, 0, 1) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-5 text-left">
+                            <h3 class="text-lg font-bold text-slate-900">{{ $advisor->name }}</h3>
+                            <p class="text-[#0ea5e9] text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
+                            @if(!empty($advisor->description))
+                                <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-medium line-clamp-3">{{ $advisor->description }}</p>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <!-- MEET OUR TEAM SECTION -->
     <section class="py-20 md:py-28 bg-white overflow-hidden" x-data="{ show: false }" x-intersect.once="show = true">
         <div class="max-w-7xl mx-auto px-6 text-center mb-14 transition duration-1000 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}">
@@ -107,39 +140,6 @@
             @endforelse
         </div>
     </section>
-
-    <!-- KEY LEADERS SECTION -->
-    @if($keyLeaders->count() > 0)
-        <section class="py-16 md:py-20 bg-slate-50 border-t border-slate-100 overflow-hidden" x-data="{ show: false }" x-intersect.once="show = true">
-            <div class="max-w-7xl mx-auto px-6 text-center mb-10 transition duration-700 opacity-0 translate-y-6" :class="{'opacity-100 translate-y-0': show}">
-                <span class="text-[10px] font-black uppercase tracking-widest text-[#0ea5e9] bg-sky-50 px-2.5 py-1 rounded-lg">Leadership</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2 tracking-tight">Key Leaders</h2>
-            </div>
-
-            <div class="max-w-7xl mx-auto px-6 grid gap-6 sm:grid-cols-3 lg:grid-cols-4">
-                @foreach($keyLeaders as $index => $advisor)
-                    <div class="group overflow-hidden rounded-2xl border border-slate-200/60 bg-white hover:-translate-y-1.5 hover:shadow-xl transition duration-500 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: {{ $index * 100 }}ms;">
-                        <div class="h-56 w-full overflow-hidden bg-slate-100">
-                            @if(!empty($advisor->image) && file_exists(public_path($advisor->image)))
-                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-contain bg-slate-100 group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
-                            @else
-                                <div class="h-full w-full flex items-center justify-center bg-sky-50 text-[#0ea5e9] font-black text-3xl">
-                                    {{ substr($advisor->name, 0, 1) }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="p-5 text-left">
-                            <h3 class="text-lg font-bold text-slate-900">{{ $advisor->name }}</h3>
-                            <p class="text-[#0ea5e9] text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
-                            @if(!empty($advisor->description))
-                                <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-medium line-clamp-3">{{ $advisor->description }}</p>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-    @endif
 
     <!-- ADVISORS SECTION -->
     @if($realAdvisors->count() > 0)
