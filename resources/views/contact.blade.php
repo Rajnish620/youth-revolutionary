@@ -116,7 +116,14 @@
                         <div x-show="show" x-transition:enter="transition ease-out duration-700 delay-300" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
                             <div class="w-full h-56 md:h-64">
                                 @if($contactSetting->map_embed_url)
-                                    <iframe src="{{ $contactSetting->map_embed_url }}" height="450" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full"></iframe>
+                                    @php
+                                        $mapUrl = $contactSetting->map_embed_url;
+                                        if (\Illuminate\Support\Str::contains($mapUrl, '<iframe')) {
+                                            preg_match('/src="([^"]+)"/', $mapUrl, $match);
+                                            $mapUrl = $match[1] ?? $mapUrl;
+                                        }
+                                    @endphp
+                                    <iframe src="{{ $mapUrl }}" height="450" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full"></iframe>
                                 @else
                                     <div class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">Map not configured</div>
                                 @endif
