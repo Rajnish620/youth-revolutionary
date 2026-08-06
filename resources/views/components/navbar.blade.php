@@ -41,13 +41,19 @@
                          x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
                          x-transition:leave-end="transform opacity-0 scale-95 -translate-y-2"
                          class="absolute top-full left-0 mt-3 w-56 rounded-2xl border border-blue-100 bg-white shadow-xl py-2 z-50">
-                        <a href="{{ url('/competitions/education') }}" class="block px-4 py-2.5 hover:bg-blue-50 text-xs font-semibold text-gray-700 hover:text-[#028CD4] transition-colors">Education</a>
-                        <a href="{{ url('/competitions/sports') }}" class="block px-4 py-2.5 hover:bg-orange-50 text-xs font-semibold text-gray-700 hover:text-[#F1400C] transition-colors">Sports</a>
-                        <a href="{{ url('/competitions/cultural') }}" class="block px-4 py-2.5 hover:bg-purple-50 text-xs font-semibold text-gray-700 hover:text-[#340C6F] transition-colors">Cultural</a>
+                        @php
+                            $navCategories = \App\Models\Category::orderBy('name', 'asc')->get();
+                        @endphp
+                        @foreach($navCategories as $category)
+                            @php 
+                                $slug = strtolower(str_replace(' ', '-', $category->name)); 
+                            @endphp
+                            <a href="{{ url('/competitions/' . $slug) }}" class="block px-4 py-2.5 hover:bg-blue-50 text-xs font-semibold text-gray-700 hover:text-[#028CD4] transition-colors">{{ $category->name }}</a>
+                        @endforeach
                     </div>
                 </div>
 
-                <a href="{{ url('/events') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Events</a>
+                {{-- <a href="{{ url('/events') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Events</a> --}}
                 <a href="{{ route('admit-card.index') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Admit Card</a>
                 <a href="{{ url('/results') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Results</a>
                 <a href="{{ url('/gallery') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Gallery</a>
@@ -96,13 +102,19 @@
                 </button>
 
                 <div x-show="mobileCompetitionOpen" style="display: none;" class="ml-4 mt-2 flex flex-col gap-2.5 border-l-2 border-blue-200 pl-4 text-sm">
-                    <a href="{{ url('/competitions/education') }}" @click="menuOpen = false" class="hover:text-[#028CD4]">Education</a>
-                    <a href="{{ url('/competitions/sports') }}" @click="menuOpen = false" class="hover:text-[#F1400C]">Sports</a>
-                    <a href="{{ url('/competitions/cultural') }}" @click="menuOpen = false" class="hover:text-[#340C6F]">Cultural</a>
+                    @php
+                        $navCategories = \App\Models\Category::orderBy('name', 'asc')->get();
+                    @endphp
+                    @foreach($navCategories as $category)
+                        @php 
+                            $slug = strtolower(str_replace(' ', '-', $category->name)); 
+                        @endphp
+                        <a href="{{ url('/competitions/' . $slug) }}" @click="menuOpen = false" class="hover:text-[#028CD4]">{{ $category->name }}</a>
+                    @endforeach
                 </div>
             </div>
 
-            <a href="{{ url('/events') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Events</a>
+            {{-- <a href="{{ url('/events') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Events</a> --}}
             <a href="{{ route('admit-card.index') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Admit Card</a>
             <a href="{{ url('/results') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Results</a>
             <a href="{{ url('/gallery') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Gallery</a>

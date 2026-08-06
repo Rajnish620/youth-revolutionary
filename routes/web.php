@@ -126,16 +126,20 @@ Route::get('/results', function () {
     return view('result');
 });
 
-Route::get('/competitions/education', function () {
-    return view('competitions.education');
-});
+Route::get('/competitions/{slug}', function ($slug) {
+    // Find category by slug
+    $categories = \App\Models\Category::all();
+    $category = $categories->first(function($cat) use ($slug) {
+        return strtolower(str_replace(' ', '-', $cat->name)) === $slug;
+    });
 
-Route::get('/competitions/sports', function () {
-    return view('competitions.sports');
-});
+    if (!$category) {
+        abort(404);
+    }
 
-Route::get('/competitions/cultural', function () {
-    return view('competitions.cultural');
+    $events = \App\Models\Event::where('category', $category->name)->latest()->get();
+    
+    return view('competitions.show', compact('category', 'events'));
 });
 
 Route::get('/educationlearn', function () {
