@@ -88,13 +88,13 @@
 
     <!-- Main Section -->
     <section class="py-24 polaroid-wall-bg min-h-screen relative overflow-hidden mt-16 text-gray-900" 
-        x-data="{ 
-            activeCategory: 'All', 
+        x-data='{ 
+            activeCategory: "All", 
             selectedIndex: null,
             images: @json($allImages),
             
             get filteredImages() {
-                if (this.activeCategory === 'All') return this.images;
+                if (this.activeCategory === "All") return this.images;
                 return this.images.filter(img => img.session === this.activeCategory);
             },
             
@@ -107,7 +107,7 @@
                 if(this.filteredImages.length === 0) return;
                 this.selectedIndex = this.selectedIndex === 0 ? this.filteredImages.length - 1 : this.selectedIndex - 1;
             }
-        }"
+        }'
         x-on:keydown.escape.window="selectedIndex = null"
         x-on:keydown.left.window="if(selectedIndex !== null) prevImage()"
         x-on:keydown.right.window="if(selectedIndex !== null) nextImage()"
