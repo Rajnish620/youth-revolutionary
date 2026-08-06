@@ -86,28 +86,34 @@
         .tilt-zero { transform: rotate(0.5deg); }
     </style>
 
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('polaroidGallery', () => ({
+                activeCategory: 'All', 
+                selectedIndex: null,
+                images: @json($allImages),
+                
+                get filteredImages() {
+                    if (this.activeCategory === 'All') return this.images;
+                    return this.images.filter(img => img.session === this.activeCategory);
+                },
+                
+                nextImage() {
+                    if(this.filteredImages.length === 0) return;
+                    this.selectedIndex = this.selectedIndex === this.filteredImages.length - 1 ? 0 : this.selectedIndex + 1;
+                },
+                
+                prevImage() {
+                    if(this.filteredImages.length === 0) return;
+                    this.selectedIndex = this.selectedIndex === 0 ? this.filteredImages.length - 1 : this.selectedIndex - 1;
+                }
+            }))
+        })
+    </script>
+
     <!-- Main Section -->
     <section class="py-24 polaroid-wall-bg min-h-screen relative overflow-hidden mt-16 text-gray-900" 
-        x-data='{ 
-            activeCategory: "All", 
-            selectedIndex: null,
-            images: @json($allImages),
-            
-            get filteredImages() {
-                if (this.activeCategory === "All") return this.images;
-                return this.images.filter(img => img.session === this.activeCategory);
-            },
-            
-            nextImage() {
-                if(this.filteredImages.length === 0) return;
-                this.selectedIndex = this.selectedIndex === this.filteredImages.length - 1 ? 0 : this.selectedIndex + 1;
-            },
-            
-            prevImage() {
-                if(this.filteredImages.length === 0) return;
-                this.selectedIndex = this.selectedIndex === 0 ? this.filteredImages.length - 1 : this.selectedIndex - 1;
-            }
-        }'
+        x-data="polaroidGallery"
         x-on:keydown.escape.window="selectedIndex = null"
         x-on:keydown.left.window="if(selectedIndex !== null) prevImage()"
         x-on:keydown.right.window="if(selectedIndex !== null) nextImage()"
