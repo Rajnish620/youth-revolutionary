@@ -25,7 +25,7 @@
         <!-- Image Upload -->
         <div>
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo *</label>
-            <x-image-upload name="image" />
+            <x-image-upload name="image" maxSize="20" />
         </div>
 
         <!-- Description -->

@@ -1,4 +1,4 @@
-@props(['name', 'label' => 'Image', 'existing' => null])
+@props(['name', 'label' => 'Image', 'existing' => null, 'maxSize' => 5])
 
 @php
     $initialUrl = '';
@@ -13,7 +13,7 @@
     }
 @endphp
 
-<div x-data="imageUploadComponent('{{ $initialUrl }}')" class="w-full">
+<div x-data="imageUploadComponent('{{ $initialUrl }}', {{ $maxSize }})" class="w-full">
     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">{{ $label }}</label>
     
     <div class="relative w-full group">
@@ -23,7 +23,7 @@
             <div x-show="!imageUrl" class="flex flex-col items-center justify-center pt-5 pb-6">
                 <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-400 mb-2 group-hover:text-[#340C6F] transition-colors"></i>
                 <p class="mb-1 text-sm text-gray-500"><span class="font-semibold text-[#340C6F]">Click to upload</span> or drag and drop</p>
-                <p class="text-xs text-gray-400">PNG, JPG, GIF up to 2MB</p>
+                <p class="text-xs text-gray-400">PNG, JPG, GIF up to {{ $maxSize }}MB</p>
             </div>
             
             <!-- Image Preview Container -->
@@ -53,7 +53,7 @@
 @once
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data('imageUploadComponent', (initialImageUrl) => ({
+        Alpine.data('imageUploadComponent', (initialImageUrl, maxSizeMB) => ({
             imageUrl: initialImageUrl,
             error: null,
             fileChosen(event) {
@@ -62,9 +62,9 @@
                 
                 if (!file) return;
                 
-                // Validate file size (e.g., max 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    this.error = 'File size must be less than 2MB.';
+                // Validate file size
+                if (file.size > maxSizeMB * 1024 * 1024) {
+                    this.error = `File size must be less than ${maxSizeMB}MB.`;
                     event.target.value = ''; // Reset input
                     return;
                 }

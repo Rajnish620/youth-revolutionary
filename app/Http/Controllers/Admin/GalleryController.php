@@ -33,7 +33,7 @@ class GalleryController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'season_id' => 'required|exists:seasons,id',
-            'image' => 'required|image|max:5120',
+            'image' => 'required|image|max:20480',
             'description' => 'nullable|string',
         ]);
 
