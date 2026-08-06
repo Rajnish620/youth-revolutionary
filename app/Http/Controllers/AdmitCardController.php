@@ -39,7 +39,7 @@ class AdmitCardController extends Controller
             return back()->with('error', 'Admit card settings have not been configured by the admin yet.');
         }
 
-        $pdf = Pdf::loadView('pdf.admit-card', compact('registration', 'setting'));
+        $pdf = Pdf::setOptions(['isRemoteEnabled' => true])->loadView('pdf.admit-card', compact('registration', 'setting'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('Admit_Card_' . $registration->roll_no . '.pdf');

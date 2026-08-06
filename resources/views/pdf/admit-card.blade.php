@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <title>Admit Card - {{ $registration->roll_no }}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+        
         @page {
             margin: 12px;
         }
         body {
-            font-family: 'DejaVu Sans', sans-serif;
+            font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
             color: #0f172a;
             background-color: #ffffff;
             margin: 0;

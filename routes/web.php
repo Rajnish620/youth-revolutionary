@@ -103,16 +103,24 @@ Route::post('/register', function (Request $request) {
 
     // Fetch group fee if selected
     $fee = 100.00;
+    $rollStart = 1000;
     if ($request->filled('event_group_id')) {
         $group = EventGroup::find($request->event_group_id);
         if ($group) {
             $fee = $group->fee;
+            $rollStart = $group->roll_sequence_start ?? 1000;
         }
     }
 
     // Generate unique Roll No
-    $nextId = (EventRegistration::max('id') ?? 0) + 1;
-    $validated['roll_no'] = 'YR-' . date('Y') . '-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+    $latestRegistration = EventRegistration::where('event_group_id', $request->event_group_id)->orderBy('id', 'desc')->first();
+    if ($latestRegistration && preg_match('/-(\d+)$/', $latestRegistration->roll_no, $matches)) {
+        $nextRollNumber = (int)$matches[1] + 1;
+    } else {
+        $nextRollNumber = $rollStart;
+    }
+    
+    $validated['roll_no'] = 'YR-' . date('Y') . '-' . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
     $validated['fee_paid'] = $fee;
     $validated['payment_status'] = 'pending';
 
