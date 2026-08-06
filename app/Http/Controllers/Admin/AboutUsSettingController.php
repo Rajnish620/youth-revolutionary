@@ -12,8 +12,9 @@ class AboutUsSettingController extends Controller
     public function index()
     {
         $setting = AboutUsSetting::getSettings();
-        $teamMembers = TeamMember::orderBy('sort_order')->orderBy('id', 'desc')->get();
-        return view('admin.settings.about-us', compact('setting', 'teamMembers'));
+        $teamMembers = TeamMember::where('type', 'team')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+        $advisors = TeamMember::where('type', 'advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+        return view('admin.settings.about-us', compact('setting', 'teamMembers', 'advisors'));
     }
 
     public function updateSettings(Request $request)
@@ -65,6 +66,7 @@ class AboutUsSettingController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
+            'type' => 'nullable|string|in:team,advisor',
             'description' => 'nullable|string',
             'is_featured' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
@@ -73,6 +75,7 @@ class AboutUsSettingController extends Controller
 
         $validated['is_featured'] = $request->has('is_featured');
         $validated['sort_order'] = $request->input('sort_order', 0);
+        $validated['type'] = $request->input('type', 'team');
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -83,7 +86,8 @@ class AboutUsSettingController extends Controller
 
         TeamMember::create($validated);
 
-        return redirect()->route('admin.settings.about-us.index')->with('success', 'Team member added successfully!');
+        $msg = $validated['type'] === 'advisor' ? 'Key Leader / Advisor added successfully!' : 'Team member added successfully!';
+        return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 
     public function updateTeamMember(Request $request, TeamMember $teamMember)
@@ -91,6 +95,7 @@ class AboutUsSettingController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
+            'type' => 'nullable|string|in:team,advisor',
             'description' => 'nullable|string',
             'is_featured' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
@@ -99,6 +104,7 @@ class AboutUsSettingController extends Controller
 
         $validated['is_featured'] = $request->has('is_featured');
         $validated['sort_order'] = $request->input('sort_order', 0);
+        $validated['type'] = $request->input('type', $teamMember->type);
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -109,12 +115,15 @@ class AboutUsSettingController extends Controller
 
         $teamMember->update($validated);
 
-        return redirect()->route('admin.settings.about-us.index')->with('success', 'Team member updated successfully!');
+        $msg = $validated['type'] === 'advisor' ? 'Key Leader / Advisor updated successfully!' : 'Team member updated successfully!';
+        return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 
     public function destroyTeamMember(TeamMember $teamMember)
     {
+        $type = $teamMember->type;
         $teamMember->delete();
-        return redirect()->route('admin.settings.about-us.index')->with('success', 'Team member deleted successfully!');
+        $msg = $type === 'advisor' ? 'Key Leader / Advisor deleted successfully!' : 'Team member deleted successfully!';
+        return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 }
