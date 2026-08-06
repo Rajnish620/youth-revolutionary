@@ -87,15 +87,15 @@
     </style>
 
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('polaroidGallery', () => ({
+        function polaroidGallery() {
+            return {
                 activeCategory: 'All', 
                 selectedIndex: null,
                 images: @json($allImages),
                 
                 get filteredImages() {
                     if (this.activeCategory === 'All') return this.images;
-                    return this.images.filter(img => img.session === this.activeCategory);
+                    return this.images.filter(img => String(img.session).trim() === String(this.activeCategory).trim());
                 },
                 
                 nextImage() {
@@ -107,13 +107,13 @@
                     if(this.filteredImages.length === 0) return;
                     this.selectedIndex = this.selectedIndex === 0 ? this.filteredImages.length - 1 : this.selectedIndex - 1;
                 }
-            }))
-        })
+            };
+        }
     </script>
 
     <!-- Main Section -->
     <section class="py-24 polaroid-wall-bg min-h-screen relative overflow-hidden mt-16 text-gray-900" 
-        x-data="polaroidGallery"
+        x-data="polaroidGallery()"
         x-on:keydown.escape.window="selectedIndex = null"
         x-on:keydown.left.window="if(selectedIndex !== null) prevImage()"
         x-on:keydown.right.window="if(selectedIndex !== null) nextImage()"
@@ -142,15 +142,15 @@
                 <div class="p-2 rounded-2xl bg-white/90 backdrop-blur-md border border-gray-300 shadow-xl flex flex-wrap justify-center gap-2">
                     @foreach($categories as $category)
                         <button 
-                            @click="activeCategory = '{{ $category }}'; selectedIndex = null"
-                            :class="activeCategory === '{{ $category }}' 
+                            @click="activeCategory = '{{ trim($category) }}'; selectedIndex = null"
+                            :class="String(activeCategory).trim() === '{{ trim($category) }}' 
                                 ? 'bg-[#F1400C] text-white font-bold shadow-md scale-105' 
                                 : 'text-gray-700 hover:text-[#340C6F] hover:bg-gray-100 font-semibold'"
                             class="px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all duration-300 transform active:scale-95 flex items-center gap-2 cursor-pointer"
                         >
                             <span>{{ $category }}</span>
                             <span 
-                                x-show="activeCategory === '{{ $category }}'"
+                                x-show="String(activeCategory).trim() === '{{ trim($category) }}'"
                                 class="w-1.5 h-1.5 rounded-full bg-white"
                             ></span>
                         </button>
