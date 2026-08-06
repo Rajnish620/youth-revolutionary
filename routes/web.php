@@ -115,7 +115,7 @@ Route::post('/register', function (Request $request) {
     // Generate unique Roll No
     $latestRegistration = EventRegistration::where('event_group_id', $request->event_group_id)->orderBy('id', 'desc')->first();
     if ($latestRegistration && preg_match('/-(\d+)$/', $latestRegistration->roll_no, $matches)) {
-        $nextRollNumber = (int)$matches[1] + 1;
+        $nextRollNumber = max($rollStart, (int)$matches[1] + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
