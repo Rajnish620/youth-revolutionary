@@ -8,7 +8,7 @@
             margin: 12px;
         }
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             color: #0f172a;
             background-color: #ffffff;
             margin: 0;
@@ -321,7 +321,7 @@
             <tr>
                 <th style="width: 20%;">Exam Date</th>
                 <th style="width: 20%;">Reporting Time</th>
-                <th style="width: 25%;">Timing</th>
+                <th style="width: 25%;">Competition Timing</th>
                 <th style="width: 35%;">Exam Center & Location</th>
             </tr>
         </thead>
