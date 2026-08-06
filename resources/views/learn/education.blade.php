@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="bg-gray-50 min-h-screen">
         <!-- Hero Section -->
-        <section class="relative bg-[#028CD4] text-white py-28 pt-40 overflow-hidden">
+        <section class="relative bg-[#028CD4] text-white pt-28 pb-16 overflow-hidden">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="relative max-w-7xl mx-auto px-6 text-center">
                 <i class="fa-solid fa-book-open text-[70px] mx-auto mb-6"></i>

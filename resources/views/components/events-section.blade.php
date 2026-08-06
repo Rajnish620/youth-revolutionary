@@ -9,7 +9,7 @@ if (!isset($events) || count($events) === 0) {
 <section class="py-6 bg-transparent">
     <div class="max-w-7xl mx-auto px-6">
         <!-- Event Cards -->
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             @forelse($dbEvents as $index => $event)
                 @php
                 $title = is_array($event) ? $event['title'] : $event->title;

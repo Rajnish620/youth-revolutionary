@@ -105,12 +105,12 @@
 
         <div class="absolute inset-0 bg-black/60"></div>
 
-        <div class="relative z-10 px-6 text-center text-white">
+        <div class="relative z-10 px-6 text-center text-white pt-20 sm:pt-24">
             <h1 x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-24" x-transition:enter-end="opacity-100 translate-y-0" class="mb-4 text-5xl font-extrabold md:text-7xl">
                 Our Events
             </h1>
 
-            <p x-show="show" x-transition:enter="transition ease-out duration-700 delay-100" x-transition:enter-start="opacity-0 translate-x-24" x-transition:enter-end="opacity-100 translate-x-0" class="mx-auto max-w-3xl text-lg leading-8 md:text-xl">
+            <p x-show="show" x-transition:enter="transition ease-out duration-700 delay-100" x-transition:enter-start="opacity-0 translate-y-8 sm:translate-x-24 sm:translate-y-0" x-transition:enter-end="opacity-100 translate-x-0 translate-y-0" class="mx-auto max-w-3xl text-base sm:text-lg leading-8 md:text-xl">
                 Discover exciting education, sports and cultural competitions designed for students from Class 5th to 12th, helping them showcase talent, build confidence and grow through healthy competition.
             </p>
 

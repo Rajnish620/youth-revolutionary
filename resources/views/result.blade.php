@@ -34,7 +34,7 @@
     $topWinners = collect($resultsData)->sortBy('rank')->take(3);
     @endphp
 
-    <div class="mt-40" x-data="{ 
+    <div class="pt-24 pb-12" x-data="{ 
             resultsData: {{ json_encode($resultsData) }},
             searchTerm: '',
             searchResultRegNo: '',
@@ -141,7 +141,7 @@
                 html2pdf().from(container).save(`${student.regNo || 'certificate'}.pdf`);
             }
         }">
-        <section class="md:mx-30 lg:mx-40">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6">
             
             <!-- Results Header (Top Winners) -->
             <div x-data="{ show: false }" x-intersect.once="show = true" x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0">
@@ -408,7 +408,7 @@
 
             <!-- Table -->
             <div x-data="{ show: false }" x-intersect.once="show = true" x-show="show" x-transition:enter="transition ease-out duration-700 delay-300" x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0">
-                <div class="bg-white rounded-3xl shadow-md overflow-hidden m-10 text-left">
+                <div class="bg-white rounded-3xl shadow-md overflow-hidden my-8 sm:my-10 text-left">
                     <div class="bg-[#028CD4] p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <h2 class="text-2xl font-bold text-white">Competition Results</h2>
                         <div class="relative w-full md:w-80">

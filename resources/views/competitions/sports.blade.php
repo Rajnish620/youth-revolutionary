@@ -47,7 +47,7 @@
             return this.sports[this.activeIndex];
         }
     }">
-        <div class="mt-40 mb-10 max-w-7xl mx-auto px-4">
+        <div class="pt-24 sm:pt-28 pb-10 max-w-7xl mx-auto px-4">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold">
                     Sports Competitions

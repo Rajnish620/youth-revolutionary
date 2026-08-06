@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-gray-50 min-h-screen py-40 px-6">
+    <div class="bg-gray-50 min-h-screen pt-28 pb-16 px-4 sm:px-6">
         <div x-data="{ show: false }" x-intersect.once="show = true" x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-5xl mx-auto bg-white rounded-2xl shadow-md p-8 md:p-12">
             <h1 class="text-4xl font-bold text-gray-800 mb-6">
                 Terms & Conditions

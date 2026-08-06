@@ -48,10 +48,26 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased flex h-screen overflow-hidden" x-data="{ sidebarCollapsed: false, mobileSidebarOpen: false }">
 
+    <!-- Mobile Overlay -->
+    <div x-show="mobileSidebarOpen" 
+         @click="mobileSidebarOpen = false"
+         class="fixed inset-0 bg-black/50 z-30 lg:hidden"
+         x-transition:enter="transition-opacity ease-linear duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-linear duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display: none;">
+    </div>
+
     <!-- Collapsible Sidebar -->
     <aside 
-        :class="sidebarCollapsed ? 'w-20' : 'w-64'" 
-        class="bg-brand-dark text-white flex flex-col justify-between flex-shrink-0 z-30 shadow-2xl relative transition-all duration-300 ease-in-out overflow-hidden"
+        :class="[
+            sidebarCollapsed ? 'w-20' : 'w-64',
+            mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        ]" 
+        class="bg-brand-dark text-white flex flex-col justify-between flex-shrink-0 z-40 shadow-2xl absolute inset-y-0 left-0 lg:relative transition-transform duration-300 ease-in-out overflow-hidden"
     >
         <!-- Decorative Top Glow -->
         <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-brand-orange/20 to-transparent pointer-events-none"></div>
@@ -229,10 +245,17 @@
         <header class="h-20 bg-white border-b border-gray-200/80 px-6 sm:px-8 flex items-center justify-between flex-shrink-0 z-10 shadow-sm">
             <!-- Sidebar Collapse Toggle Button on Header -->
             <div class="flex items-center gap-4">
+                <!-- Desktop toggle -->
                 <button @click="sidebarCollapsed = !sidebarCollapsed" 
-                        class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple flex items-center justify-center transition-all cursor-pointer"
+                        class="hidden lg:flex w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple items-center justify-center transition-all cursor-pointer"
                         title="Toggle Minimize Sidebar">
-                    <i class="fa-solid text-sm" :class="sidebarCollapsed ? 'fa-bars-staggered' : 'fa-[#340C6F] fa-bars'"></i>
+                    <i class="fa-solid text-sm" :class="sidebarCollapsed ? 'fa-bars-staggered' : 'fa-bars'"></i>
+                </button>
+                <!-- Mobile toggle -->
+                <button @click="mobileSidebarOpen = !mobileSidebarOpen" 
+                        class="flex lg:hidden w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple items-center justify-center transition-all cursor-pointer"
+                        title="Toggle Mobile Sidebar">
+                    <i class="fa-solid text-sm fa-bars"></i>
                 </button>
 
                 <!-- Search Bar -->

@@ -15,8 +15,8 @@
             <div class="grid lg:grid-cols-5 gap-8 items-start">
                 
                 <!-- Form -->
-                <div class="lg:col-span-3 bg-white rounded-2xl shadow-md p-8" x-data="{ show: false }" x-intersect.once="show = true">
-                    <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 -translate-x-12" x-transition:enter-end="opacity-100 translate-x-0" class="mb-6">
+                <div class="lg:col-span-3 bg-white rounded-2xl shadow-md p-6 sm:p-8" x-data="{ show: false }" x-intersect.once="show = true">
+                    <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-8 sm:-translate-x-12 sm:translate-y-0" x-transition:enter-end="opacity-100 translate-x-0 translate-y-0" class="mb-6">
                         <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Send Message</h2>
                         <p class="text-sm text-gray-500">Fill the form and we'll get back to you within 1-2 business days.</p>
                     </div>
@@ -74,7 +74,7 @@
                 <!-- Contact Info -->
                 <div class="lg:col-span-2" x-data="{ show: false }" x-intersect.once="show = true">
                     <div class="space-y-6">
-                        <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-8 sm:translate-x-12 sm:translate-y-0" x-transition:enter-end="opacity-100 translate-x-0 translate-y-0" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                             <h3 class="font-semibold text-lg mb-3">Contact Details</h3>
                             <ul class="text-gray-700 space-y-2">
                                 <li><span class="font-medium">Phone:</span> <a href="tel:{{ str_replace(' ', '', $contactSetting->phone) }}" class="text-[#028CD4] ml-2">{{ $contactSetting->phone }}</a></li>

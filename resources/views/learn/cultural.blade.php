@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="bg-gray-50 min-h-screen">
         <!-- Hero Section -->
-        <section class="bg-gradient-to-r from-[#028CD4] to-blue-700 text-white py-24 pt-40">
+        <section class="bg-gradient-to-r from-[#028CD4] to-blue-700 text-white pt-28 pb-16">
             <div class="max-w-7xl mx-auto px-6 text-center">
                 <i class="fa-solid fa-music text-[70px] mx-auto mb-6"></i>
                 <h1 class="text-5xl md:text-6xl font-bold mb-6">Cultural Competitions</h1>

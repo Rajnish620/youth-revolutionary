@@ -20,7 +20,7 @@
 
             <!-- Featured Video -->
             <div class="mb-16" x-data="{ show: false }" x-intersect.once="show = true">
-                <div x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="relative overflow-hidden rounded-3xl shadow-2xl h-125">
+                <div x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="relative overflow-hidden rounded-3xl shadow-2xl h-64 md:h-[500px]">
                     <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
                         <source src="{{ asset('video/videoplayback (4).mp4') }}" type="video/mp4" />
                     </video>
@@ -59,7 +59,7 @@
             <h2 class="text-4xl font-bold text-center mb-12" x-data="{ show: false }" x-intersect.once="show = true" x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0">
                 Why Choose Us
             </h2>
-            <div class="grid md:grid-cols-4 gap-6 text-center" x-data="{ show: false }" x-intersect.once="show = true">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center" x-data="{ show: false }" x-intersect.once="show = true">
                 <div x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 translate-y-24" x-transition:enter-end="opacity-100 translate-y-0" class="bg-white p-6 rounded-xl shadow hover:-translate-y-2 transition duration-300">
                     <span class="text-4xl">🏆</span>
                     <h3 class="font-bold mt-3 text-lg">Fair Competition</h3>

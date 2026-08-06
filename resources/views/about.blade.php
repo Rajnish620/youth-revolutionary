@@ -18,7 +18,7 @@
         <div class="absolute inset-0 bg-black/65 backdrop-blur-[1px]"></div>
         
         <!-- Centered Text -->
-        <div class="relative z-10 text-center text-white px-6 transition duration-1000 opacity-0 translate-y-10" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: 200ms;">
+        <div class="relative z-10 text-center text-white px-6 pt-20 sm:pt-24 transition duration-1000 opacity-0 translate-y-10" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: 200ms;">
             <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight mb-4 text-white drop-shadow-lg">
                 {{ $setting->hero_title ?? 'About Us' }}
             </h1>
@@ -31,12 +31,12 @@
     <!-- WHO WE ARE SECTION -->
     <section class="py-20 md:py-28 bg-white overflow-hidden" x-data="{ show: false }" x-intersect.once="show = true">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div class="transition duration-1000 opacity-0 -translate-x-12" :class="{'opacity-100 translate-x-0': show}">
+            <div class="transition duration-1000 opacity-0 translate-y-8 sm:-translate-x-12 sm:translate-y-0" :class="{'opacity-100 translate-x-0 translate-y-0': show}">
                 <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform transition duration-700 hover:scale-[1.02]">
-                    <img src="{{ $whoImage }}" class="w-full h-[400px] object-cover" alt="Who We Are Image">
+                    <img src="{{ $whoImage }}" class="w-full h-[300px] sm:h-[400px] object-cover" alt="Who We Are Image">
                 </div>
             </div>
-            <div class="transition duration-1000 opacity-0 translate-x-12" :class="{'opacity-100 translate-x-0': show}" style="transition-delay: 150ms;">
+            <div class="transition duration-1000 opacity-0 translate-y-8 sm:translate-x-12 sm:translate-y-0" :class="{'opacity-100 translate-x-0 translate-y-0': show}" style="transition-delay: 150ms;">
                 <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black text-[#F1400C] tracking-tight mb-3">Who We Are?</h2>
                 <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">{{ $setting->who_we_are_title ?? 'Youth Revolutionary' }}</h3>
                 <p class="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">
