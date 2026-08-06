@@ -118,9 +118,17 @@
                                 @if($contactSetting->map_embed_url)
                                     @php
                                         $mapUrl = $contactSetting->map_embed_url;
+                                        // 1. If they pasted the full iframe code
                                         if (\Illuminate\Support\Str::contains($mapUrl, '<iframe')) {
                                             preg_match('/src="([^"]+)"/', $mapUrl, $match);
                                             $mapUrl = $match[1] ?? $mapUrl;
+                                        } 
+                                        // 2. If they pasted a standard /place/ link from the browser bar
+                                        elseif (\Illuminate\Support\Str::contains($mapUrl, '/place/')) {
+                                            preg_match('/\/place\/([^\/]+)/', $mapUrl, $match);
+                                            if (isset($match[1])) {
+                                                $mapUrl = 'https://maps.google.com/maps?q=' . $match[1] . '&output=embed';
+                                            }
                                         }
                                     @endphp
                                     <iframe src="{{ $mapUrl }}" height="450" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full"></iframe>
