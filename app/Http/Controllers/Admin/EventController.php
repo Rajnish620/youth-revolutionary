@@ -32,8 +32,8 @@ class EventController extends Controller
         }
 
         $events = $query->latest()->paginate(10);
-        $categories = Category::all();
-        $seasons = Season::all();
+        $categories = Category::oldest()->get();
+        $seasons = Season::oldest()->get();
 
         return view('admin.events.index', compact('events', 'categories', 'seasons'));
     }

@@ -40,7 +40,7 @@ class RegistrationController extends Controller
 
         $registrations = $query->latest()->paginate(15);
         
-        $seasons = \App\Models\Season::all();
+        $seasons = \App\Models\Season::oldest()->get();
         $eventsQuery = Event::query();
         if ($request->filled('season') && $request->season !== 'All') {
             $eventsQuery->where('season', $request->season);

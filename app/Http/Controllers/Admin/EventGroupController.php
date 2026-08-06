@@ -23,7 +23,7 @@ class EventGroupController extends Controller
         }
 
         $groups = $query->latest()->paginate(15);
-        $seasons = \App\Models\Season::all();
+        $seasons = \App\Models\Season::oldest()->get();
         
         $eventsQuery = Event::query();
         if ($request->filled('season') && $request->season !== 'All') {

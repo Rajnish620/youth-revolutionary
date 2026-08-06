@@ -26,7 +26,7 @@ Route::get('/contact', function () {
 
 Route::get('/gallery', function () {
     $galleries = Gallery::with('season')->latest()->get();
-    $seasons = \App\Models\Season::all();
+    $seasons = \App\Models\Season::oldest()->get();
     return view('gallery', compact('galleries', 'seasons'));
 });
 

@@ -23,7 +23,7 @@ class GalleryController extends Controller
         $galleries = $query->latest()->paginate(12);
 
         // Fetch seasons from database
-        $seasons = \App\Models\Season::all();
+        $seasons = \App\Models\Season::oldest()->get();
 
         return view('admin.gallery.index', compact('galleries', 'seasons'));
     }
