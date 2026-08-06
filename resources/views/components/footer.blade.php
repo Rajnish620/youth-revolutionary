@@ -1,3 +1,6 @@
+@php
+    $contactSetting = \App\Models\ContactSetting::getSettings();
+@endphp
 <footer class="bg-gray-900 text-gray-300">
     <div class="max-w-7xl mx-auto px-6 py-12">
         <div class="grid md:grid-cols-4 gap-10">
@@ -38,15 +41,15 @@
                 <div class="space-y-3">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-phone w-4 text-center"></i>
-                        <span>+91 XXXXX XXXXX</span>
+                        <span>{{ $contactSetting->phone ?: '+91 XXXXX XXXXX' }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-envelope w-4 text-center"></i>
-                        <span>info@youthrevolutionary.com</span>
+                        <span>{{ $contactSetting->email ?: 'info@youthrevolutionary.com' }}</span>
                     </div>
                     <div class="flex items-start gap-2">
                         <i class="fa-solid fa-location-dot w-4 text-center mt-1"></i>
-                        <span>India</span>
+                        <span>{{ $contactSetting->address ?: 'India' }}</span>
                     </div>
                 </div>
             </div>
@@ -58,9 +61,9 @@
             <p>Copyright</p>
             <div class="text-center">
                 <div class="flex justify-center gap-6 mt-4 md:mt-0 pt-2 border-gray-700">
-                    <a href="#" class="hover:text-blue-400 text-xl"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/youthrevolutionarynasriganj?igsh=dXZzb2lpYXIzYWZ5" target="_blank" class="hover:text-pink-400 text-xl"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://youtube.com/@youthrevolutionary6914?si=cStQfkgHXTkbsNzO" class="hover:text-red-400 text-xl" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="{{ $contactSetting->facebook_link ?: '#' }}" class="hover:text-blue-400 text-xl" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="{{ $contactSetting->instagram_link ?: '#' }}" target="_blank" class="hover:text-pink-400 text-xl"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="{{ $contactSetting->youtube_link ?: '#' }}" class="hover:text-red-400 text-xl" target="_blank"><i class="fa-brands fa-youtube"></i></a>
                 </div>
                 <div class="mt-4 text-sm text-gray-400">
                     © {{ date('Y') }} Youth Revolutionary. All Rights Reserved.
