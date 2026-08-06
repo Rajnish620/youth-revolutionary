@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.gallery.store') }}" class="space-y-5" enctype="multipart/form-data">
+<form method="POST" action="{{ route('admin.gallery.store') }}" class="space-y-5" enctype="multipart/form-data" x-data="{ isSubmitting: false }" x-on:submit="isSubmitting = true">
     @csrf
 
     <div class="space-y-4">
@@ -43,9 +43,12 @@
             Cancel
         </button>
         <button type="submit" 
+            :disabled="isSubmitting"
+            :class="isSubmitting ? 'opacity-70 cursor-not-allowed' : ''"
             class="px-6 py-2.5 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-md shadow-[#F1400C]/20 transition-all flex items-center gap-2">
-            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
-            <span>Upload to Gallery</span>
+            <i class="fa-solid fa-cloud-arrow-up text-xs" x-show="!isSubmitting"></i>
+            <i class="fa-solid fa-spinner fa-spin text-xs" x-show="isSubmitting"></i>
+            <span x-text="isSubmitting ? 'Uploading...' : 'Upload to Gallery'"></span>
         </button>
     </div>
 </form>

@@ -91,7 +91,7 @@
         x-data="{ 
             activeCategory: 'All', 
             selectedIndex: null,
-            images: {{ json_encode($allImages) }},
+            images: @json($allImages),
             
             get filteredImages() {
                 if (this.activeCategory === 'All') return this.images;
@@ -154,7 +154,7 @@
 
             <!-- Polaroid Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                <template x-for="(item, index) in filteredImages" :key="index">
+                <template x-for="(item, index) in filteredImages" :key="item.id">
                     <div 
                         @click="selectedIndex = index"
                         :class="[
