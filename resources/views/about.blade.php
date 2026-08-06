@@ -84,7 +84,7 @@
                 <div class="group overflow-hidden rounded-3xl border border-slate-100 bg-white hover:-translate-y-2 hover:shadow-2xl transition duration-500 opacity-0 translate-y-10" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: {{ $index * 120 }}ms;">
                     <div class="h-72 w-full overflow-hidden bg-slate-100">
                         @if(!empty($member->image) && file_exists(public_path($member->image)))
-                            <img src="{{ asset($member->image) }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-700" alt="{{ $member->name }}">
+                            <img src="{{ asset($member->image) }}" class="h-full w-full object-contain bg-slate-100 group-hover:scale-105 transition duration-700" alt="{{ $member->name }}">
                         @else
                             <div class="h-full w-full flex items-center justify-center bg-purple-50 text-[#340C6F] font-black text-4xl">
                                 {{ substr($member->name, 0, 1) }}
@@ -121,7 +121,7 @@
                     <div class="group overflow-hidden rounded-2xl border border-slate-200/60 bg-white hover:-translate-y-1.5 hover:shadow-xl transition duration-500 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: {{ $index * 100 }}ms;">
                         <div class="h-56 w-full overflow-hidden bg-slate-100">
                             @if(!empty($advisor->image) && file_exists(public_path($advisor->image)))
-                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
+                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-contain bg-slate-100 group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
                             @else
                                 <div class="h-full w-full flex items-center justify-center bg-sky-50 text-[#0ea5e9] font-black text-3xl">
                                     {{ substr($advisor->name, 0, 1) }}
@@ -154,7 +154,7 @@
                     <div class="group overflow-hidden rounded-2xl border border-slate-200/60 bg-white hover:-translate-y-1.5 hover:shadow-xl transition duration-500 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}" style="transition-delay: {{ $index * 100 }}ms;">
                         <div class="h-56 w-full overflow-hidden bg-slate-100">
                             @if(!empty($advisor->image) && file_exists(public_path($advisor->image)))
-                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
+                                <img src="{{ asset($advisor->image) }}" class="h-full w-full object-contain bg-slate-100 group-hover:scale-105 transition duration-700" alt="{{ $advisor->name }}">
                             @else
                                 <div class="h-full w-full flex items-center justify-center bg-indigo-50 text-indigo-500 font-black text-3xl">
                                     {{ substr($advisor->name, 0, 1) }}
