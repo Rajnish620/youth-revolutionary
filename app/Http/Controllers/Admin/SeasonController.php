@@ -11,7 +11,7 @@ class SeasonController extends Controller
 {
     public function index()
     {
-        $seasons = Season::latest()->paginate(15);
+        $seasons = Season::oldest()->paginate(15);
         return view('admin.seasons.index', compact('seasons'));
     }
 
