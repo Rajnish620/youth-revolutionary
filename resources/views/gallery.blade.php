@@ -14,7 +14,7 @@
                 'id' => $item->id,
                 'image' => $item->image,
                 'title' => $item->title ?? 'Memorable Moment',
-                'session' => $item->season ? $item->season->name : 'Uncategorized',
+                'session' => $item->season ? $item->season->name : ($item->category ?? 'Uncategorized'),
                 'description' => $item->description ?? 'Youth Revolutionary Event Gallery',
                 'date' => $item->created_at ? $item->created_at->format('M d, Y') : ''
             ];

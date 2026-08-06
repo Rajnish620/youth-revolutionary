@@ -44,6 +44,11 @@ class GalleryController extends Controller
             $validated['image'] = 'uploads/galleries/' . $filename;
         }
 
+        $season = \App\Models\Season::find($request->season_id);
+        if ($season) {
+            $validated['category'] = $season->name;
+        }
+
         Gallery::create($validated);
 
         return redirect()->route('admin.gallery.index')->with('success', 'New photo added to gallery successfully!');
