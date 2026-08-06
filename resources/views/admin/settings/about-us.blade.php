@@ -325,26 +325,26 @@
             </div>
         </div>
 
-        <!-- Key Leaders & Advisors Management Section -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl shadow-gray-100/50">
+        <!-- Key Leaders Management Section -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl shadow-gray-100/50 mt-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
                 <div>
                     <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-users-gear text-[#0ea5e9]"></i>
-                        <span>Key Leaders & Advisors Management</span>
+                        <span>Key Leaders Management</span>
                     </h2>
-                    <p class="text-xs text-gray-500 mt-0.5">Add, edit, or remove advisors displayed on the About Us page.</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Add, edit, or remove key leaders displayed on the About Us page.</p>
                 </div>
-                <button @click="$dispatch('open-modal', 'add-advisor')"
+                <button @click="$dispatch('open-modal', 'add-key-leader')"
                     class="px-5 py-2.5 bg-[#0ea5e9] hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-md shadow-[#0ea5e9]/20 transition-all flex items-center gap-2 w-max">
                     <i class="fa-solid fa-plus"></i>
-                    <span>Add Advisor</span>
+                    <span>Add Key Leader</span>
                 </button>
             </div>
 
-            <!-- Advisors Grid -->
+            <!-- Key Leaders Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($advisors as $member)
+                @forelse($keyLeaders as $member)
                     <div class="border border-gray-200 rounded-2xl p-5 flex flex-col justify-between hover:shadow-md transition-all bg-gray-50/50">
                         <div>
                             <div class="flex items-center gap-4 mb-3">
@@ -369,11 +369,11 @@
                         </div>
 
                         <div class="flex items-center justify-end gap-2 border-t border-gray-200/60 pt-3 mt-2">
-                            <button @click="$dispatch('open-modal', 'edit-advisor-{{ $member->id }}')" 
+                            <button @click="$dispatch('open-modal', 'edit-key-leader-{{ $member->id }}')" 
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition-all flex items-center gap-1">
                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                             </button>
-                            <form method="POST" action="{{ route('admin.settings.about-us.team.destroy', $member->id) }}" onsubmit="return confirm('Are you sure you want to delete this advisor?');">
+                            <form method="POST" action="{{ route('admin.settings.about-us.team.destroy', $member->id) }}" onsubmit="return confirm('Are you sure you want to delete this key leader?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-lg transition-all flex items-center gap-1">
@@ -383,8 +383,8 @@
                         </div>
                     </div>
 
-                    <!-- Modal: Edit Advisor -->
-                    <x-modal name="edit-advisor-{{ $member->id }}" title="Edit Advisor" maxWidth="lg">
+                    <!-- Modal: Edit Key Leader -->
+                    <x-modal name="edit-key-leader-{{ $member->id }}" title="Edit Key Leader" maxWidth="lg">
                         <form method="POST" action="{{ route('admin.settings.about-us.team.update', $member->id) }}" enctype="multipart/form-data" class="space-y-4">
                             @csrf
                             @method('PUT')
@@ -419,8 +419,122 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="is_featured" id="edit_featured_{{ $member->id }}" value="1" {{ old('is_featured', $member->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-[#0ea5e9]">
-                                <label for="edit_featured_{{ $member->id }}" class="text-xs font-bold text-gray-700 cursor-pointer">Mark as Featured Member</label>
+                                <input type="checkbox" name="is_featured" id="edit_featured_kl_{{ $member->id }}" value="1" {{ old('is_featured', $member->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-[#0ea5e9]">
+                                <label for="edit_featured_kl_{{ $member->id }}" class="text-xs font-bold text-gray-700 cursor-pointer">Mark as Featured Member</label>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
+                                <button type="button" @click="$dispatch('close-modal', 'edit-key-leader-{{ $member->id }}')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-xs font-bold">Cancel</button>
+                                <button type="submit" class="px-6 py-2.5 bg-[#340C6F] text-white text-xs font-bold rounded-xl shadow-md">Update Member</button>
+                            </div>
+                        </form>
+                    </x-modal>
+                @empty
+                    <div class="md:col-span-3 text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <i class="fa-solid fa-users-slash text-3xl text-gray-300 mb-2"></i>
+                        <p class="text-sm font-bold text-gray-600">No key leaders added yet.</p>
+                        <p class="text-xs text-gray-400 mt-1">Click 'Add Key Leader' button above to create profiles.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Advisors Management Section -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl shadow-gray-100/50 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
+                <div>
+                    <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-users-viewfinder text-indigo-500"></i>
+                        <span>Advisors Management</span>
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Add, edit, or remove advisors displayed on the About Us page.</p>
+                </div>
+                <button @click="$dispatch('open-modal', 'add-advisor')"
+                    class="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-500/20 transition-all flex items-center gap-2 w-max">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Advisor</span>
+                </button>
+            </div>
+
+            <!-- Advisors Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @forelse($realAdvisors as $member)
+                    <div class="border border-gray-200 rounded-2xl p-5 flex flex-col justify-between hover:shadow-md transition-all bg-gray-50/50">
+                        <div>
+                            <div class="flex items-center gap-4 mb-3">
+                                @if(!empty($member->image) && file_exists(public_path($member->image)))
+                                    <img src="{{ asset($member->image) }}" class="w-14 h-14 rounded-full object-cover border-2 border-[#340C6F]" alt="{{ $member->name }}">
+                                @else
+                                    <div class="w-14 h-14 rounded-full bg-purple-100 text-[#340C6F] font-bold flex items-center justify-center text-lg border-2 border-[#340C6F]">
+                                        {{ substr($member->name, 0, 1) }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">{{ $member->name }}</h4>
+                                    <span class="text-xs font-semibold text-indigo-500">{{ $member->role }}</span>
+                                    @if($member->is_featured)
+                                        <span class="block text-[10px] text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-star text-indigo-500"></i> Featured Member</span>
+                                    @endif
+                                </div>
+                            </div>
+                            @if(!empty($member->description))
+                                <p class="text-xs text-gray-600 line-clamp-3 mb-3">{{ $member->description }}</p>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center justify-end gap-2 border-t border-gray-200/60 pt-3 mt-2">
+                            <button @click="$dispatch('open-modal', 'edit-advisor-{{ $member->id }}')" 
+                                class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <form method="POST" action="{{ route('admin.settings.about-us.team.destroy', $member->id) }}" onsubmit="return confirm('Are you sure you want to delete this advisor?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Modal: Edit Advisor -->
+                    <x-modal name="edit-advisor-{{ $member->id }}" title="Edit Advisor" maxWidth="lg">
+                        <form method="POST" action="{{ route('admin.settings.about-us.team.update', $member->id) }}" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            @method('PUT')
+                            <input type='hidden' name='type' value='real_advisor'>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Name *</label>
+                                <input type="text" name="name" value="{{ old('name', $member->name) }}" required
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:bg-white focus:border-[#340C6F]">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Role / Position *</label>
+                                <input type="text" name="role" value="{{ old('role', $member->role) }}" required placeholder="e.g. Mentor"
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:bg-white focus:border-[#340C6F]">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo</label>
+                                <div class="flex items-center gap-4">
+                                    @if(!empty($member->image) && file_exists(public_path($member->image)))
+                                        <img src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                    @endif
+                                    <input type="file" name="image" accept="image/*"
+                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Short Bio / Description</label>
+                                <textarea name="description" rows="3"
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm font-medium outline-none focus:bg-white focus:border-[#340C6F]">{{ old('description', $member->description) }}</textarea>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" name="is_featured" id="edit_featured_adv_{{ $member->id }}" value="1" {{ old('is_featured', $member->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-500">
+                                <label for="edit_featured_adv_{{ $member->id }}" class="text-xs font-bold text-gray-700 cursor-pointer">Mark as Featured Member</label>
                             </div>
 
                             <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
@@ -433,13 +547,11 @@
                     <div class="md:col-span-3 text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                         <i class="fa-solid fa-users-slash text-3xl text-gray-300 mb-2"></i>
                         <p class="text-sm font-bold text-gray-600">No advisors added yet.</p>
-                        <p class="text-xs text-gray-400 mt-1">Click 'Add Advisor' button above to create team profiles.</p>
+                        <p class="text-xs text-gray-400 mt-1">Click 'Add Advisor' button above to create profiles.</p>
                     </div>
                 @endforelse
             </div>
         </div>
-
-        <!-- Modal: Add Advisor -->
 
         <!-- Modal: Add Team Member -->
         <x-modal name="add-team-member" title="Add New Team Member" maxWidth="lg">
@@ -481,8 +593,8 @@
             </form>
         </x-modal>
 
-        <!-- Modal: Add Advisor -->
-        <x-modal name="add-advisor" title="Add New Advisor" maxWidth="lg">
+        <!-- Modal: Add Key Leader -->
+        <x-modal name="add-key-leader" title="Add New Key Leader" maxWidth="lg">
             <form method="POST" action="{{ route('admin.settings.about-us.team.store') }}" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <input type='hidden' name='type' value='advisor'>
@@ -494,7 +606,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Role / Position *</label>
-                    <input type="text" name="role" required placeholder="e.g. Founder & Director"
+                    <input type="text" name="role" required placeholder="e.g. Key Leader"
                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:bg-white focus:border-[#340C6F]">
                 </div>
 
@@ -511,13 +623,54 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" name="is_featured" id="add_adv_featured" value="1" class="rounded border-gray-300 text-[#F1400C]">
+                    <input type="checkbox" name="is_featured" id="add_kl_featured" value="1" class="rounded border-gray-300 text-[#0ea5e9]">
+                    <label for="add_kl_featured" class="text-xs font-bold text-gray-700 cursor-pointer">Mark as Featured Member</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
+                    <button type="button" @click="$dispatch('close-modal', 'add-key-leader')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-xs font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 bg-[#0ea5e9] text-white text-xs font-bold rounded-xl shadow-md">Add Key Leader</button>
+                </div>
+            </form>
+        </x-modal>
+
+        <!-- Modal: Add Advisor -->
+        <x-modal name="add-advisor" title="Add New Advisor" maxWidth="lg">
+            <form method="POST" action="{{ route('admin.settings.about-us.team.store') }}" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+                <input type='hidden' name='type' value='real_advisor'>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Name *</label>
+                    <input type="text" name="name" required placeholder="e.g. Rahul Sharma"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:bg-white focus:border-[#340C6F]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Role / Position *</label>
+                    <input type="text" name="role" required placeholder="e.g. Mentor"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:bg-white focus:border-[#340C6F]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo</label>
+                    <input type="file" name="image" accept="image/*"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Short Bio / Description</label>
+                    <textarea name="description" rows="3" placeholder="Brief details about role and background..."
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm font-medium outline-none focus:bg-white focus:border-[#340C6F]"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" name="is_featured" id="add_adv_featured" value="1" class="rounded border-gray-300 text-indigo-500">
                     <label for="add_adv_featured" class="text-xs font-bold text-gray-700 cursor-pointer">Mark as Featured Member</label>
                 </div>
 
                 <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
                     <button type="button" @click="$dispatch('close-modal', 'add-advisor')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-xs font-bold">Cancel</button>
-                    <button type="submit" class="px-6 py-2.5 bg-[#0ea5e9] text-white text-xs font-bold rounded-xl shadow-md">Add Advisor</button>
+                    <button type="submit" class="px-6 py-2.5 bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-md">Add Advisor</button>
                 </div>
             </form>
         </x-modal>

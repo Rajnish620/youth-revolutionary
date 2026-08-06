@@ -16,8 +16,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     $setting = \App\Models\AboutUsSetting::getSettings();
     $teamMembers = \App\Models\TeamMember::where('type', 'team')->orderBy('sort_order')->orderBy('id', 'asc')->get();
-    $advisors = \App\Models\TeamMember::where('type', 'advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
-    return view('about', compact('setting', 'teamMembers', 'advisors'));
+    $keyLeaders = \App\Models\TeamMember::where('type', 'advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+    $realAdvisors = \App\Models\TeamMember::where('type', 'real_advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+    return view('about', compact('setting', 'teamMembers', 'keyLeaders', 'realAdvisors'));
 });
 
 Route::get('/contact', function () {

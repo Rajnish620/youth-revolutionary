@@ -13,8 +13,9 @@ class AboutUsSettingController extends Controller
     {
         $setting = AboutUsSetting::getSettings();
         $teamMembers = TeamMember::where('type', 'team')->orderBy('sort_order')->orderBy('id', 'asc')->get();
-        $advisors = TeamMember::where('type', 'advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
-        return view('admin.settings.about-us', compact('setting', 'teamMembers', 'advisors'));
+        $keyLeaders = TeamMember::where('type', 'advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+        $realAdvisors = TeamMember::where('type', 'real_advisor')->orderBy('sort_order')->orderBy('id', 'asc')->get();
+        return view('admin.settings.about-us', compact('setting', 'teamMembers', 'keyLeaders', 'realAdvisors'));
     }
 
     public function updateSettings(Request $request)
@@ -66,7 +67,7 @@ class AboutUsSettingController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
-            'type' => 'nullable|string|in:team,advisor',
+            'type' => 'nullable|string|in:team,advisor,real_advisor',
             'description' => 'nullable|string',
             'is_featured' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
@@ -86,7 +87,13 @@ class AboutUsSettingController extends Controller
 
         TeamMember::create($validated);
 
-        $msg = $validated['type'] === 'advisor' ? 'Key Leader / Advisor added successfully!' : 'Team member added successfully!';
+        if ($validated['type'] === 'advisor') {
+            $msg = 'Key Leader added successfully!';
+        } elseif ($validated['type'] === 'real_advisor') {
+            $msg = 'Advisor added successfully!';
+        } else {
+            $msg = 'Team member added successfully!';
+        }
         return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 
@@ -95,7 +102,7 @@ class AboutUsSettingController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
-            'type' => 'nullable|string|in:team,advisor',
+            'type' => 'nullable|string|in:team,advisor,real_advisor',
             'description' => 'nullable|string',
             'is_featured' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
@@ -115,7 +122,13 @@ class AboutUsSettingController extends Controller
 
         $teamMember->update($validated);
 
-        $msg = $validated['type'] === 'advisor' ? 'Key Leader / Advisor updated successfully!' : 'Team member updated successfully!';
+        if ($validated['type'] === 'advisor') {
+            $msg = 'Key Leader updated successfully!';
+        } elseif ($validated['type'] === 'real_advisor') {
+            $msg = 'Advisor updated successfully!';
+        } else {
+            $msg = 'Team member updated successfully!';
+        }
         return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 
@@ -123,7 +136,14 @@ class AboutUsSettingController extends Controller
     {
         $type = $teamMember->type;
         $teamMember->delete();
-        $msg = $type === 'advisor' ? 'Key Leader / Advisor deleted successfully!' : 'Team member deleted successfully!';
+        
+        if ($type === 'advisor') {
+            $msg = 'Key Leader deleted successfully!';
+        } elseif ($type === 'real_advisor') {
+            $msg = 'Advisor deleted successfully!';
+        } else {
+            $msg = 'Team member deleted successfully!';
+        }
         return redirect()->route('admin.settings.about-us.index')->with('success', $msg);
     }
 }
