@@ -94,7 +94,7 @@
                         </div>
                         <div class="p-5 text-left">
                             <h3 class="text-lg font-bold text-slate-900">{{ $advisor->name }}</h3>
-                            <p class="text-[#0ea5e9] text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
+                            <p class="text-[#F1400C] text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
                             @if(!empty($advisor->description))
                                 <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-medium line-clamp-3">{{ $advisor->description }}</p>
                             @endif
@@ -163,7 +163,7 @@
                         </div>
                         <div class="p-5 text-left">
                             <h3 class="text-lg font-bold text-slate-900">{{ $advisor->name }}</h3>
-                            <p class="text-indigo-500 text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
+                            <p class="text-[#F1400C] text-[11px] font-extrabold uppercase tracking-wider mt-0.5">{{ $advisor->role }}</p>
                             @if(!empty($advisor->description))
                                 <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-medium line-clamp-3">{{ $advisor->description }}</p>
                             @endif
