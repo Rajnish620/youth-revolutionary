@@ -10,7 +10,8 @@ use App\Models\PaymentSetting;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return view('home');
+    $homeSetting = \App\Models\HomeSetting::getSettings();
+    return view('home', compact('homeSetting'));
 });
 
 Route::get('/about', function () {
@@ -238,6 +239,10 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/settings/about-us/team', [\App\Http\Controllers\Admin\AboutUsSettingController::class, 'storeTeamMember'])->name('admin.settings.about-us.team.store');
     Route::put('admin/settings/about-us/team/{teamMember}', [\App\Http\Controllers\Admin\AboutUsSettingController::class, 'updateTeamMember'])->name('admin.settings.about-us.team.update');
     Route::delete('admin/settings/about-us/team/{teamMember}', [\App\Http\Controllers\Admin\AboutUsSettingController::class, 'destroyTeamMember'])->name('admin.settings.about-us.team.destroy');
+
+    // Admin Home Settings
+    Route::get('admin/settings/home', [\App\Http\Controllers\Admin\HomeSettingController::class, 'index'])->name('admin.settings.home.index');
+    Route::post('admin/settings/home', [\App\Http\Controllers\Admin\HomeSettingController::class, 'update'])->name('admin.settings.home.update');
 
     // Admin Inquiries
     Route::get('admin/inquiries', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.inquiries.index');

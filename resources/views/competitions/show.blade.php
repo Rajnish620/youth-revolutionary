@@ -324,7 +324,7 @@
                                     <div class="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900 shine-hover">
                                         @php
                                             $fallbackStock = "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800";
-                                            $imgUrl = (!empty($event->image) && str_starts_with($event->image, 'http')) ? $event->image : (!empty($event->image) ? asset($event->image) : $fallbackStock);
+                                            $imgUrl = (!empty($event->image) && str_starts_with($event->image, 'http')) ? $event->image : (!empty($event->image) ? asset('storage/' . $event->image) : $fallbackStock);
                                         @endphp
 
                                         <img src="{{ $imgUrl }}" 

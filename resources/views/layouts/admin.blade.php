@@ -7,7 +7,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -202,15 +201,24 @@
 
                 <div x-show="!sidebarCollapsed" class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pt-6 mb-2">System</div>
 
-                <!-- Settings -->
+                <!-- Home Page Settings -->
+                <a href="{{ route('admin.settings.home.index') }}" 
+                   title="Home Page Settings"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.settings.home.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-home text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.settings.home.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Home Page</span>
+                    </div>
+                </a>
+
+                <!-- Contact Settings -->
                 <a href="{{ route('admin.settings.contact.index') }}" 
                    title="Settings"
-                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.settings.contact.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
                     <div class="flex items-center gap-3.5 truncate">
-                        <i class="fa-solid fa-gear text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.settings.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }} transition-colors"></i>
-                        <span x-show="!sidebarCollapsed" class="truncate">Settings</span>
+                        <i class="fa-solid fa-gear text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.settings.contact.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Contact Settings</span>
                     </div>
-                    <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.settings.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
                 </a>
             </nav>
         </div>

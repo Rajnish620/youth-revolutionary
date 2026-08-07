@@ -54,7 +54,16 @@
                             },
 
                             get availableGroups() {
-                                return this.selectedEvent ? (this.selectedEvent.groups || []) : [];
+                                const groups = this.selectedEvent ? (this.selectedEvent.groups || []) : [];
+                                const uniqueGroups = [];
+                                const seen = new Set();
+                                for (const grp of groups) {
+                                    if (!seen.has(grp.group_name)) {
+                                        seen.add(grp.group_name);
+                                        uniqueGroups.push(grp);
+                                    }
+                                }
+                                return uniqueGroups;
                             },
 
                             get currentFee() {
