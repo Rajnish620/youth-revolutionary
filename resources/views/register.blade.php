@@ -15,11 +15,11 @@
                     </p>
                     
                     <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-2xl font-black shadow-lg">
-                        ROLL NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
+                        REGISTRATION NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
                     </div>
 
                     <div class="text-xs text-emerald-100 font-medium pt-2">
-                        Please save or note down this Roll Number for competition day and certificates.
+                        Please save or note down this Registration Number for competition day and certificates.
                     </div>
                 </div>
             @endif
