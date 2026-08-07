@@ -180,7 +180,12 @@ use App\Http\Controllers\Admin\CompetitionController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
+        $totalRegistrations = \App\Models\EventRegistration::count();
+        $activeCompetitions = \App\Models\Event::where('status', 'ongoing')->count();
+        $upcomingEvents = \App\Models\Event::where('status', 'upcoming')->count();
+        $totalCollections = \App\Models\EventRegistration::where('payment_status', 'approved')->sum('fee_paid');
+
+        return view('admin.dashboard', compact('totalRegistrations', 'activeCompetitions', 'upcomingEvents', 'totalCollections'));
     })->name('dashboard');
 
     Route::resource('admin/competitions', CompetitionController::class, [

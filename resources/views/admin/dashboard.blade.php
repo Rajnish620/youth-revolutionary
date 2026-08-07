@@ -6,19 +6,19 @@
 <div class="space-y-8">
 
     <!-- Welcome Hero Banner -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#340C6F] via-[#24084f] to-[#1A0638] p-8 text-white shadow-xl">
+    <div class="relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 shadow-sm">
         <!-- Background Pattern Decor -->
-        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-[#F1400C]/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute right-40 -top-10 w-60 h-60 bg-[#028CD4]/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-orange-50 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute right-40 -top-10 w-60 h-60 bg-blue-50 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-orange-300 backdrop-blur-md mb-3 border border-white/10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-xs font-bold text-[#F1400C] mb-3">
                     <span class="w-2 h-2 rounded-full bg-[#F1400C] animate-ping"></span>
                     Admin Overview
                 </div>
-                <h1 class="text-3xl font-extrabold tracking-tight">Welcome Back, {{ auth()->user()->name ?? 'Admin' }}! 👋</h1>
-                <p class="text-purple-200 mt-2 text-sm max-w-xl">
+                <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Welcome Back, {{ auth()->user()->name ?? 'Admin' }}! 👋</h1>
+                <p class="text-gray-600 font-medium mt-2 text-sm max-w-xl">
                     Here's what's happening with Youth Revolutionary today. Track registrations, manage competitions, and review upcoming events.
                 </p>
             </div>
@@ -48,12 +48,12 @@
                 </div>
             </div>
             <div class="mt-4 flex items-baseline justify-between">
-                <span class="text-3xl font-extrabold text-gray-900">1,284</span>
+                <span class="text-3xl font-extrabold text-gray-900">{{ number_format($totalRegistrations) }}</span>
                 <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> +12%
+                    <i class="fa-solid fa-arrow-trend-up"></i> Lifetime
                 </span>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Compared to last week</p>
+            <p class="text-xs text-gray-500 mt-2">All student registrations</p>
         </div>
 
         <!-- Card 2 -->
@@ -65,10 +65,10 @@
                 </div>
             </div>
             <div class="mt-4 flex items-baseline justify-between">
-                <span class="text-3xl font-extrabold text-gray-900">3</span>
+                <span class="text-3xl font-extrabold text-gray-900">{{ number_format($activeCompetitions) }}</span>
                 <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">Live Now</span>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Education, Sports, Cultural</p>
+            <p class="text-xs text-gray-500 mt-2">Ongoing events & exams</p>
         </div>
 
         <!-- Card 3 -->
@@ -80,27 +80,27 @@
                 </div>
             </div>
             <div class="mt-4 flex items-baseline justify-between">
-                <span class="text-3xl font-extrabold text-gray-900">5</span>
+                <span class="text-3xl font-extrabold text-gray-900">{{ number_format($upcomingEvents) }}</span>
                 <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded-md">Scheduled</span>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Next event in 2 days</p>
+            <p class="text-xs text-gray-500 mt-2">To be held in the future</p>
         </div>
 
         <!-- Card 4 -->
         <div class="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Page Views</span>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Collections</span>
                 <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center font-bold">
-                    <i class="fa-solid fa-eye text-base"></i>
+                    <i class="fa-solid fa-indian-rupee-sign text-base"></i>
                 </div>
             </div>
             <div class="mt-4 flex items-baseline justify-between">
-                <span class="text-3xl font-extrabold text-gray-900">45.2K</span>
+                <span class="text-3xl font-extrabold text-gray-900">₹{{ number_format($totalCollections) }}</span>
                 <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> +18%
+                    <i class="fa-solid fa-check"></i> Approved
                 </span>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Total visits this month</p>
+            <p class="text-xs text-gray-500 mt-2">From successful registrations</p>
         </div>
     </div>
 
