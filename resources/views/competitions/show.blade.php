@@ -370,7 +370,7 @@
                                         <div class="grid grid-cols-1 gap-2 mb-4">
                                             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100/80 text-xs font-manrope font-semibold text-gray-700">
                                                 <i class="fa-regular fa-clock text-accent text-xs"></i>
-                                                <span>Reporting: {{ $event->reporting_time ? date('h:i A', strtotime($event->reporting_time)) : 'TBA' }}</span>
+                                                <span>Reporting: {{ $event->reporting_time ?: 'TBA' }}</span>
                                             </div>
 
                                             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100/80 text-xs font-manrope font-semibold text-gray-700">
