@@ -20,7 +20,7 @@ class GalleryController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $galleries = $query->latest()->paginate(12);
+        $galleries = $query->oldest()->paginate(12);
 
         // Fetch seasons from database
         $seasons = \App\Models\Season::oldest()->get();

@@ -1,6 +1,7 @@
 @props(['name', 'label' => 'Image', 'existing' => null, 'maxSize' => 5])
 
 @php
+    $inputId = $name . '_upload_' . uniqid();
     $initialUrl = '';
     if ($existing) {
         if (str_starts_with($existing, 'http')) {
@@ -17,7 +18,7 @@
     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">{{ $label }}</label>
     
     <div class="relative w-full group">
-        <label for="{{ $name }}_upload" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden relative">
+        <label for="{{ $inputId }}" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden relative">
             
             <!-- Default Placeholder (Shows when no image is selected) -->
             <div x-show="!imageUrl" class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -37,7 +38,7 @@
                 </div>
             </div>
             
-            <input id="{{ $name }}_upload" name="{{ $name }}" type="file" accept="image/*" class="hidden" @change="fileChosen">
+            <input id="{{ $inputId }}" name="{{ $name }}" type="file" accept="image/*" class="hidden" @change="fileChosen">
         </label>
         
         <!-- Hidden input to keep track of existing image if no new file is uploaded (useful for updates) -->
