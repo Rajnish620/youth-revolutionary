@@ -32,8 +32,11 @@
                     <h3 class="text-2xl font-bold text-[#028CD4] mb-3">Cricket</h3>
                     <p class="text-gray-600">Demonstrate batting, bowling and fielding skills in competitive matches.</p>
                 </div>
-                <div class="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition hover:-translate-y-2">
-                    <div class="text-5xl mb-4">🤼</div>
+                <div class="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition hover:-translate-y-2 relative overflow-hidden group">
+                    <div class="flex justify-between items-start">
+                        <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">🤼</div>
+                        <img src="{{ asset('images/kabaddi-match.png') }}" alt="Kabaddi Match" class="w-16 h-16 rounded-full object-cover border-4 border-gray-50 shadow-md transform group-hover:rotate-6 transition-transform">
+                    </div>
                     <h3 class="text-2xl font-bold text-[#028CD4] mb-3">Kabaddi</h3>
                     <p class="text-gray-600">Show strength, strategy and teamwork in exciting kabaddi events.</p>
                 </div>

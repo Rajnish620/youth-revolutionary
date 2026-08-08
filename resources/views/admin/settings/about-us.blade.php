@@ -45,7 +45,7 @@
                         <i class="fa-solid fa-circle-info text-[#340C6F]"></i>
                         <span>About Us Page Content & Background Banner</span>
                     </h2>
-                    <p class="text-xs text-gray-500 mt-0.5">Customize Hero Banner, Who We Are section, Mission, Vision, and Impact Counters.</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Customize Hero Banner, Who Are We section, Mission, Vision, and Impact Counters.</p>
                 </div>
             </div>
 
@@ -94,7 +94,7 @@
 
                 <!-- Section 2: Who We Are -->
                 <div class="space-y-4 border-t border-gray-100 pt-6">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-[#340C6F] bg-purple-50 px-3 py-1.5 rounded-lg w-max">2. Who We Are Section</h3>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-[#340C6F] bg-purple-50 px-3 py-1.5 rounded-lg w-max">2. Who Are We Section</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="md:col-span-2">
@@ -110,11 +110,11 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Who We Are Side Image</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Who Are We Side Image</label>
                             <div class="flex items-center gap-6">
                                 @if(!empty($setting->who_we_are_image) && file_exists(public_path($setting->who_we_are_image)))
                                     <div class="w-24 h-24 rounded-xl border border-gray-200 p-1 bg-gray-50 shrink-0 overflow-hidden">
-                                        <img src="{{ asset($setting->who_we_are_image) }}" class="w-full h-full object-cover rounded-lg" alt="Who We Are Image">
+                                        <img src="{{ asset($setting->who_we_are_image) }}" class="w-full h-full object-cover rounded-lg" alt="Who Are We Image">
                                     </div>
                                 @else
                                     <div class="w-24 h-24 rounded-xl border border-dashed border-gray-300 p-1 flex flex-col items-center justify-center bg-gray-50 text-gray-400 text-xs shrink-0">

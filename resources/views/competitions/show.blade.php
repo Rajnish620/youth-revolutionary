@@ -83,6 +83,39 @@
         
         <!-- HERO SECTION -->
         <section class="relative flex flex-col justify-center pt-20 sm:pt-23 lg:pt-64 pb-16 sm:pb-24 border-b border-black/10 overflow-hidden">
+            @if(strtolower($category->name) === 'sports')
+                <!-- Subtle sports background texture -->
+                <div class="absolute inset-0 z-0 pointer-events-none" style="opacity: 0.35;">
+                    <img src="{{ asset('images/kabaddi-match.png') }}" alt="Sports Background" class="w-full h-full object-cover filter grayscale">
+                    <!-- Gradient to protect text readability on the left -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
+                </div>
+            @elseif(str_contains(strtolower($category->name), 'art'))
+                <!-- Subtle arts background texture -->
+                <div class="absolute inset-0 z-0 pointer-events-none" style="opacity: 0.35;">
+                    <img src="{{ asset('images/art-competition.png') }}" alt="Arts Background" class="w-full h-full object-cover filter grayscale">
+                    <!-- Gradient to protect text readability on the left -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
+                </div>
+            @elseif(str_contains(strtolower($category->name), 'cultur'))
+                <!-- Subtle cultural background texture -->
+                <div class="absolute inset-0 z-0 pointer-events-none" style="opacity: 0.35;">
+                    <img src="{{ asset('images/culture-competition.png') }}" alt="Culture Background" class="w-full h-full object-cover filter grayscale">
+                    <!-- Gradient to protect text readability on the left -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
+                </div>
+            @elseif(str_contains(strtolower($category->name), 'education'))
+                <!-- Subtle education background texture -->
+                <div class="absolute inset-0 z-0 pointer-events-none" style="opacity: 0.35;">
+                    <img src="{{ asset('images/education-competition.png') }}" alt="Education Background" class="w-full h-full object-cover filter grayscale">
+                    <!-- Gradient to protect text readability on the left -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-transparent"></div>
+                </div>
+            @endif
             
             <!-- Ambient Floating Animated Orbs -->
             <div class="absolute top-12 right-12 w-72 h-72 rounded-full bg-accent/10 blur-3xl animate-ring pointer-events-none"></div>
@@ -111,6 +144,7 @@
                     
                     <!-- Right: Subtext & Interactive CTA -->
                     <div class="lg:col-span-4 lg:pb-2">
+
                         <p class="font-manrope text-sm sm:text-base font-medium leading-relaxed text-black/70 border-l-2 border-black/20 pl-4 sm:pl-6">
                             Step into the ultimate proving ground. Participate in high-stakes {{ strtolower($category->name) }} competitions, showcase your raw talent, and architect your legacy.
                         </p>

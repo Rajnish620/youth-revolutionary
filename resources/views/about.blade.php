@@ -32,11 +32,11 @@
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div class="transition duration-1000 opacity-0 translate-y-8 sm:-translate-x-12 sm:translate-y-0" :class="{'opacity-100 translate-x-0 translate-y-0': show}">
                 <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform transition duration-700 hover:scale-[1.02]">
-                    <img src="{{ $whoImage }}" class="w-full h-[300px] sm:h-[400px] object-cover" alt="Who We Are Image">
+                    <img src="{{ $whoImage }}" class="w-full h-[300px] sm:h-[400px] object-cover" alt="Who Are We Image">
                 </div>
             </div>
             <div class="transition duration-1000 opacity-0 translate-y-8 sm:translate-x-12 sm:translate-y-0" :class="{'opacity-100 translate-x-0 translate-y-0': show}" style="transition-delay: 150ms;">
-                <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black text-[#F1400C] tracking-tight mb-3">Who We Are?</h2>
+                <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black text-[#F1400C] tracking-tight mb-3">Who Are We?</h2>
                 <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">{{ $setting->who_we_are_title ?? 'Youth Revolutionary' }}</h3>
                 <p class="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">
                     {!! nl2br(e($setting->who_we_are_description ?? 'Youth Revolutionary is a student-focused organization dedicated to discovering, nurturing, and recognizing young talents across academics, sports, and cultural competitions.')) !!}

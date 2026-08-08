@@ -211,10 +211,11 @@
                 </a>
 
                 <!-- Box 2 (Pink) - Sports -->
-                <a href="{{ url('/competitions/sports') }}" class="block bg-neo-pink neo-border neo-shadow p-6 flex flex-col justify-between aspect-video md:aspect-auto transition-transform">
+                <a href="{{ url('/competitions/sports') }}" class="block bg-neo-pink neo-border neo-shadow p-6 flex flex-col justify-between aspect-video md:aspect-auto transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                     <div class="flex gap-2 mb-4">
                         <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=100&h=100&fit=crop" class="w-12 h-12 rounded-full border-2 border-black object-cover" alt="S1">
                         <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=100&h=100&fit=crop" class="w-12 h-12 rounded-full border-2 border-black object-cover -ml-4" alt="S2">
+                        <img src="{{ asset('images/kabaddi-match.png') }}" class="w-12 h-12 rounded-full border-2 border-black object-cover -ml-4" alt="Kabaddi Match">
                     </div>
                     <div class="flex justify-end w-full">
                         <h3 class="font-black text-black text-2xl lowercase tracking-tight">join sports</h3>
