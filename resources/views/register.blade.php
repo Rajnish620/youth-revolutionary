@@ -310,7 +310,7 @@
                                 </div>
 
                                 <!-- Option B: Live Camera Capture -->
-                                <div>
+                                <!-- <div>
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Or Take Live Photo</label>
                                     
                                     <div x-show="!showCamera && !capturedImage">
@@ -332,7 +332,7 @@
                                         <img :src="capturedImage" class="w-24 h-24 object-cover rounded-2xl border-2 border-[#028CD4]" />
                                         <button type="button" @click="capturedImage = null; openCamera()" class="text-xs text-orange-600 font-bold hover:underline">Retake Photo</button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
