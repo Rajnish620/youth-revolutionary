@@ -1,3 +1,46 @@
+<style>
+    @keyframes marquee {
+        0% { transform: translateX(100vw); }
+        100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+        animation: marquee 25s linear infinite;
+    }
+    .animate-marquee:hover {
+        animation-play-state: paused;
+    }
+</style>
+
+<!-- Top Updates Ticker -->
+<div class="fixed top-0 left-0 w-full bg-black text-white z-[60] h-8 sm:h-10 flex items-center overflow-hidden border-b border-white/20 shadow-md">
+    <div class="whitespace-nowrap animate-marquee flex items-center">
+        @php
+            // Fetch the latest 5 active events/competitions from the database
+            $recentEvents = \App\Models\Event::where('status', 'active')->latest()->take(5)->get();
+        @endphp
+
+        @forelse($recentEvents as $event)
+            <a href="{{ url('/competitions/' . strtolower(str_replace(' ', '-', $event->category))) }}" class="inline-flex items-center gap-2 hover:text-accent transition-colors font-manrope font-bold text-[10px] sm:text-xs tracking-wider uppercase px-4 cursor-pointer">
+                <span class="relative flex h-2 w-2 mr-1">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                New Registration Open: {{ $event->title }}! Apply Now.
+            </a>
+            <span class="text-white/30 mx-4">✦</span>
+        @empty
+            <a href="{{ url('/competitions') }}" class="inline-flex items-center gap-2 hover:text-accent transition-colors font-manrope font-bold text-[10px] sm:text-xs tracking-wider uppercase px-4 cursor-pointer">
+                <span class="relative flex h-2 w-2 mr-1">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                Stay tuned for upcoming competitions!
+            </a>
+            <span class="text-white/30 mx-4">✦</span>
+        @endforelse
+    </div>
+</div>
+
 <nav
     x-data="{ 
         menuOpen: false, 
@@ -6,7 +49,7 @@
         scrolled: false 
     }"
     @scroll.window="scrolled = (window.pageYOffset > 50)"
-    :class="scrolled ? 'top-0 w-full shadow-md bg-white/90 backdrop-blur-xl md:rounded-b-4xl border-b border-gray-100' : 'top-4 md:top-6 w-[92%] sm:w-[90%] lg:w-[85%] max-w-7xl rounded-3xl shadow-lg bg-white/80 backdrop-blur-3xl border border-white/50'"
+    :class="scrolled ? 'top-8 sm:top-10 w-full shadow-md bg-white/90 backdrop-blur-xl md:rounded-b-4xl border-b border-gray-100' : 'top-12 sm:top-16 md:top-20 w-[92%] sm:w-[90%] lg:w-[85%] max-w-7xl rounded-3xl shadow-lg bg-white/80 backdrop-blur-3xl border border-white/50'"
     class="fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-out"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
