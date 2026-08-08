@@ -15,8 +15,8 @@
 <div class="fixed top-0 left-0 w-full bg-black text-white z-[60] h-8 sm:h-10 flex items-center overflow-hidden border-b border-white/20 shadow-md">
     <div class="whitespace-nowrap animate-marquee flex items-center">
         @php
-            // Fetch the latest 5 active events/competitions from the database
-            $recentEvents = \App\Models\Event::where('status', 'active')->latest()->take(5)->get();
+            // Fetch the latest 5 active events/competitions from the database (status: upcoming or ongoing)
+            $recentEvents = \App\Models\Event::whereIn('status', ['upcoming', 'ongoing'])->latest()->take(5)->get();
         @endphp
 
         @forelse($recentEvents as $event)
