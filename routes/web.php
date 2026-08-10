@@ -57,6 +57,7 @@ Route::post('/register', function (Request $request) {
         'photo' => 'nullable|image|max:5120',
         'live_photo_base64' => 'nullable|string',
         'payment_screenshot' => 'nullable|image|max:5120',
+        'transaction_id' => 'required|string|unique:event_registrations,transaction_id',
         'dob' => 'required|date',
         'email' => 'nullable|email|max:255',
         'gender' => 'required|string|max:10',

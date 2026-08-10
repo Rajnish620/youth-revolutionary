@@ -158,6 +158,7 @@
                                     <button @click='activeStudent = {{ json_encode([
                                         "roll_no" => $reg->roll_no,
                                         "registration_no" => $reg->registration_no,
+                                        "transaction_id" => $reg->transaction_id ?? "N/A",
                                         "student_name" => $reg->student_name,
                                         "dob" => $reg->dob ? \Carbon\Carbon::parse($reg->dob)->format("d M Y") : "N/A",
                                         "father_name" => $reg->father_name ?? "N/A",
@@ -258,6 +259,10 @@
                         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
                             <div class="text-xs text-gray-400 font-semibold mb-1">Mobile No</div>
                             <div class="font-bold text-gray-800" x-text="activeStudent?.mobile"></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 sm:col-span-3">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">Transaction ID / UTR</div>
+                            <div class="font-mono text-sm font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded inline-block" x-text="activeStudent?.transaction_id"></div>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
                             <div class="text-xs text-gray-400 font-semibold mb-1">Class</div>

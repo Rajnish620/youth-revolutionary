@@ -187,6 +187,17 @@
                     <form method="POST" action="{{ url('/register') }}" class="space-y-10" enctype="multipart/form-data">
                         @csrf
                         
+                        @if ($errors->any())
+                            <div class="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl mb-6">
+                                <h4 class="font-bold mb-2">Please fix the following errors:</h4>
+                                <ul class="list-disc list-inside text-sm font-medium space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        
                         <!-- Hidden Input for Live Photo -->
                         <input type="hidden" name="live_photo_base64" :value="capturedImage">
 
@@ -386,6 +397,15 @@
                                         <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Registration Fee</span>
                                         <div class="text-4xl font-black text-[#F1400C]">₹<span x-text="currentFee"></span></div>
                                         <p class="text-xs text-slate-600 font-medium leading-relaxed pt-1">{{ $paymentSetting->instructions }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Transaction ID / UTR Number *</label>
+                                        <input type="text" name="transaction_id" required value="{{ old('transaction_id') }}" placeholder="e.g. 3182XXXXXXXX"
+                                            class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:border-[#F1400C] outline-none transition-all">
+                                        @error('transaction_id')
+                                            <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div>

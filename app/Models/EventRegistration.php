@@ -22,6 +22,7 @@ class EventRegistration extends Model
         'fee_paid',
         'photo',
         'payment_screenshot',
+        'transaction_id',
         'payment_status',
         'marks',
         'rank',
