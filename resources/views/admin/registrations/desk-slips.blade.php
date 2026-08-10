@@ -34,7 +34,7 @@
     <div class="w-[210mm] mx-auto grid grid-cols-4 gap-1 no-print-margin" style="page-break-inside: auto;">
         @forelse($registrations as $index => $reg)
             <div class="desk-slip bg-white p-1.5 border border-dashed border-gray-400 flex flex-col items-center justify-center text-center h-[52mm] overflow-hidden m-0.5">
-                <span class="text-[8px] font-black tracking-widest uppercase text-[#340C6F] mb-1">YOUTH REV</span>
+                <span class="text-[8px] font-black tracking-widest uppercase text-[#340C6F] mb-1">YOUTH REVOLUTIONARY</span>
                 
                 <img src="{{ str_starts_with($reg->photo, 'http') ? $reg->photo : asset($reg->photo ?? 'images/quize.jpg') }}" 
                      class="w-20 h-20 object-cover border border-gray-300 rounded mb-1.5 shadow-sm">
