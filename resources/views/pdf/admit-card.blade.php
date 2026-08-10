@@ -245,9 +245,9 @@
     <!-- Header Banner Section -->
     <div style="text-align: center; margin-bottom: 2px; padding-bottom: 2px; overflow: visible;">
         @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-            <img src="{{ public_path($setting->header_banner_path) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
+            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($setting->header_banner_path))) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
         @elseif(file_exists(public_path('images/header_banner.jpg')))
-            <img src="{{ public_path('images/header_banner.jpg') }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
+            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/header_banner.jpg'))) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
         @endif
     </div>
 
@@ -264,7 +264,7 @@
             <td rowspan="6" class="photo-cell">
                 <div class="photo-box">
                     @if($registration->photo && file_exists(public_path($registration->photo)))
-                        <img src="{{ public_path($registration->photo) }}" alt="Candidate Photo">
+                        <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($registration->photo))) }}" alt="Candidate Photo">
                     @else
                         <div style="padding-top: 50px; font-size: 8px; color: #94a3b8; font-weight: bold;">AFFIX PASSPORT<br>PHOTO HERE</div>
                     @endif
@@ -367,7 +367,7 @@
             <td class="sig-td">
                 <div class="sig-img-container">
                     @if(!empty($setting->signature_path) && file_exists(public_path($setting->signature_path)))
-                        <img src="{{ public_path($setting->signature_path) }}" alt="Signature">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($setting->signature_path))) }}" alt="Signature">
                     @endif
                 </div>
                 <div class="sig-box-line">Authorized Signatory / Controller</div>
