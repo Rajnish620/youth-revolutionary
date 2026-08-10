@@ -245,9 +245,9 @@
     <!-- Header Banner Section -->
     <div style="text-align: center; margin-bottom: 4px;">
         @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($setting->header_banner_path))) }}" style="width: 100%; max-height: 140px; object-fit: contain;" alt="Header Banner">
+            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($setting->header_banner_path))) }}" style="width: 100%; height: auto;" alt="Header Banner">
         @elseif(file_exists(public_path('images/header_banner.jpg')))
-            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/header_banner.jpg'))) }}" style="width: 100%; max-height: 140px; object-fit: contain;" alt="Header Banner">
+            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/header_banner.jpg'))) }}" style="width: 100%; height: auto;" alt="Header Banner">
         @endif
     </div>
 
