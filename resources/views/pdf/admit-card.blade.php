@@ -10,13 +10,13 @@
             margin: 12px;
         }
         body {
-            font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
+            font-family: sans-serif;
             color: #0f172a;
             background-color: #ffffff;
             margin: 0;
             padding: 0;
             font-size: 11px;
-            line-height: 1.35;
+            line-height: 1.5;
         }
 
         /* Outer Container */
@@ -90,7 +90,7 @@
         }
         .data-table th, .data-table td {
             border: 1px solid #cbd5e1;
-            padding: 4px 7px;
+            padding: 8px 10px;
             font-size: 10px;
             vertical-align: middle;
         }
@@ -172,13 +172,13 @@
             font-size: 9px;
             font-weight: bold;
             text-transform: uppercase;
-            padding: 4px 6px;
+            padding: 6px 8px;
             border: 1px solid #cbd5e1;
             text-align: left;
         }
         .exam-grid td {
             border: 1px solid #cbd5e1;
-            padding: 5px 6px;
+            padding: 7px 8px;
             font-size: 10px;
             font-weight: 600;
         }
@@ -187,7 +187,7 @@
         .sig-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
+            margin-top: 35px;
             margin-bottom: 6px;
         }
         .sig-td {
@@ -218,9 +218,9 @@
         .inst-box {
             border: 1px solid #cbd5e1;
             background-color: #ffffff;
-            padding: 6px 10px;
+            padding: 10px 14px;
             border-radius: 2px;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         .inst-head {
             font-weight: bold;
@@ -245,9 +245,9 @@
     <!-- Header Banner Section -->
     <div style="text-align: center; margin-bottom: 2px; padding-bottom: 2px; overflow: visible;">
         @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($setting->header_banner_path))) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
+            <img src="{{ public_path($setting->header_banner_path) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
         @elseif(file_exists(public_path('images/header_banner.jpg')))
-            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/header_banner.jpg'))) }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
+            <img src="{{ public_path('images/header_banner.jpg') }}" style="display: block; width: 100%; height: 120px; margin: 0 auto; padding-bottom: 3px;" alt="Header Banner">
         @endif
     </div>
 
@@ -264,7 +264,7 @@
             <td rowspan="6" class="photo-cell">
                 <div class="photo-box">
                     @if($registration->photo && file_exists(public_path($registration->photo)))
-                        <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($registration->photo))) }}" alt="Candidate Photo">
+                        <img src="{{ public_path($registration->photo) }}" style="max-width: 115px; max-height: 130px; width: auto; height: auto;" alt="Candidate Photo">
                     @else
                         <div style="padding-top: 50px; font-size: 8px; color: #94a3b8; font-weight: bold;">AFFIX PASSPORT<br>PHOTO HERE</div>
                     @endif
@@ -361,13 +361,13 @@
     <table class="sig-table">
         <tr>
             <td class="sig-td">
-                <div class="sig-img-container"></div>
+                <div class="sig-img-container">&nbsp;</div>
                 <div class="sig-box-line">Signature of Candidate</div>
             </td>
             <td class="sig-td">
                 <div class="sig-img-container">
                     @if(!empty($setting->signature_path) && file_exists(public_path($setting->signature_path)))
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($setting->signature_path))) }}" alt="Signature">
+                        <img src="{{ public_path($setting->signature_path) }}" alt="Signature">
                     @endif
                 </div>
                 <div class="sig-box-line">Authorized Signatory / Controller</div>

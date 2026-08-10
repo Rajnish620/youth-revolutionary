@@ -43,9 +43,24 @@ class AdmitCardController extends Controller
             return back()->with('error', 'Admit card settings have not been configured by the admin yet.');
         }
 
-        $pdf = Pdf::setOptions(['isRemoteEnabled' => true])->loadView('pdf.admit-card', compact('registration', 'setting'));
-        $pdf->setPaper('A4', 'portrait');
+        $html = view('pdf.admit-card', compact('registration', 'setting'))->render();
 
-        return $pdf->download('Admit_Card_' . $registration->roll_no . '.pdf');
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'A4',
+            'margin_left' => 6,
+            'margin_right' => 6,
+            'margin_top' => 6,
+            'margin_bottom' => 6,
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        ini_set('pcre.backtrack_limit', '5000000');
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="Admit_Card_' . $registration->roll_no . '.pdf"'
+        ]);
     }
 }
