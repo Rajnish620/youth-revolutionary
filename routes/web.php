@@ -115,16 +115,16 @@ Route::post('/register', function (Request $request) {
 
     // Generate unique Roll No (group-based sequence)
     $latestRoll = EventRegistration::where('event_group_id', $request->event_group_id)
-        ->where('roll_no', 'like', 'YR-%')
-        ->orderByRaw("CAST(SUBSTRING_INDEX(roll_no, '-', -1) AS UNSIGNED) DESC")
+        ->where('roll_no', 'like', 'YR%')
+        ->orderByRaw("CAST(RIGHT(roll_no, 4) AS UNSIGNED) DESC")
         ->first();
-    if ($latestRoll && preg_match('/-(\d+)$/', $latestRoll->roll_no, $matches)) {
+    if ($latestRoll && preg_match('/(\d+)$/', $latestRoll->roll_no, $matches)) {
         $nextRollNumber = max($rollStart, (int)$matches[1] + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
     
-    $validated['roll_no'] = 'YR-' . date('Y') . '-' . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
+    $validated['roll_no'] = 'YR' . date('Y') . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
 
     // Generate unique Registration No per season (Format: YRREG0001)
     $event = Event::find($request->event_id);
