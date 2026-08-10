@@ -35,7 +35,7 @@
         
         <!-- Document Header -->
         <div class="border-b-2 border-gray-900 pb-4 mb-6 text-center">
-            <h2 class="text-2xl font-black uppercase tracking-wider text-gray-900">YOUTH REVOLUTIONARY ORGANISATION</h2>
+            <h2 class="text-2xl font-black uppercase tracking-wider text-gray-900">YOUTH REVOLUTIONARY NASRIGANJ</h2>
             <h3 class="text-lg font-bold text-[#F1400C] uppercase mt-1">{{ $event ? $event->title : 'Event Attendance & Verification Sheet' }}</h3>
             <p class="text-xs text-gray-600 font-semibold mt-1">
                 Date: {{ $event && $event->event_date ? $event->event_date->format('d F Y') : date('d F Y') }} | Location: {{ $event->location ?? 'Patna Nashariganj' }}

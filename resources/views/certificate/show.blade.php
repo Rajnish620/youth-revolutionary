@@ -45,7 +45,7 @@
             <!-- Organization Header -->
             <div class="space-y-2">
                 <div class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#F1400C]">
-                    <i class="fa-solid fa-award text-amber-600 text-base"></i> YOUTH REVOLUTIONARY ORGANISATION
+                    <i class="fa-solid fa-award text-amber-600 text-base"></i> YOUTH REVOLUTIONARY NASRIGANJ
                 </div>
                 <h2 class="font-cinzel text-3xl sm:text-5xl font-black text-[#340C6F] tracking-wide">
                     CERTIFICATE OF ACHIEVEMENT
