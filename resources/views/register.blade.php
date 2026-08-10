@@ -17,9 +17,9 @@
                     <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-2xl font-black shadow-lg">
                         REG NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['registration_no'] ?? '') : ($reg->registration_no ?? '') }}</span>
                     </div>
-                    <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-xl font-black shadow-lg mt-2">
+                    <!-- <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-xl font-black shadow-lg mt-2">
                         ROLL NO: <span class="text-[#028CD4]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
-                    </div>
+                    </div> -->
 
                     <div class="text-xs text-emerald-100 font-medium pt-2">
                         Please save or note down this Registration Number for competition day and certificates.
