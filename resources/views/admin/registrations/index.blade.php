@@ -106,9 +106,12 @@
                                     <img src="{{ str_starts_with($reg->photo, 'http') ? $reg->photo : asset($reg->photo ?? 'images/quize.jpg') }}" 
                                          alt="Student" class="w-10 h-10 rounded-full object-cover border border-gray-200">
                                     <div>
-                                        <div class="font-extrabold text-gray-900 flex items-center gap-2">
+                                        <div class="font-extrabold text-gray-900 flex flex-wrap items-center gap-2">
                                             <span>{{ $reg->student_name }}</span>
-                                            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-100 text-[#340C6F]">{{ $reg->roll_no }}</span>
+                                            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-100 text-[#340C6F]" title="Roll Number">{{ $reg->roll_no }}</span>
+                                            @if($reg->registration_no)
+                                                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700" title="Registration Number">{{ $reg->registration_no }}</span>
+                                            @endif
                                         </div>
                                         <div class="text-xs text-gray-400">Mob: {{ $reg->mobile }} | Father: {{ $reg->father_name ?? 'N/A' }}</div>
                                     </div>
@@ -154,6 +157,7 @@
                                 <div class="flex items-center justify-end gap-2">
                                     <button @click='activeStudent = {{ json_encode([
                                         "roll_no" => $reg->roll_no,
+                                        "registration_no" => $reg->registration_no,
                                         "student_name" => $reg->student_name,
                                         "father_name" => $reg->father_name ?? "N/A",
                                         "school_name" => $reg->school_name ?? "N/A",
@@ -231,7 +235,12 @@
                     <img :src="activeStudent?.photo" alt="Student" class="w-16 h-16 rounded-full object-cover border-2 border-[#340C6F]">
                     <div>
                         <h3 class="font-extrabold text-xl text-gray-900" x-text="activeStudent?.student_name"></h3>
-                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-purple-100 text-[#340C6F]" x-text="activeStudent?.roll_no"></span>
+                        <div class="flex flex-wrap gap-2 mt-1">
+                            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-purple-100 text-[#340C6F]" x-text="activeStudent?.roll_no" title="Roll Number"></span>
+                            <template x-if="activeStudent?.registration_no">
+                                <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-700" x-text="activeStudent?.registration_no" title="Registration Number"></span>
+                            </template>
+                        </div>
                     </div>
                 </div>
                 
