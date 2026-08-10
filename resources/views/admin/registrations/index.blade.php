@@ -159,6 +159,7 @@
                                         "roll_no" => $reg->roll_no,
                                         "registration_no" => $reg->registration_no,
                                         "student_name" => $reg->student_name,
+                                        "dob" => $reg->dob ? \Carbon\Carbon::parse($reg->dob)->format("d M Y") : "N/A",
                                         "father_name" => $reg->father_name ?? "N/A",
                                         "school_name" => $reg->school_name ?? "N/A",
                                         "student_class" => $reg->student_class,
@@ -245,10 +246,14 @@
                 </div>
                 
                 <div class="space-y-4 text-sm">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
                             <div class="text-xs text-gray-400 font-semibold mb-1">Father's Name</div>
                             <div class="font-bold text-gray-800" x-text="activeStudent?.father_name"></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">DOB</div>
+                            <div class="font-bold text-gray-800" x-text="activeStudent?.dob"></div>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
                             <div class="text-xs text-gray-400 font-semibold mb-1">Mobile No</div>

@@ -50,7 +50,7 @@ Route::post('/register', function (Request $request) {
         'event_id' => 'required|exists:events,id',
         'event_group_id' => 'nullable|exists:event_groups,id',
         'student_name' => 'required|string|max:255',
-        'father_name' => 'nullable|string|max:255',
+        'father_name' => 'required|string|max:255',
         'school_name' => 'nullable|string|max:255',
         'student_class' => 'required|string|max:100',
         'mobile' => 'required|string|max:20',
