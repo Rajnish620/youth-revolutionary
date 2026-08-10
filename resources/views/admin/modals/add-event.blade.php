@@ -5,7 +5,7 @@
         <!-- Title -->
         <div class="md:col-span-2">
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Event Title *</label>
-            <input type="text" name="title" required placeholder="e.g. Talent Search Festival Nashariganj"
+            <input type="text" name="title" required placeholder="e.g. Talent Search Festival Nasriganj"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 outline-none transition-all">
         </div>
 
@@ -46,7 +46,7 @@
         <!-- Location -->
         <div>
             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Location *</label>
-            <input type="text" name="location" value="Patna Nashariganj" required placeholder="e.g. Patna Nashariganj"
+            <input type="text" name="location" value="Nasriganj" required placeholder="e.g. Nasriganj"
                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:bg-white focus:border-[#340C6F] outline-none transition-all">
         </div>
 

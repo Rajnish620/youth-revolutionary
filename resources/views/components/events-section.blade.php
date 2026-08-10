@@ -15,7 +15,7 @@ if (!isset($events) || count($events) === 0) {
                 $title = is_array($event) ? $event['title'] : $event->title;
                 $img = is_array($event) ? $event['image'] : ($event->image ?? 'images/quize.jpg');
                 $dateStr = is_array($event) ? $event['date'] : ($event->event_date ? $event->event_date->format('d F Y') : 'Upcoming');
-                $location = is_array($event) ? $event['location'] : ($event->location ?? 'Patna Nashariganj');
+                $location = is_array($event) ? $event['location'] : ($event->location ?? 'Nasriganj');
                 $category = is_array($event) ? 'General' : ($event->category ?? 'General');
                 @endphp
                 <div x-data="{ show: false }" x-intersect.once="show = true"

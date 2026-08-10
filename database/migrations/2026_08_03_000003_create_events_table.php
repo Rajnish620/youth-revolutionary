@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->date('event_date')->nullable();
-            $table->string('location')->default('Patna Nashariganj');
+            $table->string('location')->default('Nasriganj');
             $table->string('category')->default('General');
             $table->text('image')->nullable();
             $table->text('description')->nullable();

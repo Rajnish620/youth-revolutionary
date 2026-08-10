@@ -307,7 +307,7 @@
                                 <!-- Address -->
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Address *</label>
-                                    <input type="text" name="address" required placeholder="e.g. Patna Nashariganj"
+                                    <input type="text" name="address" required placeholder="e.g. Nasriganj"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                                 </div>
 

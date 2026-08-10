@@ -20,7 +20,7 @@ class AboutUsSeeder extends Seeder
                 'hero_subtitle' => 'Empowering Young Minds Through Education, Sports & Cultural Excellence.',
                 'hero_bg_image' => 'images/NIKON Z 502317.JPG.jpeg',
                 'who_we_are_title' => 'Youth Revolutionary',
-                'who_we_are_description' => "Youth Revolutionary (A Unit of SWS) is a student-centric social & educational movement operating in Patna Nashariganj, Charhanpuri. Our core mission is to discover hidden talents among school & college students by providing structured talent search examinations, sports competitions, and cultural festivals.\n\nSince inception, we have helped thousands of students build academic confidence, win prestigious awards, and achieve national recognition.",
+                'who_we_are_description' => "Youth Revolutionary (A Unit of SWS) is a student-centric social & educational movement operating in Nasriganj, Charhanpuri. Our core mission is to discover hidden talents among school & college students by providing structured talent search examinations, sports competitions, and cultural festivals.\n\nSince inception, we have helped thousands of students build academic confidence, win prestigious awards, and achieve national recognition.",
                 'who_we_are_image' => 'images/WhatsApp Image 2026-06-24 at 12.37.06 PM.jpeg',
                 'mission_title' => 'Our Mission',
                 'mission_description' => 'To provide every student with an equal opportunity to compete, excel, and win recognition through transparent examinations and talent festivals.',
@@ -52,7 +52,7 @@ class AboutUsSeeder extends Seeder
                 'name' => 'Amit Sharma',
                 'role' => 'Founder & Managing Director',
                 'image' => 'images/dance3.JPG',
-                'description' => 'Social entrepreneur passionate about promoting sports, academics, and cultural youth empowerment in Nashariganj.',
+                'description' => 'Social entrepreneur passionate about promoting sports, academics, and cultural youth empowerment in Nasriganj.',
                 'is_featured' => true,
                 'sort_order' => 2,
             ]);

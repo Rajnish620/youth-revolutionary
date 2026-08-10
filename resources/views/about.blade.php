@@ -204,7 +204,7 @@
     <section class="py-20 bg-slate-100 text-center overflow-hidden" x-data="{ show: false }" x-intersect.once="show = true">
         <div class="max-w-4xl mx-auto px-6 transition duration-1000 opacity-0 translate-y-8" :class="{'opacity-100 translate-y-0': show}">
             <h2 class="text-3xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">Ready To Showcase Your Talent?</h2>
-            <p class="text-slate-600 text-base sm:text-lg mb-8 font-medium">Join thousands of students competing in Patna Nashariganj's biggest youth festival.</p>
+            <p class="text-slate-600 text-base sm:text-lg mb-8 font-medium">Join thousands of students competing in Nasriganj biggest youth festival.</p>
             <a href="{{ url('/register') }}" class="inline-flex items-center justify-center gap-2 bg-[#F1400C] text-white px-8 py-3.5 rounded-2xl font-bold text-base whitespace-nowrap hover:bg-orange-600 shadow-xl shadow-[#F1400C]/25 transition transform hover:-translate-y-0.5">
                 <span>Register Now</span>
                 <i class="fa-solid fa-arrow-right"></i>

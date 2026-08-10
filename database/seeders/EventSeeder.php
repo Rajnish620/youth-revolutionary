@@ -10,10 +10,10 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         Event::create([
-            'title' => 'Talent Search Festival Nashariganj',
-            'slug' => 'talent-search-festival-nashariganj',
+            'title' => 'Talent Search Festival Nasriganj',
+            'slug' => 'talent-search-festival-Nasriganj',
             'event_date' => '2026-09-15',
-            'location' => 'Patna Nashariganj',
+            'location' => 'Nasriganj',
             'category' => 'Education',
             'image' => 'images/NIKON Z 502317.JPG.jpeg',
             'description' => 'प्रतिभा खोज महोत्सव एक ऐसा मंच है, जहाँ बच्चों, युवाओं एवं प्रतिभाशाली व्यक्तियों को अपनी कला, ज्ञान, कौशल और रचनात्मकता प्रदर्शित करने का अवसर प्रदान किया जाता है।',
@@ -25,7 +25,7 @@ class EventSeeder extends Seeder
             'title' => 'National Quiz Competition 2026',
             'slug' => 'national-quiz-competition-2026',
             'event_date' => '2026-09-20',
-            'location' => 'Patna Nashariganj',
+            'location' => 'Nasriganj',
             'category' => 'Education',
             'image' => 'images/quize.jpg',
             'description' => 'Science and General Knowledge quiz championship for school students.',
