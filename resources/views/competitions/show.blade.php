@@ -310,7 +310,7 @@
         </section>
 
         <!-- DYNAMIC UPCOMING EXHIBITIONS / EVENTS SECTION (ULTRA PREMIUM ANIMATED CARD GRID) -->
-        <section id="exhibitions" class="py-16 sm:py-24 md:py-32 relative" x-data="{ showEvents: false, search: '' }" x-intersect.margin.-10%="showEvents = true">
+        <section id="exhibitions" class="py-16 sm:py-24 md:py-32 relative" x-data="{ showEvents: false, search: '', openModalId: null }" x-intersect.margin.-10%="showEvents = true">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <!-- Section Header -->
@@ -414,9 +414,12 @@
                                         </div>
 
                                         @if($event->description)
-                                            <p class="font-manrope text-xs text-gray-600 leading-relaxed line-clamp-3 font-medium mb-4">
-                                                {{ strip_tags($event->description) }}
-                                            </p>
+                                            <div class="mb-4">
+                                                <button @click.prevent="openModalId = {{ $event->id }}" class="group/more inline-flex items-center gap-1.5 text-[11px] font-extrabold font-manrope uppercase tracking-wider text-accent hover:text-ink transition-colors">
+                                                    More Details
+                                                    <i class="fa-solid fa-circle-info text-[10px] group-hover/more:scale-110 transition-transform"></i>
+                                                </button>
+                                            </div>
                                         @endif
 
                                         <!-- Group Categories Badges -->
@@ -454,6 +457,46 @@
                         </a>
                     </div>
                 @endif
+
+                <!-- Modals Rendering -->
+                @foreach($events as $event)
+                    @if($event->description)
+                        <div x-show="openModalId === {{ $event->id }}" x-cloak style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+                            <div @click.away="openModalId = null" 
+                                 x-show="openModalId === {{ $event->id }}" 
+                                 x-transition:enter="transition ease-out duration-300"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-200"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto border border-gray-100">
+                                 
+                                <button @click="openModalId = null" class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-black hover:text-white text-gray-600 transition-all shadow-sm">
+                                    <i class="fa-solid fa-xmark text-lg"></i>
+                                </button>
+                                
+                                <h2 class="font-playfair text-3xl font-bold text-ink mb-2 pr-12 leading-tight">{{ $event->title }}</h2>
+                                <div class="flex items-center gap-3 text-xs font-manrope font-bold text-gray-500 mb-6 pb-4 border-b border-gray-100">
+                                    <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar text-accent"></i> {{ $event->event_date ? $event->event_date->format('d M, Y') : 'TBA' }}</span>
+                                    <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-accent"></i> {{ $event->location ?? 'TBA' }}</span>
+                                </div>
+                                
+                                <div class="prose prose-sm prose-p:font-manrope prose-p:text-sm prose-p:text-gray-700 max-w-none prose-headings:font-playfair prose-headings:text-ink">
+                                    {!! $event->description !!}
+                                </div>
+                                
+                                <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                                    <a href="{{ url('/register') }}?event={{ $event->id }}" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-accent hover:bg-black text-white font-manrope font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all shadow-md">
+                                        Register For Competition
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
 
             </div>
         </section>
