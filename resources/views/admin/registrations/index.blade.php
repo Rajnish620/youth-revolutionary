@@ -12,12 +12,12 @@
             <p class="text-xs text-gray-500 mt-1">Review student registrations, verify payment screenshots, and generate event day printouts</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-            <a href="{{ route('admin.registrations.signature-sheet', ['event_id' => request('event_id')]) }}" target="_blank" 
+            <a href="{{ route('admin.registrations.signature-sheet', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
                 class="px-4 py-2.5 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-print text-xs"></i>
                 <span>Print Attendance Sheet</span>
             </a>
-            <a href="{{ route('admin.registrations.desk-slips', ['event_id' => request('event_id')]) }}" target="_blank" 
+            <a href="{{ route('admin.registrations.desk-slips', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
                 class="px-4 py-2.5 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-ticket text-xs"></i>
                 <span>Print Desk Slips</span>
@@ -52,6 +52,16 @@
                 @endforeach
             </select>
 
+            <!-- Group Filter -->
+            @if(request('event_id') && request('event_id') !== 'All')
+            <select name="group_id" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none max-w-[200px] truncate">
+                <option value="All">All Groups</option>
+                @foreach($groups as $g)
+                    <option value="{{ $g->id }}" {{ request('group_id') == $g->id ? 'selected' : '' }}>{{ $g->group_name }} ({{ $g->registrations_count }} students)</option>
+                @endforeach
+            </select>
+            @endif
+
             <!-- Status Filter -->
             <select name="status" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none">
                 <option value="All">All Payment Statuses</option>
@@ -65,6 +75,7 @@
         <form method="GET" action="{{ route('admin.registrations.index') }}" class="relative w-full md:w-72">
             @if(request('season')) <input type="hidden" name="season" value="{{ request('season') }}"> @endif
             @if(request('event_id')) <input type="hidden" name="event_id" value="{{ request('event_id') }}"> @endif
+            @if(request('group_id')) <input type="hidden" name="group_id" value="{{ request('group_id') }}"> @endif
             @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, roll no, school..."  
                 class="w-full bg-gray-100/80 text-xs pl-9 pr-4 py-2.5 rounded-xl border border-transparent focus:border-[#340C6F] focus:bg-white outline-none transition-all">

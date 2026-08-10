@@ -38,6 +38,10 @@ class RegistrationController extends Controller
             });
         }
 
+        if ($request->filled('group_id') && $request->group_id !== 'All') {
+            $query->where('event_group_id', $request->group_id);
+        }
+
         $registrations = $query->latest()->paginate(15);
         
         $seasons = \App\Models\Season::oldest()->get();
@@ -47,7 +51,12 @@ class RegistrationController extends Controller
         }
         $events = $eventsQuery->get();
 
-        return view('admin.registrations.index', compact('registrations', 'events', 'seasons'));
+        $groups = [];
+        if ($request->filled('event_id') && $request->event_id !== 'All') {
+            $groups = \App\Models\EventGroup::where('event_id', $request->event_id)->withCount('registrations')->get();
+        }
+
+        return view('admin.registrations.index', compact('registrations', 'events', 'seasons', 'groups'));
     }
 
     public function approvePayment(EventRegistration $registration)
@@ -74,10 +83,15 @@ class RegistrationController extends Controller
     public function signatureSheet(Request $request)
     {
         $eventId = $request->get('event_id');
+        $groupId = $request->get('group_id');
         $query = EventRegistration::with(['event', 'group'])->where('payment_status', 'approved');
 
-        if ($eventId) {
+        if ($eventId && $eventId !== 'All') {
             $query->where('event_id', $eventId);
+        }
+
+        if ($groupId && $groupId !== 'All') {
+            $query->where('event_group_id', $groupId);
         }
 
         $registrations = $query->orderBy('roll_no', 'asc')->get();
@@ -89,10 +103,15 @@ class RegistrationController extends Controller
     public function deskSlips(Request $request)
     {
         $eventId = $request->get('event_id');
+        $groupId = $request->get('group_id');
         $query = EventRegistration::with(['event', 'group'])->where('payment_status', 'approved');
 
-        if ($eventId) {
+        if ($eventId && $eventId !== 'All') {
             $query->where('event_id', $eventId);
+        }
+
+        if ($groupId && $groupId !== 'All') {
+            $query->where('event_group_id', $groupId);
         }
 
         $registrations = $query->orderBy('roll_no', 'asc')->get();
