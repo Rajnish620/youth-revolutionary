@@ -306,7 +306,7 @@
             <td class="val">{{ $registration->email }}</td>
         </tr>
         <tr>
-            <td class="lbl">School Name</td>
+            <td class="lbl">School Name/Coaching Name</td>
             <td class="val" colspan="4">{{ $registration->school_name ?? 'N/A' }}</td>
         </tr>
         <tr>
