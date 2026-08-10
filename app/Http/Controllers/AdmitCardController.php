@@ -55,6 +55,7 @@ class AdmitCardController extends Controller
             'autoLangToFont' => true,
         ]);
 
+        ini_set('pcre.backtrack_limit', '5000000');
         $mpdf->WriteHTML($html);
 
         return response($mpdf->Output('', 'S'), 200, [
