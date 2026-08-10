@@ -15,7 +15,10 @@
                     </p>
                     
                     <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-2xl font-black shadow-lg">
-                        REGISTRATION NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
+                        REG NO: <span class="text-[#F1400C]">{{ is_array($reg) ? ($reg['registration_no'] ?? '') : ($reg->registration_no ?? '') }}</span>
+                    </div>
+                    <div class="inline-block bg-white text-slate-900 px-8 py-3.5 rounded-2xl font-mono text-xl font-black shadow-lg mt-2">
+                        ROLL NO: <span class="text-[#028CD4]">{{ is_array($reg) ? ($reg['roll_no'] ?? '') : ($reg->roll_no ?? '') }}</span>
                     </div>
 
                     <div class="text-xs text-emerald-100 font-medium pt-2">
@@ -75,38 +78,62 @@
                             get availableClasses() {
                                 const allClasses = [
                                     'Class 5th', 'Class 6th', 'Class 7th', 'Class 8th', 
-                                    'Class 9th', 'Class 10th', 'Class 11th', 'Class 12th'
+                                    'Class 9th', 'Class 10th', 'Class 11th', 'Class 12th',
+                                    'General Below to 25 years'
                                 ];
                                 if(!this.selectedGroupId) return allClasses;
                                 
                                 const grp = this.availableGroups.find(g => g.id == this.selectedGroupId);
                                 if(!grp) return allClasses;
                                 
+                                const groupName = (grp.group_name || '').toLowerCase();
+                                const classRange = (grp.class_range || '').toLowerCase();
                                 const rangeStr = (grp.class_range || grp.group_name || '').toLowerCase();
                                 const numbers = rangeStr.match(/\d+/g);
                                 
                                 if (!numbers || numbers.length === 0) return allClasses;
+
+                                let allowedClasses = [];
                                 
                                 // If they typed something like "5th, 6th, 8th" or "5 & 6"
                                 if(rangeStr.includes(',') || rangeStr.includes('&') || rangeStr.includes('and')) {
-                                    return allClasses.filter(c => {
-                                        const cNum = c.match(/\d+/)[0];
+                                    allowedClasses = allClasses.filter(c => {
+                                        const match = c.match(/\d+/);
+                                        const cNum = match ? match[0] : null;
                                         return numbers.includes(cNum);
                                     });
+                                } else {
+                                    // If they typed a range like "9 to 12" or single class "5"
+                                    let start = parseInt(numbers[0]);
+                                    let end = numbers.length > 1 ? parseInt(numbers[numbers.length - 1]) : start;
+                                    
+                                    if (start && end) {
+                                        allowedClasses = allClasses.filter(c => {
+                                            const match = c.match(/\d+/);
+                                            if (!match) return false;
+                                            const cNum = parseInt(match[0]);
+                                            return cNum >= Math.min(start, end) && cNum <= Math.max(start, end);
+                                        });
+                                    } else {
+                                        allowedClasses = allClasses;
+                                    }
+                                }
+
+                                // Explicitly include 'General Below to 25 years' for Group D, Group 5, or any group with Class 12th
+                                if (
+                                    groupName.includes('group d') || 
+                                    groupName.includes('grp 5') ||
+                                    groupName.includes('group 5') ||
+                                    classRange.includes('25') || 
+                                    groupName.includes('25') ||
+                                    allowedClasses.includes('Class 12th')
+                                ) {
+                                    if (!allowedClasses.includes('General Below to 25 years')) {
+                                        allowedClasses.push('General Below to 25 years');
+                                    }
                                 }
                                 
-                                // If they typed a range like "9 to 12" or single class "5"
-                                let start = parseInt(numbers[0]);
-                                let end = numbers.length > 1 ? parseInt(numbers[numbers.length - 1]) : start;
-                                
-                                if (start && end) {
-                                    return allClasses.filter(c => {
-                                        const cNum = parseInt(c.match(/\d+/)[0]);
-                                        return cNum >= Math.min(start, end) && cNum <= Math.max(start, end);
-                                    });
-                                }
-                                
-                                return allClasses;
+                                return allowedClasses;
                             },
 
                             get classOptionsHtml() {
@@ -227,8 +254,8 @@
 
                                 <!-- Email -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address *</label>
-                                    <input type="email" name="email" required placeholder="student@gmail.com"
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+                                    <input type="email" name="email" placeholder="student@gmail.com"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                                 </div>
 
@@ -272,7 +299,7 @@
 
                                 <!-- School Name -->
                                 <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">School Name</label>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">School Name / Coaching Centre Name </label>
                                     <input type="text" name="school_name" placeholder="e.g. ABC Public School"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                                 </div>

@@ -12,6 +12,7 @@ class EventRegistration extends Model
     protected $fillable = [
         'event_id',
         'event_group_id',
+        'registration_no',
         'roll_no',
         'student_name',
         'father_name',

@@ -73,7 +73,7 @@
     </div>
 
     <!-- Student Registrations Data Table -->
-    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden" x-data="{ activeSS: null }">
+    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden" x-data="{ activeSS: null, activeStudent: null }">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -141,6 +141,22 @@
                             </td>
                             <td class="py-4 px-6 text-right">
                                 <div class="flex items-center justify-end gap-2">
+                                    <button @click='activeStudent = {{ json_encode([
+                                        "roll_no" => $reg->roll_no,
+                                        "student_name" => $reg->student_name,
+                                        "father_name" => $reg->father_name ?? "N/A",
+                                        "school_name" => $reg->school_name ?? "N/A",
+                                        "student_class" => $reg->student_class,
+                                        "mobile" => $reg->mobile,
+                                        "fee_paid" => $reg->fee_paid,
+                                        "event_title" => $reg->event->title ?? "N/A",
+                                        "group_name" => $reg->group->group_name ?? "General Group",
+                                        "payment_status" => $reg->payment_status,
+                                        "photo" => str_starts_with($reg->photo, "http") ? $reg->photo : asset($reg->photo ?? "images/quize.jpg")
+                                    ], JSON_HEX_APOS | JSON_HEX_QUOT) }}' class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-500 hover:text-white text-gray-500 flex items-center justify-center transition-all" title="View Details">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+
                                     @if($reg->payment_status !== 'approved')
                                         <form method="POST" action="{{ route('admin.registrations.approve', $reg->id) }}">
                                             @csrf
@@ -183,12 +199,65 @@
         <!-- Payment Screenshot Preview Modal -->
         <div x-show="activeSS !== null" style="display: none;" 
             class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white p-4 rounded-3xl max-w-md w-full relative">
+            <div @click.away="activeSS = null" class="bg-white p-4 rounded-3xl max-w-md w-full relative">
                 <button @click="activeSS = null" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <h3 class="font-extrabold text-base text-gray-900 mb-3">Payment Screenshot</h3>
                 <img :src="activeSS" class="w-full max-h-[70vh] object-contain rounded-2xl border border-gray-200" />
+            </div>
+        </div>
+
+        <!-- Student Details Modal -->
+        <div x-show="activeStudent !== null" style="display: none;" 
+            class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div @click.away="activeStudent = null" class="bg-white p-6 rounded-3xl max-w-lg w-full relative shadow-2xl">
+                <button @click="activeStudent = null" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                
+                <div class="flex items-center gap-4 mb-6">
+                    <img :src="activeStudent?.photo" alt="Student" class="w-16 h-16 rounded-full object-cover border-2 border-[#340C6F]">
+                    <div>
+                        <h3 class="font-extrabold text-xl text-gray-900" x-text="activeStudent?.student_name"></h3>
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-purple-100 text-[#340C6F]" x-text="activeStudent?.roll_no"></span>
+                    </div>
+                </div>
+                
+                <div class="space-y-4 text-sm">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">Father's Name</div>
+                            <div class="font-bold text-gray-800" x-text="activeStudent?.father_name"></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">Mobile No</div>
+                            <div class="font-bold text-gray-800" x-text="activeStudent?.mobile"></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">Class</div>
+                            <div class="font-bold text-gray-800" x-text="activeStudent?.student_class"></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="text-xs text-gray-400 font-semibold mb-1">School</div>
+                            <div class="font-bold text-gray-800 line-clamp-2" x-text="activeStudent?.school_name"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[#340C6F]/5 p-4 rounded-xl border border-[#340C6F]/10">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-xs text-[#340C6F] font-bold">Event Details</div>
+                            <div class="text-xs font-bold" :class="activeStudent?.payment_status === 'approved' ? 'text-green-600' : (activeStudent?.payment_status === 'pending' ? 'text-amber-600' : 'text-red-600')">
+                                Status: <span class="capitalize" x-text="activeStudent?.payment_status"></span>
+                            </div>
+                        </div>
+                        <div class="font-bold text-gray-900" x-text="activeStudent?.event_title"></div>
+                        <div class="flex justify-between mt-1 text-sm">
+                            <div class="text-[#F1400C] font-semibold" x-text="activeStudent?.group_name"></div>
+                            <div class="font-bold text-gray-900">Fee: ₹<span x-text="activeStudent?.fee_paid"></span></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

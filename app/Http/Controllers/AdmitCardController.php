@@ -17,17 +17,17 @@ class AdmitCardController extends Controller
     public function download(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|string',
+            'registration_no' => 'required|string',
             'dob' => 'required|date',
         ]);
 
         $registration = EventRegistration::with(['event', 'group'])
-            ->where('mobile', $request->mobile)
+            ->where('registration_no', $request->registration_no)
             ->where('dob', $request->dob)
             ->first();
 
         if (!$registration) {
-            return back()->with('error', 'No registration found with this Mobile Number and Date of Birth.');
+            return back()->with('error', 'No registration found with this Registration Number and Date of Birth.');
         }
 
         if ($registration->payment_status !== 'approved') {

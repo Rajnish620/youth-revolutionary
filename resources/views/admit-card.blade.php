@@ -4,7 +4,7 @@
     <div class="max-w-md w-full px-6">
         <div class="text-center mb-10">
             <h1 class="text-3xl font-extrabold text-[#340C6F] mb-4">Download Admit Card</h1>
-            <p class="text-slate-600 text-sm">Enter your Date of Birth and Mobile Number associated with your approved registration.</p>
+            <p class="text-slate-600 text-sm">Enter your Registration Number and Date of Birth associated with your approved registration.</p>
         </div>
 
         <div class="bg-white rounded-3xl p-8 shadow-xl shadow-[#028CD4]/5 border border-slate-100">
@@ -19,10 +19,10 @@
                 @csrf
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Mobile Number</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Registration Number</label>
                     <div class="relative">
-                        <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="tel" name="mobile" required placeholder="e.g. 9876543210"
+                        <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" name="registration_no" required placeholder="e.g. YRREG0001"
                             class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-semibold text-slate-900 focus:bg-white focus:border-[#028CD4] outline-none transition-all">
                     </div>
                 </div>

@@ -58,7 +58,7 @@ Route::post('/register', function (Request $request) {
         'live_photo_base64' => 'nullable|string',
         'payment_screenshot' => 'nullable|image|max:5120',
         'dob' => 'required|date',
-        'email' => 'required|email|max:255',
+        'email' => 'nullable|email|max:255',
         'gender' => 'required|string|max:10',
         'category' => 'required|string|max:50',
         'address' => 'required|string|max:500',
@@ -113,15 +113,41 @@ Route::post('/register', function (Request $request) {
         }
     }
 
-    // Generate unique Roll No
-    $latestRegistration = EventRegistration::where('event_group_id', $request->event_group_id)->orderBy('id', 'desc')->first();
-    if ($latestRegistration && preg_match('/-(\d+)$/', $latestRegistration->roll_no, $matches)) {
+    // Generate unique Roll No (global sequence across all groups)
+    $latestRoll = EventRegistration::where('roll_no', 'like', 'YR-%')
+        ->orderBy('id', 'desc')
+        ->first();
+    if ($latestRoll && preg_match('/-(\d+)$/', $latestRoll->roll_no, $matches)) {
         $nextRollNumber = max($rollStart, (int)$matches[1] + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
     
     $validated['roll_no'] = 'YR-' . date('Y') . '-' . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
+
+    // Generate unique Registration No per season (Format: YRREG0001)
+    $event = Event::find($request->event_id);
+    $season = $event ? $event->season : null;
+
+    $latestRegistration = EventRegistration::whereHas('event', function ($q) use ($season) {
+        if ($season) {
+            $q->where('season', $season);
+        } else {
+            $q->whereNull('season')->orWhere('season', '');
+        }
+    })
+    ->whereNotNull('registration_no')
+    ->where('registration_no', 'like', 'YRREG%')
+    ->orderBy('id', 'desc')
+    ->first();
+
+    if ($latestRegistration && preg_match('/YRREG(\d+)$/', $latestRegistration->registration_no, $matches)) {
+        $nextRegNumber = (int)$matches[1] + 1;
+    } else {
+        $nextRegNumber = 1;
+    }
+    
+    $validated['registration_no'] = 'YRREG' . str_pad($nextRegNumber, 4, '0', STR_PAD_LEFT);
     $validated['fee_paid'] = $fee;
     $validated['payment_status'] = 'pending';
 

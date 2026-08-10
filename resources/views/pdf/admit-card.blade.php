@@ -260,7 +260,7 @@
             <td class="lbl">Roll Number</td>
             <td class="val"><span class="roll-highlight">{{ $registration->roll_no }}</span></td>
             <td class="lbl">Registration ID</td>
-            <td class="val">#REG-{{ str_pad($registration->id, 5, '0', STR_PAD_LEFT) }}</td>
+            <td class="val">{{ $registration->registration_no ?? '#REG-'.str_pad($registration->id, 5, '0', STR_PAD_LEFT) }}</td>
             <td rowspan="6" class="photo-cell">
                 <div class="photo-box">
                     @if($registration->photo && file_exists(public_path($registration->photo)))
