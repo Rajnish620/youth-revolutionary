@@ -244,6 +244,7 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/registrations', [\App\Http\Controllers\Admin\RegistrationController::class, 'index'])->name('admin.registrations.index');
     Route::post('admin/registrations/{registration}/approve', [\App\Http\Controllers\Admin\RegistrationController::class, 'approvePayment'])->name('admin.registrations.approve');
     Route::post('admin/registrations/{registration}/reject', [\App\Http\Controllers\Admin\RegistrationController::class, 'rejectPayment'])->name('admin.registrations.reject');
+    Route::post('admin/registrations/{registration}/toggle-admit-card', [\App\Http\Controllers\Admin\RegistrationController::class, 'toggleAdmitCard'])->name('admin.registrations.toggle-admit-card');
     Route::delete('admin/registrations/{registration}', [\App\Http\Controllers\Admin\RegistrationController::class, 'destroy'])->name('admin.registrations.destroy');
     Route::get('admin/registrations/signature-sheet', [\App\Http\Controllers\Admin\RegistrationController::class, 'signatureSheet'])->name('admin.registrations.signature-sheet');
     Route::get('admin/registrations/desk-slips', [\App\Http\Controllers\Admin\RegistrationController::class, 'deskSlips'])->name('admin.registrations.desk-slips');

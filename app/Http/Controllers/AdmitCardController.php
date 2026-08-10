@@ -34,6 +34,10 @@ class AdmitCardController extends Controller
             return back()->with('error', 'Your registration is not yet approved. Please try again later.');
         }
 
+        if (!$registration->is_admit_card_allowed) {
+            return back()->with('error', 'Admit card generation is not yet allowed for your registration. Please check back later.');
+        }
+
         $setting = AdmitCardSetting::first();
         if (!$setting) {
             return back()->with('error', 'Admit card settings have not been configured by the admin yet.');

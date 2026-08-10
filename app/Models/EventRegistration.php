@@ -27,6 +27,7 @@ class EventRegistration extends Model
         'marks',
         'rank',
         'certificate_enabled',
+        'is_admit_card_allowed',
         'dob',
         'email',
         'gender',
@@ -36,6 +37,7 @@ class EventRegistration extends Model
 
     protected $casts = [
         'certificate_enabled' => 'boolean',
+        'is_admit_card_allowed' => 'boolean',
         'marks' => 'decimal:2',
         'fee_paid' => 'decimal:2',
     ];

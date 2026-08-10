@@ -66,6 +66,14 @@ class RegistrationController extends Controller
         return redirect()->back()->with('success', "Payment approved for Roll No: {$registration->roll_no}!");
     }
 
+    public function toggleAdmitCard(EventRegistration $registration)
+    {
+        $registration->update(['is_admit_card_allowed' => !$registration->is_admit_card_allowed]);
+        
+        $status = $registration->is_admit_card_allowed ? 'allowed' : 'disabled';
+        return redirect()->back()->with('success', "Admit Card has been {$status} for Roll No: {$registration->roll_no}.");
+    }
+
     public function rejectPayment(EventRegistration $registration)
     {
         $registration->update(['payment_status' => 'rejected']);

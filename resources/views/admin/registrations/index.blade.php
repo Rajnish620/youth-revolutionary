@@ -181,6 +181,19 @@
                                                 <i class="fa-solid fa-check text-xs"></i> Approve
                                             </button>
                                         </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.registrations.toggle-admit-card', $reg->id) }}">
+                                            @csrf
+                                            @if($reg->is_admit_card_allowed)
+                                                <button type="submit" class="px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1" title="Disable Admit Card">
+                                                    <i class="fa-solid fa-lock text-xs"></i> Disallow
+                                                </button>
+                                            @else
+                                                <button type="submit" class="px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1" title="Allow Admit Card">
+                                                    <i class="fa-solid fa-id-card text-xs"></i> Allow
+                                                </button>
+                                            @endif
+                                        </form>
                                     @endif
 
                                     @if($reg->payment_status !== 'rejected')
