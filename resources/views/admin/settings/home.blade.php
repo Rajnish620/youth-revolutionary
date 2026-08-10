@@ -79,6 +79,19 @@
 
         </div>
 
+        <div class="border p-4 rounded-lg bg-gray-50 mb-8">
+            <h3 class="font-bold text-lg mb-4 border-b pb-2">Middle Banner (Between "What you can do" and "Nextgen")</h3>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Banner Image</label>
+                @if($setting->middle_banner_image)
+                    <div class="mb-2">
+                        <img src="{{ asset($setting->middle_banner_image) }}" class="max-h-48 object-cover border rounded">
+                    </div>
+                @endif
+                <input type="file" name="middle_banner_image" class="w-full border-gray-300 rounded-md shadow-sm">
+            </div>
+        </div>
+
         <div class="flex justify-end">
             <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700">Save Settings</button>
         </div>

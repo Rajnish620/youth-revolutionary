@@ -16,6 +16,7 @@ class HomeSetting extends Model
         'polaroid_2_text',
         'polaroid_3_image',
         'polaroid_3_text',
+        'middle_banner_image',
     ];
 
     public static function getSettings()

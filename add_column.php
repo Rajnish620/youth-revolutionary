@@ -1,13 +1,17 @@
 <?php
-require __DIR__.'/vendor/autoload.php';
-$app = require_once __DIR__.'/bootstrap/app.php';
-$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+require 'vendor/autoload.php';
+$app = require_once 'bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
 
-Schema::table('event_registrations', function (Blueprint $table) {
-    if (!Schema::hasColumn('event_registrations', 'registration_no')) {
-        $table->string('registration_no')->nullable()->unique()->after('id');
-    }
-});
-echo "Column added successfully.\n";
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
+if(!Schema::hasColumn('home_settings', 'middle_banner_image')) {
+    Schema::table('home_settings', function(Blueprint $table) {
+        $table->text('middle_banner_image')->nullable();
+    });
+    echo "Column added successfully.\n";
+} else {
+    echo "Column already exists.\n";
+}

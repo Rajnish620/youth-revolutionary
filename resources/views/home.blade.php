@@ -252,6 +252,14 @@
         </div>
     </section>
 
+    @if($homeSetting && $homeSetting->middle_banner_image)
+    <!-- MIDDLE BANNER IMAGE -->
+    <section class="border-t-[6px] border-black bg-black">
+        <img src="{{ asset($homeSetting->middle_banner_image) }}" class="w-full h-auto object-cover" alt="Campaign Banner">
+    </section>
+    @endif
+
+
     {{-- 
     <!-- SECTION 3: HUMANS WHO CARE (Cards) -->
     <section class="bg-[#24211D] py-24 brutalist-font border-t-[6px] border-black">
