@@ -103,7 +103,7 @@
                               } 
                           }" 
                           x-init="setTimeout(() => typeWriter(), 500)">
-                        <span x-text="typewriterText"></span><span class="animate-pulse text-black">|</span>
+                        <span x-text="typewriterText"></span>
                     </span> 
                     in competitions could change <span class="text-neo-yellow" style="-webkit-text-stroke: 2px #000;">everything?</span>
                 </h2>
