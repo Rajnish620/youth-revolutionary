@@ -282,4 +282,13 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/inquiries', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.inquiries.index');
     Route::post('admin/inquiries/{message}/read', [\App\Http\Controllers\Admin\ContactMessageController::class, 'markAsRead'])->name('admin.inquiries.mark-read');
     Route::delete('admin/inquiries/{message}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.inquiries.destroy');
+
+    // Admin Finance
+    Route::get('admin/finance', [\App\Http\Controllers\Admin\FinanceController::class, 'index'])->name('admin.finance.index');
+    Route::post('admin/finance/contributions', [\App\Http\Controllers\Admin\FinanceController::class, 'storeContribution'])->name('admin.finance.contributions.store');
+    Route::put('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateContribution'])->name('admin.finance.contributions.update');
+    Route::delete('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyContribution'])->name('admin.finance.contributions.destroy');
+    Route::post('admin/finance/expenses', [\App\Http\Controllers\Admin\FinanceController::class, 'storeExpense'])->name('admin.finance.expenses.store');
+    Route::put('admin/finance/expenses/{expense}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateExpense'])->name('admin.finance.expenses.update');
+    Route::delete('admin/finance/expenses/{expense}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyExpense'])->name('admin.finance.expenses.destroy');
 });

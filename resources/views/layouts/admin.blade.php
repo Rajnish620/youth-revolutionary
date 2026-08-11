@@ -168,6 +168,16 @@
                     <i x-show="!sidebarCollapsed" class="fa-solid fa-chevron-right text-xs {{ request()->routeIs('admin.registrations.*') ? 'text-white' : 'text-gray-500 group-hover:translate-x-1' }} transition-transform"></i>
                 </a>
 
+                <!-- Finance -->
+                <a href="{{ route('admin.finance.index') }}" 
+                   title="Finance"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.finance.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-wallet text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.finance.*') ? 'text-white' : 'text-gray-400 group-hover:text-emerald-400' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Finance</span>
+                    </div>
+                </a>
+
                 <!-- Marks & Certificates -->
                 <a href="{{ route('admin.marks.index') }}" 
                    title="Marks & Certificates"
