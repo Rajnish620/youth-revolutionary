@@ -206,11 +206,13 @@
             text-transform: uppercase;
         }
         .sig-img-container {
-            height: 35px;
+            height: 50px;
             margin-bottom: 2px;
+            text-align: center;
         }
         .sig-img-container img {
-            max-height: 34px;
+            height: 45px;
+            width: auto;
             max-width: 150px;
         }
 
@@ -367,7 +369,7 @@
             <td class="sig-td">
                 <div class="sig-img-container">
                     @if(!empty($setting->signature_path) && file_exists(public_path($setting->signature_path)))
-                        <img src="{{ public_path($setting->signature_path) }}" alt="Signature">
+                        <img src="{{ public_path($setting->signature_path) }}" alt="Signature" height="45">
                     @endif
                 </div>
                 <div class="sig-box-line">Authorized Signatory / Controller</div>
