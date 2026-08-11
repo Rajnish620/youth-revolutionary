@@ -178,6 +178,16 @@
                     </div>
                 </a>
 
+                <!-- Answer Keys -->
+                <a href="{{ route('admin.answer-keys.index') }}" 
+                   title="Answer Keys"
+                   class="flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 {{ request()->routeIs('admin.answer-keys.*') ? 'bg-gradient-to-r from-brand-orange to-brand-purple text-white shadow-lg shadow-brand-orange/30' : 'text-gray-300 hover:text-white hover:bg-white/5 group' }}">
+                    <div class="flex items-center gap-3.5 truncate">
+                        <i class="fa-solid fa-key text-lg shrink-0 w-6 text-center {{ request()->routeIs('admin.answer-keys.*') ? 'text-white' : 'text-gray-400 group-hover:text-yellow-400' }} transition-colors"></i>
+                        <span x-show="!sidebarCollapsed" class="truncate">Answer Keys</span>
+                    </div>
+                </a>
+
                 <!-- Marks & Certificates -->
                 <a href="{{ route('admin.marks.index') }}" 
                    title="Marks & Certificates"

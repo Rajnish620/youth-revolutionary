@@ -98,6 +98,7 @@
 
                 {{-- <a href="{{ url('/events') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Events</a> --}}
                 <a href="{{ route('admit-card.index') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Admit Card</a>
+                <a href="{{ route('answer-key.index') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Answer Key</a>
                 <a href="{{ url('/results') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Results</a>
                 <a href="{{ url('/gallery') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Gallery</a>
                 <a href="{{ url('/contact') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Contact</a>
@@ -159,6 +160,7 @@
 
             {{-- <a href="{{ url('/events') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Events</a> --}}
             <a href="{{ route('admit-card.index') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Admit Card</a>
+            <a href="{{ route('answer-key.index') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Answer Key</a>
             <a href="{{ url('/results') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Results</a>
             <a href="{{ url('/gallery') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Gallery</a>
             <a href="{{ url('/contact') }}" @click="menuOpen = false" class="hover:text-[#028CD4] py-1">Contact</a>

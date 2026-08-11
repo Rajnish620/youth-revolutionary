@@ -38,4 +38,9 @@ class Event extends Model
     {
         return $this->hasMany(EventRegistration::class);
     }
+
+    public function answerKeys()
+    {
+        return $this->hasMany(AnswerKey::class);
+    }
 }

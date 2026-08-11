@@ -204,6 +204,12 @@ use App\Http\Controllers\AdmitCardController;
 Route::get('/admit-card', [AdmitCardController::class, 'index'])->name('admit-card.index');
 Route::post('/admit-card/download', [AdmitCardController::class, 'download'])->name('admit-card.download');
 
+use App\Http\Controllers\AnswerKeyController;
+Route::get('/answer-key', [AnswerKeyController::class, 'index'])->name('answer-key.index');
+Route::post('/answer-key/authenticate', [AnswerKeyController::class, 'authenticate'])->name('answer-key.authenticate');
+Route::get('/answer-key/view', [AnswerKeyController::class, 'view'])->name('answer-key.view');
+Route::post('/answer-key/logout', [AnswerKeyController::class, 'logout'])->name('answer-key.logout');
+
 use App\Http\Controllers\Admin\CompetitionController;
 
 Route::middleware('auth')->group(function () {
@@ -288,7 +294,18 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/finance/contributions', [\App\Http\Controllers\Admin\FinanceController::class, 'storeContribution'])->name('admin.finance.contributions.store');
     Route::put('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateContribution'])->name('admin.finance.contributions.update');
     Route::delete('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyContribution'])->name('admin.finance.contributions.destroy');
+    // Admin Finance
+    Route::get('admin/finance', [\App\Http\Controllers\Admin\FinanceController::class, 'index'])->name('admin.finance.index');
+    Route::post('admin/finance/contributions', [\App\Http\Controllers\Admin\FinanceController::class, 'storeContribution'])->name('admin.finance.contributions.store');
+    Route::put('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateContribution'])->name('admin.finance.contributions.update');
+    Route::delete('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyContribution'])->name('admin.finance.contributions.destroy');
     Route::post('admin/finance/expenses', [\App\Http\Controllers\Admin\FinanceController::class, 'storeExpense'])->name('admin.finance.expenses.store');
     Route::put('admin/finance/expenses/{expense}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateExpense'])->name('admin.finance.expenses.update');
     Route::delete('admin/finance/expenses/{expense}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyExpense'])->name('admin.finance.expenses.destroy');
+
+    // Admin Answer Keys
+    Route::get('admin/answer-keys', [\App\Http\Controllers\Admin\AnswerKeyController::class, 'index'])->name('admin.answer-keys.index');
+    Route::post('admin/answer-keys', [\App\Http\Controllers\Admin\AnswerKeyController::class, 'store'])->name('admin.answer-keys.store');
+    Route::patch('admin/answer-keys/{answerKey}/toggle', [\App\Http\Controllers\Admin\AnswerKeyController::class, 'toggle'])->name('admin.answer-keys.toggle');
+    Route::delete('admin/answer-keys/{answerKey}', [\App\Http\Controllers\Admin\AnswerKeyController::class, 'destroy'])->name('admin.answer-keys.destroy');
 });
