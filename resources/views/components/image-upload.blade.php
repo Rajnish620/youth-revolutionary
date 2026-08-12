@@ -14,8 +14,13 @@
     }
 @endphp
 
-<div x-data="imageUploadComponent('{{ $initialUrl }}', {{ $maxSize }})" class="w-full">
-    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">{{ $label }}</label>
+<div x-data="imageUploadComponent('{{ $initialUrl }}', {{ $maxSize }})" class="w-full relative">
+    <div class="flex justify-between items-end mb-1.5">
+        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ $label }}</label>
+        <button type="button" x-show="imageUrl" @click.prevent="removeImage" class="text-red-500 hover:text-red-700 text-[10px] uppercase font-bold flex items-center gap-1 transition-colors" style="display: none;">
+            <i class="fa-solid fa-trash-can"></i> Remove
+        </button>
+    </div>
     
     <div class="relative w-full group">
         <label for="{{ $inputId }}" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden relative">
@@ -46,6 +51,9 @@
             <input type="hidden" name="existing_{{ $name }}" value="{{ $existing }}">
         @endif
         
+        <!-- Hidden input for remove flag -->
+        <input type="hidden" name="remove_{{ $name }}" :value="isRemoved ? '1' : '0'">
+        
         <!-- Error Message (Optional alpine bound) -->
         <p x-show="error" x-text="error" class="mt-2 text-xs text-red-500 font-semibold" style="display: none;"></p>
     </div>
@@ -57,9 +65,16 @@
         Alpine.data('imageUploadComponent', (initialImageUrl, maxSizeMB) => ({
             imageUrl: initialImageUrl,
             error: null,
+            isRemoved: false,
+            removeImage() {
+                this.imageUrl = null;
+                this.isRemoved = true;
+                document.getElementById('{{ $inputId }}').value = '';
+            },
             fileChosen(event) {
                 const file = event.target.files[0];
                 this.error = null;
+                this.isRemoved = false;
                 
                 if (!file) return;
                 

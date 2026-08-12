@@ -20,8 +20,14 @@
                 <h3 class="font-bold text-lg mb-4 border-b pb-2">Site Favicon</h3>
                 <div class="mb-4 flex items-center gap-4">
                     @if($setting->favicon)
-                        <div class="w-16 h-16 bg-white border border-gray-200 rounded p-1 flex items-center justify-center shrink-0">
-                            <img src="{{ asset($setting->favicon) }}" alt="Favicon" class="max-w-full max-h-full">
+                        <div x-data="{ removed: false }" class="flex flex-col items-center gap-2">
+                            <div x-show="!removed" class="w-16 h-16 bg-white border border-gray-200 rounded p-1 flex items-center justify-center shrink-0">
+                                <img src="{{ asset($setting->favicon) }}" alt="Favicon" class="max-w-full max-h-full">
+                            </div>
+                            <button type="button" x-show="!removed" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-trash-can"></i> Remove
+                            </button>
+                            <input type="hidden" name="remove_favicon" :value="removed ? '1' : '0'">
                         </div>
                     @endif
                     <div class="flex-1">
@@ -39,8 +45,14 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
                     @if($setting->polaroid_1_image)
-                        <div class="mb-2">
-                            <img src="{{ asset($setting->polaroid_1_image) }}" class="h-32 object-cover border rounded">
+                        <div x-data="{ removed: false }" class="mb-2">
+                            <div x-show="!removed" class="flex items-start gap-3">
+                                <img src="{{ asset($setting->polaroid_1_image) }}" class="h-32 object-cover border rounded">
+                                <button type="button" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors mt-1">
+                                    <i class="fa-solid fa-trash-can"></i> Remove Image
+                                </button>
+                            </div>
+                            <input type="hidden" name="remove_polaroid_1_image" :value="removed ? '1' : '0'">
                         </div>
                     @endif
                     <input type="file" name="polaroid_1_image" class="w-full border-gray-300 rounded-md shadow-sm">
@@ -59,8 +71,14 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
                     @if($setting->polaroid_2_image)
-                        <div class="mb-2">
-                            <img src="{{ asset($setting->polaroid_2_image) }}" class="h-32 object-cover border rounded">
+                        <div x-data="{ removed: false }" class="mb-2">
+                            <div x-show="!removed" class="flex items-start gap-3">
+                                <img src="{{ asset($setting->polaroid_2_image) }}" class="h-32 object-cover border rounded">
+                                <button type="button" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors mt-1">
+                                    <i class="fa-solid fa-trash-can"></i> Remove Image
+                                </button>
+                            </div>
+                            <input type="hidden" name="remove_polaroid_2_image" :value="removed ? '1' : '0'">
                         </div>
                     @endif
                     <input type="file" name="polaroid_2_image" class="w-full border-gray-300 rounded-md shadow-sm">
@@ -79,8 +97,14 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
                     @if($setting->polaroid_3_image)
-                        <div class="mb-2">
-                            <img src="{{ asset($setting->polaroid_3_image) }}" class="h-32 object-cover border rounded">
+                        <div x-data="{ removed: false }" class="mb-2">
+                            <div x-show="!removed" class="flex items-start gap-3">
+                                <img src="{{ asset($setting->polaroid_3_image) }}" class="h-32 object-cover border rounded">
+                                <button type="button" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors mt-1">
+                                    <i class="fa-solid fa-trash-can"></i> Remove Image
+                                </button>
+                            </div>
+                            <input type="hidden" name="remove_polaroid_3_image" :value="removed ? '1' : '0'">
                         </div>
                     @endif
                     <input type="file" name="polaroid_3_image" class="w-full border-gray-300 rounded-md shadow-sm">
@@ -99,8 +123,14 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Upload Banner Image</label>
                 @if($setting->middle_banner_image)
-                    <div class="mb-2">
-                        <img src="{{ asset($setting->middle_banner_image) }}" class="max-h-48 object-cover border rounded">
+                    <div x-data="{ removed: false }" class="mb-2">
+                        <div x-show="!removed" class="flex flex-col items-start gap-2">
+                            <img src="{{ asset($setting->middle_banner_image) }}" class="max-h-48 object-cover border rounded">
+                            <button type="button" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-trash-can"></i> Remove Banner Image
+                            </button>
+                        </div>
+                        <input type="hidden" name="remove_middle_banner_image" :value="removed ? '1' : '0'">
                     </div>
                 @endif
                 <input type="file" name="middle_banner_image" class="w-full border-gray-300 rounded-md shadow-sm">

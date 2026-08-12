@@ -49,6 +49,8 @@ class AdmitCardSettingController extends Controller
             $filename = 'admit_card_logo_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/settings'), $filename);
             $data['logo_path'] = 'uploads/settings/' . $filename;
+        } elseif ($request->has('remove_logo')) {
+            $data['logo_path'] = null;
         }
 
         if ($request->hasFile('signature')) {
@@ -56,6 +58,8 @@ class AdmitCardSettingController extends Controller
             $filename = 'admit_card_signature_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/settings'), $filename);
             $data['signature_path'] = 'uploads/settings/' . $filename;
+        } elseif ($request->has('remove_signature')) {
+            $data['signature_path'] = null;
         }
 
         $setting->update($data);

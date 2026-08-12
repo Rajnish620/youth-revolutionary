@@ -57,45 +57,14 @@
 
                 <!-- Logo Upload -->
                 <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Admit Card Logo (Optional)</label>
-                    <div class="flex items-center gap-6">
-                        @if(!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)))
-                            <div class="w-16 h-16 rounded-xl border border-gray-200 p-1 flex items-center justify-center bg-gray-50 shrink-0">
-                                <img src="{{ asset($setting->logo_path) }}" alt="Logo" class="max-h-full max-w-full object-contain rounded-lg">
-                            </div>
-                        @else
-                            <div class="w-16 h-16 rounded-xl border border-gray-200 p-1 flex items-center justify-center bg-gray-50 shrink-0">
-                                <img src="{{ asset('logo/logo.jpeg') }}" alt="Default Logo" class="max-h-full max-w-full object-contain rounded-lg">
-                            </div>
-                        @endif
-                        <div class="flex-1">
-                            <input type="file" name="logo" accept="image/*"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:bg-white outline-none">
-                            <p class="text-[11px] text-gray-400 mt-1">Upload transparent PNG or JPG logo. If left blank, website default logo will be used.</p>
-                        </div>
-                    </div>
+                    <x-image-upload name="logo" label="Admit Card Logo (Optional)" :existing="!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)) ? $setting->logo_path : 'logo/logo.jpeg'" :maxSize="2" />
+                    <p class="text-[11px] text-gray-400 mt-1">Upload transparent PNG or JPG logo. If you remove this and save, no logo will be used (or default logo will be used).</p>
                 </div>
 
                 <!-- Signature Upload -->
                 <div class="sm:col-span-2 border-t border-gray-100 pt-6">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Authorized Signature Stamp / Image</label>
-                    <div class="flex items-center gap-6">
-                        @if(!empty($setting->signature_path) && file_exists(public_path($setting->signature_path)))
-                            <div class="w-32 h-16 rounded-xl border border-gray-200 p-1 flex items-center justify-center bg-gray-50 shrink-0">
-                                <img src="{{ asset($setting->signature_path) }}" alt="Authorized Signature" class="max-h-full max-w-full object-contain">
-                            </div>
-                        @else
-                            <div class="w-32 h-16 rounded-xl border border-dashed border-gray-300 p-1 flex flex-col items-center justify-center bg-gray-50 shrink-0 text-gray-400 text-xs">
-                                <i class="fa-solid fa-signature text-base mb-1"></i>
-                                <span>No Signature</span>
-                            </div>
-                        @endif
-                        <div class="flex-1">
-                            <input type="file" name="signature" accept="image/*"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:bg-white outline-none">
-                            <p class="text-[11px] text-gray-400 mt-1">Upload a clear PNG image of the authority signature/stamp. It will be printed above "Authorized Signature" on the Admit Card.</p>
-                        </div>
-                    </div>
+                    <x-image-upload name="signature" label="Authorized Signature Stamp / Image" :existing="$setting->signature_path" :maxSize="2" />
+                    <p class="text-[11px] text-gray-400 mt-1">Upload a clear PNG image of the authority signature/stamp. It will be printed above "Authorized Signature" on the Admit Card.</p>
                 </div>
             </div>
         </div>

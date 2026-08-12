@@ -30,6 +30,8 @@ class SettingController extends Controller
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/settings'), $filename);
             $validated['qr_code_image'] = 'uploads/settings/' . $filename;
+        } elseif ($request->has('remove_qr_code_image')) {
+            $validated['qr_code_image'] = null;
         } else {
             // Remove qr_code_image from validated array to keep existing if not uploaded
             unset($validated['qr_code_image']);

@@ -37,6 +37,8 @@ class HomeSettingController extends Controller
                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/settings'), $filename);
                 $validated[$field] = 'uploads/settings/' . $filename;
+            } elseif ($request->has('remove_' . $field)) {
+                $validated[$field] = null;
             } else {
                 unset($validated[$field]);
             }

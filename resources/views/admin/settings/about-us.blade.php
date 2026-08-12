@@ -73,8 +73,14 @@
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Hero Background Image</label>
                             <div class="flex items-center gap-6">
                                 @if(!empty($setting->hero_bg_image) && file_exists(public_path($setting->hero_bg_image)))
-                                    <div class="w-36 h-20 rounded-xl border border-gray-200 p-1 bg-gray-50 shrink-0 overflow-hidden">
-                                        <img src="{{ asset($setting->hero_bg_image) }}" class="w-full h-full object-cover rounded-lg" alt="Hero BG">
+                                    <div x-data="{ removed: false }" class="flex flex-col items-center gap-2">
+                                        <div x-show="!removed" class="w-36 h-20 rounded-xl border border-gray-200 p-1 bg-gray-50 shrink-0 overflow-hidden">
+                                            <img src="{{ asset($setting->hero_bg_image) }}" class="w-full h-full object-cover rounded-lg" alt="Hero BG">
+                                        </div>
+                                        <button type="button" x-show="!removed" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors">
+                                            <i class="fa-solid fa-trash-can"></i> Remove
+                                        </button>
+                                        <input type="hidden" name="remove_hero_bg_image" :value="removed ? '1' : '0'">
                                     </div>
                                 @else
                                     <div class="w-36 h-20 rounded-xl border border-dashed border-gray-300 p-1 flex flex-col items-center justify-center bg-gray-50 text-gray-400 text-xs shrink-0">
@@ -113,8 +119,14 @@
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Who Are We Side Image</label>
                             <div class="flex items-center gap-6">
                                 @if(!empty($setting->who_we_are_image) && file_exists(public_path($setting->who_we_are_image)))
-                                    <div class="w-24 h-24 rounded-xl border border-gray-200 p-1 bg-gray-50 shrink-0 overflow-hidden">
-                                        <img src="{{ asset($setting->who_we_are_image) }}" class="w-full h-full object-cover rounded-lg" alt="Who Are We Image">
+                                    <div x-data="{ removed: false }" class="flex flex-col items-center gap-2">
+                                        <div x-show="!removed" class="w-24 h-24 rounded-xl border border-gray-200 p-1 bg-gray-50 shrink-0 overflow-hidden">
+                                            <img src="{{ asset($setting->who_we_are_image) }}" class="w-full h-full object-cover rounded-lg" alt="Who Are We Image">
+                                        </div>
+                                        <button type="button" x-show="!removed" @click="removed = true" class="text-[10px] text-red-500 font-bold uppercase hover:text-red-700 flex items-center gap-1 transition-colors">
+                                            <i class="fa-solid fa-trash-can"></i> Remove
+                                        </button>
+                                        <input type="hidden" name="remove_who_we_are_image" :value="removed ? '1' : '0'">
                                     </div>
                                 @else
                                     <div class="w-24 h-24 rounded-xl border border-dashed border-gray-300 p-1 flex flex-col items-center justify-center bg-gray-50 text-gray-400 text-xs shrink-0">
@@ -291,7 +303,13 @@
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo</label>
                                 <div class="flex items-center gap-4">
                                     @if(!empty($member->image) && file_exists(public_path($member->image)))
-                                        <img src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                        <div x-data="{ removed: false }" class="flex flex-col items-center gap-1">
+                                            <img x-show="!removed" src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                            <button type="button" x-show="!removed" @click="removed = true" class="text-[9px] text-red-500 font-bold uppercase hover:text-red-700 transition-colors mt-1">
+                                                Remove
+                                            </button>
+                                            <input type="hidden" name="remove_image" :value="removed ? '1' : '0'">
+                                        </div>
                                     @endif
                                     <input type="file" name="image" accept="image/*"
                                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none">
@@ -405,7 +423,13 @@
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo</label>
                                 <div class="flex items-center gap-4">
                                     @if(!empty($member->image) && file_exists(public_path($member->image)))
-                                        <img src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                        <div x-data="{ removed: false }" class="flex flex-col items-center gap-1">
+                                            <img x-show="!removed" src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                            <button type="button" x-show="!removed" @click="removed = true" class="text-[9px] text-red-500 font-bold uppercase hover:text-red-700 transition-colors mt-1">
+                                                Remove
+                                            </button>
+                                            <input type="hidden" name="remove_image" :value="removed ? '1' : '0'">
+                                        </div>
                                     @endif
                                     <input type="file" name="image" accept="image/*"
                                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none">
@@ -519,7 +543,13 @@
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Photo</label>
                                 <div class="flex items-center gap-4">
                                     @if(!empty($member->image) && file_exists(public_path($member->image)))
-                                        <img src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                        <div x-data="{ removed: false }" class="flex flex-col items-center gap-1">
+                                            <img x-show="!removed" src="{{ asset($member->image) }}" class="w-12 h-12 rounded-full object-cover" alt="Member Photo">
+                                            <button type="button" x-show="!removed" @click="removed = true" class="text-[9px] text-red-500 font-bold uppercase hover:text-red-700 transition-colors mt-1">
+                                                Remove
+                                            </button>
+                                            <input type="hidden" name="remove_image" :value="removed ? '1' : '0'">
+                                        </div>
                                     @endif
                                     <input type="file" name="image" accept="image/*"
                                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs outline-none">

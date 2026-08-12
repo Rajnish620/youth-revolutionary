@@ -48,6 +48,8 @@ class AboutUsSettingController extends Controller
             $filename = 'about_hero_bg_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/settings'), $filename);
             $validated['hero_bg_image'] = 'uploads/settings/' . $filename;
+        } elseif ($request->has('remove_hero_bg_image')) {
+            $validated['hero_bg_image'] = null;
         }
 
         if ($request->hasFile('who_we_are_image')) {
@@ -55,6 +57,8 @@ class AboutUsSettingController extends Controller
             $filename = 'about_who_we_are_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/settings'), $filename);
             $validated['who_we_are_image'] = 'uploads/settings/' . $filename;
+        } elseif ($request->has('remove_who_we_are_image')) {
+            $validated['who_we_are_image'] = null;
         }
 
         $setting->update($validated);
@@ -118,6 +122,8 @@ class AboutUsSettingController extends Controller
             $filename = 'team_' . time() . '_' . rand(100, 999) . '.' . $file->extension();
             $file->move(public_path('uploads/team'), $filename);
             $validated['image'] = 'uploads/team/' . $filename;
+        } elseif ($request->has('remove_image')) {
+            $validated['image'] = null;
         }
 
         $teamMember->update($validated);
