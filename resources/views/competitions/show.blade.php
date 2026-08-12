@@ -324,11 +324,15 @@
                             <span class="font-manrope text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-accent block">The Schedule</span>
                             <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] uppercase flex items-center gap-1.5 shadow-sm border border-emerald-200">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                                {{ $events->count() }} Competitions Live
+                                {{ $events->where('status', 'ongoing')->count() }} Competitions Live
                             </span>
                         </div>
                         <h2 class="font-playfair text-4xl sm:text-6xl lg:text-7xl text-ink leading-none">
-                            Upcoming <span class="italic text-accent">Exhibitions.</span>
+                            @if($events->where('status', 'ongoing')->count() > 0)
+                                Live <span class="italic text-accent">Exhibitions.</span>
+                            @else
+                                Upcoming <span class="italic text-accent">Exhibitions.</span>
+                            @endif
                         </h2>
                     </div>
 
