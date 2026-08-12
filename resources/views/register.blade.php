@@ -383,12 +383,17 @@
 
                             <div class="flex flex-col sm:flex-row items-center gap-8">
                                 <!-- QR Code Display -->
-                                <div class="bg-white p-5 rounded-3xl border border-orange-300 shadow-md text-center shrink-0">
+                                <div class="bg-white p-5 rounded-3xl border border-orange-300 shadow-md text-center shrink-0 flex flex-col items-center w-full sm:w-auto">
                                     <img src="{{ str_starts_with($paymentSetting->qr_code_image, 'http') ? $paymentSetting->qr_code_image : asset($paymentSetting->qr_code_image ?? 'images/quize.jpg') }}" 
                                          alt="Payment QR Code" class="w-44 h-44 object-contain mx-auto rounded-2xl">
-                                    <div class="mt-3 font-mono font-black text-xs text-[#340C6F] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100">
+                                    <div class="mt-3 font-mono font-black text-xs text-[#340C6F] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100 w-full">
                                         UPI: {{ $paymentSetting->upi_id }}
                                     </div>
+                                    <!-- UPI Intent Button (Mobile) -->
+                                    <a :href="'upi://pay?pa={{ $paymentSetting->upi_id }}&pn=Youth+Revolutionary&am=' + currentFee + '&cu=INR&tn=Registration+Fee'" 
+                                       class="mt-4 w-full bg-[#028CD4] hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer md:hidden">
+                                        <i class="fa-solid fa-mobile-screen-button text-lg"></i> Pay via UPI App
+                                    </a>
                                 </div>
 
                                 <!-- Fee Amount & Screenshot Field -->
