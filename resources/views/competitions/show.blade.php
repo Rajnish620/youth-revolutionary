@@ -555,7 +555,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
                 <div class="font-manrope font-extrabold text-lg uppercase tracking-tighter flex items-center gap-2">
                     <div class="w-3 h-3 bg-black"></div>
-                    YOUTH<span class="font-playfair italic font-normal text-accent lowercase">rev</span>
+                    YOUTH<span class="font-playfair italic font-normal text-accent lowercase">Revolutionary</span>
                 </div>
                 <p class="font-manrope text-[11px] font-bold uppercase tracking-widest text-black/50">
                     The Official Competition Arena &bull; Youth Revolutionary
