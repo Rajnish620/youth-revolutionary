@@ -20,6 +20,8 @@ class FinanceController extends Controller
         $studentsQuery = EventRegistration::where('payment_status', 'approved');
         $contributionsQuery = Contribution::query();
         $expensesQuery = Expense::query();
+        
+        $events = \App\Models\Event::latest()->get();
 
         if ($selectedSeason) {
             $studentsQuery->whereHas('event', function ($q) use ($selectedSeason) {
@@ -41,6 +43,7 @@ class FinanceController extends Controller
 
         return view('admin.finance.index', compact(
             'seasons', 
+            'events',
             'selectedSeason', 
             'studentIncome', 
             'contributionsTotal', 
@@ -125,14 +128,51 @@ class FinanceController extends Controller
         $type = $request->input('type', 'both'); // 'contributions', 'expenses', 'both'
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $season = $request->input('season');
+        $eventId = $request->input('event_id');
 
         $contributions = collect();
         $expenses = collect();
+        $studentIncome = 0;
+        $eventName = null;
+
+        if ($eventId) {
+            $event = \App\Models\Event::find($eventId);
+            if ($event) {
+                $eventName = $event->title;
+                // If event is selected, we override the season with the event's season just to be consistent, or just keep it
+                if (!$season) {
+                    $season = $event->season;
+                }
+            }
+        }
+
+        // Student Income (Registrations)
+        if ($type === 'both' || $type === 'students') { // Although UI might only pass 'both'
+            $studentsQuery = EventRegistration::where('payment_status', 'approved');
+            if ($season) {
+                $studentsQuery->whereHas('event', function ($q) use ($season) {
+                    $q->where('season', $season);
+                });
+            }
+            if ($eventId) {
+                $studentsQuery->where('event_id', $eventId);
+            }
+            if ($startDate) {
+                // Assuming students have created_at as their payment date or use updated_at
+                $studentsQuery->whereDate('updated_at', '>=', $startDate);
+            }
+            if ($endDate) {
+                $studentsQuery->whereDate('updated_at', '<=', $endDate);
+            }
+            $studentIncome = $studentsQuery->sum('fee_paid');
+        }
 
         if ($type === 'contributions' || $type === 'both') {
             $cQuery = Contribution::query();
             if ($startDate) $cQuery->whereDate('date', '>=', $startDate);
             if ($endDate) $cQuery->whereDate('date', '<=', $endDate);
+            if ($season) $cQuery->where('season', $season);
             $contributions = $cQuery->orderBy('date', 'asc')->get();
         }
 
@@ -140,9 +180,10 @@ class FinanceController extends Controller
             $eQuery = Expense::query();
             if ($startDate) $eQuery->whereDate('date', '>=', $startDate);
             if ($endDate) $eQuery->whereDate('date', '<=', $endDate);
+            if ($season) $eQuery->where('season', $season);
             $expenses = $eQuery->orderBy('date', 'asc')->get();
         }
 
-        return view('admin.finance.print', compact('type', 'startDate', 'endDate', 'contributions', 'expenses'));
+        return view('admin.finance.print', compact('type', 'startDate', 'endDate', 'season', 'eventId', 'eventName', 'studentIncome', 'contributions', 'expenses'));
     }
 }

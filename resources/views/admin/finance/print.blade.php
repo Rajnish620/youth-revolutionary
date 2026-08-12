@@ -32,6 +32,16 @@
                         <span class="text-gray-900">{{ $endDate ? \Carbon\Carbon::parse($endDate)->format('d M Y') : 'Present' }}</span>
                     </p>
                 @endif
+                @if($season)
+                    <p class="text-gray-600 font-semibold text-sm mt-1">
+                        Season: <span class="text-gray-900">{{ $season }}</span>
+                    </p>
+                @endif
+                @if($eventName)
+                    <p class="text-gray-600 font-semibold text-sm mt-1">
+                        Event: <span class="text-gray-900">{{ $eventName }}</span>
+                    </p>
+                @endif
             </div>
             <button onclick="window.print()" class="no-print bg-[#340C6F] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-purple-800 transition flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -119,11 +129,29 @@
             </div>
         @endif
 
+        @if($type === 'both' || $type === 'students')
+            @if($type === 'both' && $studentIncome > 0)
+            <div class="mb-10 border border-blue-200 bg-blue-50/50 p-4 rounded-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-800">Student Payments (Registrations)</h2>
+                        <p class="text-sm text-gray-500">Total fees collected from approved student registrations for the selected criteria.</p>
+                    </div>
+                    <div class="text-2xl font-extrabold text-blue-700">₹{{ number_format($studentIncome, 2) }}</div>
+                </div>
+            </div>
+            @endif
+        @endif
+
         @if($type === 'both')
             <div class="mt-8 border-2 border-gray-800 rounded-lg p-6 bg-gray-50 break-inside-avoid">
                 <h3 class="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wider">Summary</h3>
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-gray-700 font-semibold">Total Contributions</span>
+                    <span class="text-gray-700 font-semibold">Student Payments</span>
+                    <span class="text-blue-700 font-bold">₹{{ number_format($studentIncome ?? 0, 2) }}</span>
+                </div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-700 font-semibold">Other Contributions</span>
                     <span class="text-green-700 font-bold">₹{{ number_format($totalContrib ?? 0, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center mb-4">
@@ -132,8 +160,8 @@
                 </div>
                 <div class="flex justify-between items-center border-t border-gray-300 pt-3">
                     <span class="text-gray-900 font-extrabold text-lg">Net Balance</span>
-                    <span class="font-extrabold text-xl {{ ($totalContrib ?? 0) - ($totalExp ?? 0) >= 0 ? 'text-blue-700' : 'text-red-700' }}">
-                        ₹{{ number_format(($totalContrib ?? 0) - ($totalExp ?? 0), 2) }}
+                    <span class="font-extrabold text-xl {{ (($studentIncome ?? 0) + ($totalContrib ?? 0)) - ($totalExp ?? 0) >= 0 ? 'text-blue-700' : 'text-red-700' }}">
+                        ₹{{ number_format((($studentIncome ?? 0) + ($totalContrib ?? 0)) - ($totalExp ?? 0), 2) }}
                     </span>
                 </div>
             </div>

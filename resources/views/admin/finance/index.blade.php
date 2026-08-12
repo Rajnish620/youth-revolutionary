@@ -342,12 +342,33 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Report Type</label>
                             <select name="type" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
-                                <option value="both">Both (Contributions & Expenses)</option>
+                                <option value="both">All (Students, Contributions & Expenses)</option>
                                 <option value="contributions">Contributions Only</option>
                                 <option value="expenses">Expenses Only</option>
                             </select>
                         </div>
                         
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Season</label>
+                                <select name="season" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
+                                    <option value="">All Seasons</option>
+                                    @foreach($seasons as $s)
+                                        <option value="{{ $s }}">{{ $s }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Event (For Students)</label>
+                                <select name="event_id" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
+                                    <option value="">All Events</option>
+                                    @foreach($events as $e)
+                                        <option value="{{ $e->id }}">{{ $e->title }} ({{ $e->season }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Start Date</label>
