@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('home_settings', function (Blueprint $table) {
-            $table->string('favicon')->nullable()->after('hero_image');
+            $table->string('favicon')->nullable()->after('middle_banner_image');
         });
     }
 
