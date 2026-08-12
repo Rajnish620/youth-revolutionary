@@ -219,7 +219,11 @@ Route::middleware('auth')->group(function () {
         $upcomingEvents = \App\Models\Event::where('status', 'upcoming')->count();
         $totalCollections = \App\Models\EventRegistration::where('payment_status', 'approved')->sum('fee_paid');
 
-        return view('admin.dashboard', compact('totalRegistrations', 'activeCompetitions', 'upcomingEvents', 'totalCollections'));
+        $recentRegistrations = \App\Models\EventRegistration::with('event')->latest()->take(5)->get();
+        $categories = \App\Models\Category::all();
+        $seasons = \App\Models\Season::latest()->get();
+
+        return view('admin.dashboard', compact('totalRegistrations', 'activeCompetitions', 'upcomingEvents', 'totalCollections', 'recentRegistrations', 'categories', 'seasons'));
     })->name('dashboard');
 
     Route::resource('admin/competitions', CompetitionController::class, [
