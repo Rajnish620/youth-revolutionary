@@ -423,6 +423,19 @@
                             </div>
                         </div>
 
+                        <!-- TERMS & CONDITIONS CHECKBOX -->
+                        <div class="pt-6 pb-2">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center mt-0.5">
+                                    <input type="checkbox" required class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-[#F1400C] checked:border-[#F1400C] transition-colors cursor-pointer focus:ring-2 focus:ring-[#F1400C]/20 outline-none">
+                                    <i class="fa-solid fa-check absolute text-white text-[10px] opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-700 leading-snug select-none group-hover:text-slate-900 transition-colors">
+                                    I have read and agree to the <a href="{{ url('/terms') }}" target="_blank" class="text-[#F1400C] hover:underline">Terms & Conditions, Privacy & Refund Policy</a>.
+                                </span>
+                            </label>
+                        </div>
+
                         <!-- SUBMIT BUTTON -->
                         <div class="pt-4">
                             <button type="submit" 

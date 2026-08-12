@@ -543,7 +543,7 @@
                             <i class="fa-solid transition-transform duration-300" :class="openFaq === 3 ? 'fa-minus text-accent rotate-180' : 'fa-plus text-black/40'"></i>
                         </button>
                         <div x-show="openFaq === 3" x-collapse class="px-5 pb-6 sm:px-6 font-manrope text-xs sm:text-sm text-black/70 font-medium leading-relaxed border-t border-black/5 pt-4">
-                            Once your registration is submitted online, you can download your official Admit Card directly from the Admit Card page by entering your registered mobile number or DOB.
+                            Once your registration is submitted online, you can download your official Admit Card directly from the Admit Card page by entering your Registeration number or DOB.
                         </div>
                     </div>
                 </div>

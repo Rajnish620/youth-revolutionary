@@ -1,5 +1,6 @@
 @php
     $contactSetting = \App\Models\ContactSetting::getSettings();
+    $categories = \App\Models\Category::orderBy('name')->get();
 @endphp
 <footer class="bg-gray-900 text-gray-300">
     <div class="max-w-7xl mx-auto px-6 py-12">
@@ -9,7 +10,7 @@
                 <h2 class="text-2xl font-bold text-white mb-4">Youth Revolutionary</h2>
                 <p class="text-sm leading-6">
                     A platform for students from Class 5th to 12th
-                    to participate in Education, Sports and Cultural Competitions.
+                    to participate in Education, Sports, Arts and Cultural Competitions.
                 </p>
             </div>
 
@@ -29,9 +30,13 @@
             <div>
                 <h3 class="text-lg font-semibold text-white mb-4">Competitions</h3>
                 <ul class="space-y-2 flex flex-col">
-                    <a href="{{ url('/competitions/education') }}" class="hover:text-blue-400">Education</a>
-                    <a href="{{ url('/competitions/sports') }}" class="hover:text-blue-400">Sports</a>
-                    <a href="{{ url('/competitions/cultural') }}" class="hover:text-blue-400">Cultural</a>
+                    @forelse($categories as $category)
+                        <a href="{{ url('/competitions/' . strtolower(str_replace(' ', '-', $category->name))) }}" class="hover:text-blue-400">{{ $category->name }}</a>
+                    @empty
+                        <a href="{{ url('/competitions/education') }}" class="hover:text-blue-400">Education</a>
+                        <a href="{{ url('/competitions/sports') }}" class="hover:text-blue-400">Sports</a>
+                        <a href="{{ url('/competitions/cultural') }}" class="hover:text-blue-400">Cultural</a>
+                    @endforelse
                 </ul>
             </div>
 
