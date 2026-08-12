@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -21,6 +22,11 @@
                     }
                 }
             }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
         }
     </script>
     <style>
@@ -43,9 +49,55 @@
         .sidebar-scroll::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
+        /* Dark Mode Global Overrides */
+        .dark body, .dark .bg-gray-50, .dark .bg-gray-50\/50 { background-color: #0f172a !important; color: #f8fafc !important; }
+        .dark .bg-white { background-color: #1e293b !important; border-color: #334155 !important; }
+        .dark .text-gray-900, .dark .text-gray-800 { color: #f8fafc !important; }
+        .dark .text-gray-700, .dark .text-gray-600 { color: #cbd5e1 !important; }
+        .dark .text-gray-500, .dark .text-gray-400 { color: #94a3b8 !important; }
+        .dark .border-gray-200, .dark .border-gray-200\/80, .dark .border-gray-100 { border-color: #334155 !important; }
+        .dark .bg-gray-100, .dark .bg-gray-100\/80 { background-color: #334155 !important; }
+        .dark input, .dark select, .dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        .dark input:focus, .dark select:focus, .dark textarea:focus { border-color: #8B5CF6 !important; }
+        .dark th { background-color: #1e293b !important; color: #94a3b8 !important; border-color: #334155 !important; }
+        .dark td, .dark tr { border-color: #334155 !important; }
+        .dark table { border-color: #334155 !important; }
+        .dark .hover\:bg-gray-50\/50:hover { background-color: #334155 !important; }
+        .dark .shadow-sm, .dark .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important; }
+        .dark .divide-y > :not([hidden]) ~ :not([hidden]), .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #334155 !important; }
+        .dark header { background-color: #1e293b !important; border-bottom: 1px solid #334155 !important; }
+        
+        /* Colored Badges in Dark Mode */
+        .dark .bg-green-50, .dark .bg-green-100 { background-color: rgba(34, 197, 94, 0.2) !important; color: #4ade80 !important; }
+        .dark .text-green-600, .dark .text-green-700 { color: #4ade80 !important; }
+        .dark .bg-orange-50, .dark .bg-orange-100 { background-color: rgba(249, 115, 22, 0.2) !important; color: #fb923c !important; }
+        .dark .text-orange-600, .dark .text-[#F1400C] { color: #fb923c !important; }
+        .dark .bg-blue-50, .dark .bg-blue-100 { background-color: rgba(59, 130, 246, 0.2) !important; color: #60a5fa !important; }
+        .dark .text-blue-600, .dark .text-[#028CD4] { color: #60a5fa !important; }
+        .dark .bg-purple-50, .dark .bg-purple-100 { background-color: rgba(168, 85, 247, 0.2) !important; color: #c084fc !important; }
+        .dark .text-purple-600, .dark .text-[#340C6F] { color: #c084fc !important; }
+        .dark .bg-yellow-50, .dark .bg-yellow-100 { background-color: rgba(234, 179, 8, 0.2) !important; color: #facc15 !important; }
+        .dark .text-yellow-600, .dark .text-yellow-700 { color: #facc15 !important; }
+        .dark .bg-red-50, .dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.2) !important; color: #f87171 !important; }
+        .dark .text-red-600, .dark .text-red-700 { color: #f87171 !important; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased flex h-screen overflow-hidden" x-data="{ sidebarCollapsed: false, mobileSidebarOpen: false }">
+<body class="bg-gray-50 text-gray-800 antialiased flex h-screen overflow-hidden transition-colors duration-200" 
+      x-data="{ 
+          sidebarCollapsed: false, 
+          mobileSidebarOpen: false,
+          darkMode: document.documentElement.classList.contains('dark')
+      }"
+      x-init="$watch('darkMode', val => {
+          if (val) {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('darkMode', 'true');
+          } else {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('darkMode', 'false');
+          }
+      })">
 
     <!-- Mobile Overlay -->
     <div x-show="mobileSidebarOpen" 
@@ -296,8 +348,13 @@
 
             <!-- Right Controls -->
             <div class="flex items-center gap-4">
+                <!-- Dark Mode Toggle -->
+                <button @click="darkMode = !darkMode" class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple flex items-center justify-center transition-all cursor-pointer">
+                    <i class="fa-solid" :class="darkMode ? 'fa-sun text-yellow-500' : 'fa-moon'"></i>
+                </button>
+
                 <!-- Notifications -->
-                <button class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple flex items-center justify-center relative transition-all">
+                <button class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-brand-purple/10 hover:text-brand-purple flex items-center justify-center relative transition-all cursor-pointer">
                     <i class="fa-solid fa-bell"></i>
                     <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange animate-ping"></span>
                     <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange"></span>
