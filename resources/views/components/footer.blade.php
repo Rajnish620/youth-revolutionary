@@ -66,7 +66,8 @@
                     <a href="{{ $contactSetting->youtube_link ?: '#' }}" class="hover:text-red-400 text-xl" target="_blank"><i class="fa-brands fa-youtube"></i></a>
                 </div>
                 <div class="mt-4 text-sm text-gray-400">
-                    © {{ date('Y') }} Youth Revolutionary. All Rights Reserved.
+                    © {{ date('Y') }} Youth Revolutionary. All Rights Reserved.<br>
+                    Developed by <a href="https://startupwebsupport.com/" target="_blank" class="hover:text-blue-400 font-semibold transition-colors">startup web support</a>
                 </div>
             </div>
             <a href="{{ url('/terms') }}" class="hover:text-blue-400">Terms & Conditions</a>
