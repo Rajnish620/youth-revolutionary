@@ -254,6 +254,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('admin/registrations/{registration}', [\App\Http\Controllers\Admin\RegistrationController::class, 'destroy'])->name('admin.registrations.destroy');
     Route::get('admin/registrations/signature-sheet', [\App\Http\Controllers\Admin\RegistrationController::class, 'signatureSheet'])->name('admin.registrations.signature-sheet');
     Route::get('admin/registrations/desk-slips', [\App\Http\Controllers\Admin\RegistrationController::class, 'deskSlips'])->name('admin.registrations.desk-slips');
+    Route::get('admin/registrations/roll-numbers', [\App\Http\Controllers\Admin\RegistrationController::class, 'rollNumbers'])->name('admin.registrations.roll-numbers');
 
     // Admin Marks & Certificates
     Route::get('admin/marks', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'index'])->name('admin.marks.index');

@@ -12,6 +12,11 @@
             <p class="text-xs text-gray-500 mt-1">Review student registrations, verify payment screenshots, and generate event day printouts</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('admin.registrations.roll-numbers', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
+                class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                <i class="fa-solid fa-list-ol text-xs"></i>
+                <span>Print Roll Numbers</span>
+            </a>
             <a href="{{ route('admin.registrations.signature-sheet', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
                 class="px-4 py-2.5 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-print text-xs"></i>

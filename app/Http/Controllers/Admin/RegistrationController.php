@@ -127,4 +127,25 @@ class RegistrationController extends Controller
 
         return view('admin.registrations.desk-slips', compact('registrations', 'event'));
     }
+
+    public function rollNumbers(Request $request)
+    {
+        $eventId = $request->get('event_id');
+        $groupId = $request->get('group_id');
+        $query = EventRegistration::with(['event', 'group'])->where('payment_status', 'approved');
+
+        if ($eventId && $eventId !== 'All') {
+            $query->where('event_id', $eventId);
+        }
+
+        if ($groupId && $groupId !== 'All') {
+            $query->where('event_group_id', $groupId);
+        }
+
+        $registrations = $query->orderBy('roll_no', 'asc')->get();
+        $event = $eventId ? Event::find($eventId) : null;
+        $group = $groupId ? EventGroup::find($groupId) : null;
+
+        return view('admin.registrations.roll-numbers', compact('registrations', 'event', 'group'));
+    }
 }
