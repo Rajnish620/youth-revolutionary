@@ -16,7 +16,22 @@
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            
+            <div class="border p-4 rounded-lg bg-gray-50 md:col-span-3">
+                <h3 class="font-bold text-lg mb-4 border-b pb-2">Site Favicon</h3>
+                <div class="mb-4 flex items-center gap-4">
+                    @if($setting->favicon)
+                        <div class="w-16 h-16 bg-white border border-gray-200 rounded p-1 flex items-center justify-center shrink-0">
+                            <img src="{{ asset($setting->favicon) }}" alt="Favicon" class="max-w-full max-h-full">
+                        </div>
+                    @endif
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Upload New Favicon (.ico, .png, .jpg)</label>
+                        <input type="file" name="favicon" accept=".ico,.png,.jpg,.jpeg" class="w-full border-gray-300 rounded-md shadow-sm">
+                        <p class="text-xs text-gray-500 mt-1">Recommended size: 32x32 or 64x64 pixels.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Polaroid 1 -->
             <div class="border p-4 rounded-lg bg-gray-50">
                 <h3 class="font-bold text-lg mb-4 border-b pb-2">Polaroid 1 (Top Left)</h3>

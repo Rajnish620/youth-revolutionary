@@ -26,9 +26,10 @@ class HomeSettingController extends Controller
             'polaroid_2_image' => 'nullable|image|max:5120',
             'polaroid_3_image' => 'nullable|image|max:5120',
             'middle_banner_image' => 'nullable|image|max:10240',
+            'favicon' => 'nullable|file|mimes:ico,png,jpg,jpeg|max:1024',
         ]);
 
-        $fields = ['polaroid_1_image', 'polaroid_2_image', 'polaroid_3_image', 'middle_banner_image'];
+        $fields = ['polaroid_1_image', 'polaroid_2_image', 'polaroid_3_image', 'middle_banner_image', 'favicon'];
 
         foreach ($fields as $field) {
             if ($request->hasFile($field)) {
