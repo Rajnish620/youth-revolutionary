@@ -119,8 +119,10 @@ Route::post('/register', function (Request $request) {
         ->where('roll_no', 'like', 'YR%')
         ->orderByRaw("CAST(RIGHT(roll_no, 4) AS UNSIGNED) DESC")
         ->first();
-    if ($latestRoll && preg_match('/(\d+)$/', $latestRoll->roll_no, $matches)) {
-        $nextRollNumber = max($rollStart, (int)$matches[1] + 1);
+    if ($latestRoll) {
+        // roll_no format is YR20261001 (YR + 4 digit year + sequence)
+        $sequence = substr($latestRoll->roll_no, 6);
+        $nextRollNumber = max($rollStart, (int)$sequence + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
