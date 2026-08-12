@@ -45,7 +45,7 @@
                 x-transition:enter="transition ease-out duration-700 delay-300"
                 x-transition:enter-start="opacity-0 -translate-y-8 sm:-translate-x-32 sm:translate-y-0"
                 x-transition:enter-end="opacity-100 translate-x-0 translate-y-0"
-                class="text-5xl sm:text-7xl md:text-8xl font-bold mb-6">
+                class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6">
                 <span class="metallic-blue-shine drop-shadow-[0_0_10px_rgba(58,123,213,0.5)]">Youth</span>
                 <br class="sm:hidden" />
                 <span class="metallic-orange-shine drop-shadow-[0_0_10px_rgba(241,64,12,0.5)]">Revolutionary</span>

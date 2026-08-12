@@ -4,7 +4,7 @@
 @endphp
 <footer class="bg-gray-900 text-gray-300">
     <div class="max-w-7xl mx-auto px-6 py-12">
-        <div class="grid md:grid-cols-4 gap-10">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <!-- About -->
             <div>
                 <h2 class="text-2xl font-bold text-white mb-4">Youth Revolutionary</h2>

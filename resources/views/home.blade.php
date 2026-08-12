@@ -83,7 +83,7 @@
                     join the competitions
                 </span>
                 
-                <h2 class="text-5xl md:text-7xl font-black text-black leading-[1.1] max-w-4xl mx-auto tracking-tighter lowercase relative z-20">
+                <h2 class="text-5xl md:text-6xl lg:text-7xl font-black text-black leading-[1.1] max-w-4xl mx-auto tracking-tighter lowercase relative z-20">
                     what if 
                     <span class="shining-pink" 
                           x-data="{ 
@@ -115,7 +115,6 @@
                 </p>
             </div>
 
-            <!-- Massive +25k Text with Image Mask and Assembly Animation -->
             <div class="relative w-full flex justify-center mb-10 py-10 overflow-hidden" 
                  x-data="{ show: false }"
                  x-init="
@@ -127,7 +126,7 @@
                      }, { threshold: 0.3 });
                      observer.observe($el);
                  ">
-                <h1 class="text-[120px] md:text-[200px] font-black tracking-tighter leading-none text-mask drop-shadow-[8px_8px_0px_rgba(0,0,0,1)] flex" style="-webkit-text-stroke: 4px #000;">
+                <h1 class="text-[120px] md:text-[150px] lg:text-[200px] font-black tracking-tighter leading-none text-mask drop-shadow-[8px_8px_0px_rgba(0,0,0,1)] flex" style="-webkit-text-stroke: 4px #000;">
                     <span class="inline-block transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                           :class="show ? 'translate-y-0 translate-x-0 rotate-0 scale-100 opacity-100' : '-translate-y-64 -translate-x-64 -rotate-90 scale-50 opacity-0'">
                         +
@@ -323,7 +322,7 @@
     <section class="bg-cream py-32 text-center brutalist-font border-t-[6px] border-black">
         <div class="max-w-5xl mx-auto px-6">
             
-            <h1 class="text-[100px] sm:text-[150px] md:text-[250px] font-black tracking-tighter leading-none text-mask mb-10" style="-webkit-text-stroke: 4px #000; background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2000&auto=format&fit=crop');">
+            <h1 class="text-[80px] sm:text-[120px] md:text-[150px] lg:text-[250px] font-black tracking-tighter leading-none text-mask mb-10" style="-webkit-text-stroke: 4px #000; background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2000&auto=format&fit=crop');">
                 next gen.
             </h1>
 

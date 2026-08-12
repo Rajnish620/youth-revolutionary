@@ -49,7 +49,7 @@
         scrolled: false 
     }"
     @scroll.window="scrolled = (window.pageYOffset > 50)"
-    :class="scrolled ? 'top-8 sm:top-10 w-full shadow-md bg-white/90 backdrop-blur-xl md:rounded-b-4xl border-b border-gray-100' : 'top-12 sm:top-16 md:top-20 w-[92%] sm:w-[90%] lg:w-[85%] max-w-7xl rounded-3xl shadow-lg bg-white/80 backdrop-blur-3xl border border-white/50'"
+    :class="scrolled ? 'top-8 sm:top-10 w-full shadow-md bg-white/90 backdrop-blur-xl md:rounded-b-4xl border-b border-gray-100' : 'top-12 sm:top-16 md:top-20 w-[92%] sm:w-[90%] lg:w-[98%] xl:w-[85%] max-w-7xl rounded-3xl shadow-lg bg-white/80 backdrop-blur-3xl border border-white/50'"
     class="fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-out"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
@@ -64,7 +64,7 @@
             </a>
 
             <!-- Desktop Menu (Shows on lg / 1024px+ screens) -->
-            <div class="hidden lg:flex items-center gap-4 xl:gap-7">
+            <div class="hidden lg:flex items-center gap-2 xl:gap-7">
                 <a href="{{ url('/') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">Home</a>
                 <a href="{{ url('/about') }}" class="focus:text-[#028CD4] hover:text-[#028CD4] font-medium text-xs xl:text-sm text-gray-800 transition-colors">About</a>
 
@@ -109,12 +109,12 @@
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3c19d8] opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-[#3c19d8]"></span>
                         </span>
-                        <a href="{{ url('/register') }}" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-[#F1400C] text-white text-xs xl:text-sm font-bold shadow-lg border-2 border-[#F1400C] hover:bg-white hover:text-[#F1400C] transition-all duration-300 inline-block">
+                        <a href="{{ url('/register') }}" class="px-3 py-2 xl:px-5 xl:py-3 rounded-xl bg-[#F1400C] text-white text-[11px] xl:text-sm font-bold shadow-lg border-2 border-[#F1400C] hover:bg-white hover:text-[#F1400C] transition-all duration-300 inline-block">
                             Register Now
                         </a>
                     </div>
                     <div class="relative transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5 active:scale-95">
-                        <a href="{{ url('/login') }}" class="px-3.5 py-2 text-xs xl:text-sm rounded-xl bg-blue-600 text-white font-bold shadow-lg border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300 inline-block">
+                        <a href="{{ url('/login') }}" class="px-3 py-2 text-[11px] xl:text-sm rounded-xl bg-blue-600 text-white font-bold shadow-lg border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300 inline-block">
                             Admin
                         </a>
                     </div>
