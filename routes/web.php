@@ -297,6 +297,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyContribution'])->name('admin.finance.contributions.destroy');
     // Admin Finance
     Route::get('admin/finance', [\App\Http\Controllers\Admin\FinanceController::class, 'index'])->name('admin.finance.index');
+    Route::get('admin/finance/print', [\App\Http\Controllers\Admin\FinanceController::class, 'print'])->name('admin.finance.print');
     Route::post('admin/finance/contributions', [\App\Http\Controllers\Admin\FinanceController::class, 'storeContribution'])->name('admin.finance.contributions.store');
     Route::put('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'updateContribution'])->name('admin.finance.contributions.update');
     Route::delete('admin/finance/contributions/{contribution}', [\App\Http\Controllers\Admin\FinanceController::class, 'destroyContribution'])->name('admin.finance.contributions.destroy');

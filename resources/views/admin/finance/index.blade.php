@@ -18,6 +18,9 @@
                     <option value="{{ $season }}" {{ $selectedSeason == $season ? 'selected' : '' }}>Season: {{ $season }}</option>
                 @endforeach
             </select>
+            <button type="button" @click="showPrintModal = true" class="bg-[#340C6F] hover:bg-purple-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-print text-xs"></i> Print Report
+            </button>
         </form>
     </div>
 
@@ -320,11 +323,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Print Modal -->
+    <div x-show="showPrintModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div x-show="showPrintModal" @click="showPrintModal = false" class="fixed inset-0 transition-opacity bg-gray-900/50 backdrop-blur-sm"></div>
+
+            <div x-show="showPrintModal" class="relative inline-block w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl sm:my-8" x-transition.scale.origin.bottom>
+                <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
+                    <h3 class="text-xl font-bold text-gray-900">Print Finance Report</h3>
+                    <button @click="showPrintModal = false" class="text-gray-400 hover:text-gray-500 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <form action="{{ route('admin.finance.print') }}" method="GET" target="_blank">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Report Type</label>
+                            <select name="type" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
+                                <option value="both">Both (Contributions & Expenses)</option>
+                                <option value="contributions">Contributions Only</option>
+                                <option value="expenses">Expenses Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Start Date</label>
+                                <input type="date" name="start_date" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
+                                <p class="text-xs text-gray-400 mt-1">Optional</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">End Date</label>
+                                <input type="date" name="end_date" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-purple focus:ring-brand-purple text-sm p-2.5 border">
+                                <p class="text-xs text-gray-400 mt-1">Optional</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-50">
+                        <button type="button" @click="showPrintModal = false" class="px-5 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">Cancel</button>
+                        <button type="submit" @click="showPrintModal = false" class="px-5 py-2 text-sm font-medium text-white bg-[#340C6F] hover:bg-purple-900 rounded-xl shadow-sm flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> Generate Print
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 function financeApp() {
     return {
+        showPrintModal: false,
         showContributionModal: false,
         editingContribution: false,
         contributionForm: { id: null, name: '', amount: '', date: new Date().toISOString().slice(0, 10), season: '{{ $selectedSeason ?? '' }}', description: '' },

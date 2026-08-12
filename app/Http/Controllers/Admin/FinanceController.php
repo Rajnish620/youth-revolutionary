@@ -119,4 +119,30 @@ class FinanceController extends Controller
         $expense->delete();
         return back()->with('success', 'Expense deleted successfully.');
     }
+
+    public function print(Request $request)
+    {
+        $type = $request->input('type', 'both'); // 'contributions', 'expenses', 'both'
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $contributions = collect();
+        $expenses = collect();
+
+        if ($type === 'contributions' || $type === 'both') {
+            $cQuery = Contribution::query();
+            if ($startDate) $cQuery->whereDate('date', '>=', $startDate);
+            if ($endDate) $cQuery->whereDate('date', '<=', $endDate);
+            $contributions = $cQuery->orderBy('date', 'asc')->get();
+        }
+
+        if ($type === 'expenses' || $type === 'both') {
+            $eQuery = Expense::query();
+            if ($startDate) $eQuery->whereDate('date', '>=', $startDate);
+            if ($endDate) $eQuery->whereDate('date', '<=', $endDate);
+            $expenses = $eQuery->orderBy('date', 'asc')->get();
+        }
+
+        return view('admin.finance.print', compact('type', 'startDate', 'endDate', 'contributions', 'expenses'));
+    }
 }
