@@ -120,9 +120,13 @@ Route::post('/register', function (Request $request) {
         ->orderByRaw("CAST(RIGHT(roll_no, 4) AS UNSIGNED) DESC")
         ->first();
     if ($latestRoll) {
-        // roll_no format is YR20261001 (YR + 4 digit year + sequence)
-        $sequence = substr($latestRoll->roll_no, 6);
-        $nextRollNumber = max($rollStart, (int)$sequence + 1);
+        $sequenceStr = str_replace('YR', '', $latestRoll->roll_no);
+        $currentYear = date('Y');
+        // Strip all repeating current year prefixes to recover the actual sequence
+        while (strpos($sequenceStr, $currentYear) === 0) {
+            $sequenceStr = substr($sequenceStr, 4);
+        }
+        $nextRollNumber = max($rollStart, (int)$sequenceStr + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
