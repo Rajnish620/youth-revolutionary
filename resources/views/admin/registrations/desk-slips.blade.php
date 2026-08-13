@@ -37,7 +37,7 @@
                 <span class="text-[8px] font-black tracking-widest uppercase text-[#340C6F] mb-1">YOUTH REVOLUTIONARY</span>
                 
                 <img src="{{ str_starts_with($reg->photo, 'http') ? $reg->photo : asset($reg->photo ?? 'images/quize.jpg') }}" 
-                     class="w-20 h-20 object-contain border border-gray-300 rounded mb-1.5 shadow-sm">
+                     class="w-20 h-20 object-fill border border-gray-300 rounded mb-1.5 shadow-sm">
                      
                 <div class="text-[14px] font-black text-[#F1400C] font-mono leading-none mb-1 tracking-wide">{{ $reg->roll_no }}</div>
                 
