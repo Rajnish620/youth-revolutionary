@@ -72,6 +72,19 @@
             z-index: 10;
             transform: rotate(-3deg);
         }
+
+        .title-massive {
+            font-size: 80px;
+        }
+        @media (min-width: 640px) {
+            .title-massive { font-size: 120px; }
+        }
+        @media (min-width: 768px) {
+            .title-massive { font-size: 150px; }
+        }
+        @media (min-width: 1024px) {
+            .title-massive { font-size: 250px; }
+        }
     </style>
 
     <!-- SECTION 1: IMPACT (Scattered Polaroids & Massive Text) -->
@@ -322,7 +335,7 @@
     <section class="bg-cream py-32 text-center brutalist-font border-t-[6px] border-black">
         <div class="max-w-5xl mx-auto px-6">
             
-            <h1 class="text-[80px] sm:text-[120px] md:text-[150px] lg:text-[250px] font-black tracking-tighter leading-none text-mask mb-10" style="-webkit-text-stroke: 4px #000; background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2000&auto=format&fit=crop');">
+            <h1 class="title-massive font-black tracking-tighter leading-none text-mask mb-10" style="-webkit-text-stroke: 4px #000; background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2000&auto=format&fit=crop');">
                 next gen.
             </h1>
 
