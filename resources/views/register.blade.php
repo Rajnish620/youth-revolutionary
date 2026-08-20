@@ -390,10 +390,10 @@
                                         UPI: {{ $paymentSetting->upi_id }}
                                     </div>
                                     <!-- UPI Intent Button (Mobile) -->
-                                    <a :href="'upi://pay?pa={{ $paymentSetting->upi_id }}&pn=Youth+Revolutionary&am=' + currentFee + '&cu=INR&tn=Registration+Fee'" 
+                                    <!-- <a :href="'upi://pay?pa={{ $paymentSetting->upi_id }}&pn=Youth+Revolutionary&am=' + currentFee + '&cu=INR&tn=Registration+Fee'" 
                                        class="mt-4 w-full bg-[#028CD4] hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer md:hidden">
                                         <i class="fa-solid fa-mobile-screen-button text-lg"></i> Pay via UPI App
-                                    </a>
+                                    </a> -->
                                 </div>
 
                                 <!-- Fee Amount & Screenshot Field -->
