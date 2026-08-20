@@ -54,15 +54,24 @@ Route::post('/register', function (Request $request) {
         'school_name' => 'nullable|string|max:255',
         'student_class' => 'required|string|max:100',
         'mobile' => 'required|string|max:20',
-        'photo' => 'nullable|image|max:5120',
+        'photo' => 'required_without:live_photo_base64|nullable|image|max:5120',
         'live_photo_base64' => 'nullable|string',
-        'payment_screenshot' => 'nullable|image|max:5120',
+        'payment_screenshot' => 'required|image|max:5120',
         'transaction_id' => 'required|string|unique:event_registrations,transaction_id',
         'dob' => 'required|date',
         'email' => 'nullable|email|max:255',
         'gender' => 'required|string|max:10',
         'category' => 'required|string|max:50',
         'address' => 'required|string|max:500',
+    ], [
+        'photo.required' => 'Student photo upload is required.',
+        'photo.required_without' => 'Student photo is required. Please upload your photo.',
+        'photo.image' => 'The student photo must be a valid image file (JPG, PNG, WebP).',
+        'photo.max' => 'The student photo size must not exceed 5MB.',
+        'payment_screenshot.required' => 'Payment screenshot is required.',
+        'payment_screenshot.image' => 'The payment screenshot must be a valid image file.',
+        'transaction_id.required' => 'Transaction ID / UTR number is required.',
+        'transaction_id.unique' => 'This Transaction ID has already been registered.',
     ]);
 
     // Handle Photo (File upload OR base64)
@@ -88,6 +97,10 @@ Route::post('/register', function (Request $request) {
                 $photoPath = 'uploads/students/' . $filename;
             }
         }
+    }
+
+    if (!$photoPath) {
+        return back()->withErrors(['photo' => 'Student photo is required. Please upload your photo.'])->withInput();
     }
     
     // Handle Payment Screenshot

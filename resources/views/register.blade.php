@@ -335,16 +335,19 @@
                         <div class="space-y-4 bg-slate-50/80 p-6 sm:p-8 rounded-3xl border border-slate-200">
                             <div class="flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-2xl bg-[#340C6F] text-white font-black text-sm flex items-center justify-center shadow-md">3</span>
-                                <h3 class="text-base font-extrabold text-[#340C6F]">Student Photo</h3>
+                                <h3 class="text-base font-extrabold text-[#340C6F]">Student Photo *</h3>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Option A: Image File Upload -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Upload Photo File</label>
-                                    <input type="file" name="photo" accept="image/*"
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Upload Photo File *</label>
+                                    <input type="file" name="photo" accept="image/*" required
                                         class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-3.5 text-sm outline-none focus:border-[#028CD4]">
-                                    <p class="text-[11px] text-slate-500 mt-1">Select an image from your device.</p>
+                                    <p class="text-[11px] text-slate-500 mt-1">Select a passport-size photo from your device (Required for Admit Card).</p>
+                                    @error('photo')
+                                        <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Option B: Live Camera Capture -->
@@ -361,7 +364,7 @@
                                     <div x-show="showCamera" class="space-y-3" style="display: none;">
                                         <video x-ref="video" autoplay playsinline class="w-full rounded-2xl bg-black h-44 object-cover border border-slate-300"></video>
                                         <div class="flex gap-2">
-                                            <button type="button" @click="capturePhoto()" class="bg-green-600 text-white px-4 py-2 rounded-xl font-bold text-xs">Capture Photo</button>
+                                             <button type="button" @click="capturePhoto()" class="bg-green-600 text-white px-4 py-2 rounded-xl font-bold text-xs">Capture Photo</button>
                                             <button type="button" @click="stopCamera(); showCamera = false" class="bg-red-500 text-white px-4 py-2 rounded-xl font-bold text-xs">Cancel</button>
                                         </div>
                                     </div>
@@ -418,6 +421,9 @@
                                         <input type="file" name="payment_screenshot" required accept="image/*"
                                             class="w-full bg-white border border-slate-300 rounded-2xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:border-[#F1400C] outline-none transition-all">
                                         <p class="text-[11px] text-slate-500 mt-1">Upload the payment confirmation screenshot image</p>
+                                        @error('payment_screenshot')
+                                            <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
