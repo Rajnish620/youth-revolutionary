@@ -173,6 +173,7 @@ Route::post('/register', function (Request $request) {
     $validated['payment_status'] = 'pending';
 
     $registration = EventRegistration::create($validated);
+    $registration->load('event', 'group');
 
     return redirect()->back()->with('success_registration', $registration);
 });
