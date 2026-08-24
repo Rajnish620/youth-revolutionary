@@ -216,8 +216,8 @@ Route::get('/terms', function () {
     return view('terms');
 });
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::get('/youthadmin', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/youthadmin', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 use App\Http\Controllers\AdmitCardController;

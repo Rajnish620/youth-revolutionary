@@ -113,11 +113,7 @@
                             Register Now
                         </a>
                     </div>
-                    <div class="relative transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5 active:scale-95">
-                        <a href="{{ url('/login') }}" class="px-3 py-2 text-[11px] xl:text-sm rounded-xl bg-blue-600 text-white font-bold shadow-lg border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300 inline-block">
-                            Admin
-                        </a>
-                    </div>
+
                 </div>
             </div>
 
@@ -169,9 +165,7 @@
                 <a href="{{ url('/register') }}" @click="menuOpen = false" class="text-center py-3 rounded-xl bg-[#F1400C] text-white font-bold shadow-md">
                     Register Now
                 </a>
-                <a href="{{ url('/login') }}" @click="menuOpen = false" class="text-center py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm shadow-md">
-                    Admin
-                </a>
+
             </div>
         </div>
     </div>
