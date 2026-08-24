@@ -53,7 +53,27 @@ class RegistrationController extends Controller
 
         $groups = [];
         if ($request->filled('event_id') && $request->event_id !== 'All') {
-            $groups = \App\Models\EventGroup::where('event_id', $request->event_id)->withCount('registrations')->get();
+            $groups = \App\Models\EventGroup::where('event_id', $request->event_id)
+                ->withCount(['registrations' => function ($q) use ($request) {
+                    if ($request->filled('season') && $request->season !== 'All') {
+                        $q->whereHas('event', function ($eq) use ($request) {
+                            $eq->where('season', $request->season);
+                        });
+                    }
+                    if ($request->filled('status') && $request->status !== 'All') {
+                        $q->where('payment_status', $request->status);
+                    }
+                    if ($request->filled('search')) {
+                        $search = $request->search;
+                        $q->where(function ($sq) use ($search) {
+                            $sq->where('student_name', 'like', "%{$search}%")
+                               ->orWhere('roll_no', 'like', "%{$search}%")
+                               ->orWhere('mobile', 'like', "%{$search}%")
+                               ->orWhere('school_name', 'like', "%{$search}%");
+                        });
+                    }
+                }])
+                ->get();
         }
 
         return view('admin.registrations.index', compact('registrations', 'events', 'seasons', 'groups'));
