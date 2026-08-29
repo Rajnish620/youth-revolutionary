@@ -132,19 +132,23 @@ Route::post('/register', function (Request $request) {
         ->where('roll_no', 'like', 'YR%')
         ->orderByRaw("CAST(RIGHT(roll_no, 4) AS UNSIGNED) DESC")
         ->first();
-    if ($latestRoll) {
-        $sequenceStr = str_replace('YR', '', $latestRoll->roll_no);
-        $currentYear = date('Y');
-        // Strip all repeating current year prefixes to recover the actual sequence
-        while (strpos($sequenceStr, $currentYear) === 0) {
-            $sequenceStr = substr($sequenceStr, 4);
-        }
-        $nextRollNumber = max($rollStart, (int)$sequenceStr + 1);
+
+    if ($latestRoll && preg_match('/^YR-?(\d{4})-?(\d+)$/', $latestRoll->roll_no, $matches)) {
+        // $matches[1] = Year (e.g. 2026), $matches[2] = Sequence (e.g. 2026)
+        $nextRollNumber = max($rollStart, (int)$matches[2] + 1);
+    } elseif ($latestRoll && preg_match('/(\d+)$/', $latestRoll->roll_no, $matches)) {
+        $nextRollNumber = max($rollStart, (int)$matches[1] + 1);
     } else {
         $nextRollNumber = $rollStart;
     }
     
-    $validated['roll_no'] = 'YR' . date('Y') . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
+    // Safety check: Ensure globally unique roll number across the table
+    $candidateRoll = 'YR' . date('Y') . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
+    while (EventRegistration::where('roll_no', $candidateRoll)->exists()) {
+        $nextRollNumber++;
+        $candidateRoll = 'YR' . date('Y') . str_pad($nextRollNumber, 4, '0', STR_PAD_LEFT);
+    }
+    $validated['roll_no'] = $candidateRoll;
 
     // Generate unique Registration No per season (Format: YRREG0001)
     $event = Event::find($request->event_id);
