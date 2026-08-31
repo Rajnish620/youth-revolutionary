@@ -94,6 +94,43 @@ class RegistrationController extends Controller
         return redirect()->back()->with('success', "Admit Card has been {$status} for Roll No: {$registration->roll_no}.");
     }
 
+    public function bulkAdmitCardToggle(Request $request)
+    {
+        $enable = $request->input('enable', '1') == '1';
+
+        // Base query: ONLY approve registrations are targeted
+        $query = EventRegistration::where('payment_status', 'approved');
+
+        if ($request->filled('season') && $request->season !== 'All') {
+            $query->whereHas('event', function ($q) use ($request) {
+                $q->where('season', $request->season);
+            });
+        }
+
+        if ($request->filled('event_id') && $request->event_id !== 'All') {
+            $query->where('event_id', $request->event_id);
+        }
+
+        if ($request->filled('group_id') && $request->group_id !== 'All') {
+            $query->where('event_group_id', $request->group_id);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('student_name', 'like', "%{$search}%")
+                  ->orWhere('roll_no', 'like', "%{$search}%")
+                  ->orWhere('mobile', 'like', "%{$search}%")
+                  ->orWhere('school_name', 'like', "%{$search}%");
+            });
+        }
+
+        $affectedCount = $query->update(['is_admit_card_allowed' => $enable]);
+
+        $action = $enable ? 'Allowed (Unlocked)' : 'Disallowed (Locked)';
+        return redirect()->back()->with('success', "Admit cards successfully {$action} for {$affectedCount} approved students.");
+    }
+
     public function rejectPayment(EventRegistration $registration)
     {
         $registration->update(['payment_status' => 'rejected']);

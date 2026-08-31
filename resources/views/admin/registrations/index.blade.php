@@ -11,21 +11,50 @@
             <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Student Registrations & Payments</h1>
             <p class="text-xs text-gray-500 mt-1">Review student registrations, verify payment screenshots, and generate event day printouts</p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <!-- Bulk Admit Card Permission Controls (Approved Only) -->
+            <form method="POST" action="{{ route('admin.registrations.bulk-admit-card') }}" onsubmit="return confirm('Kya aap sabhi Approved students ko Admit Card download allow karna chahte hain?')">
+                @csrf
+                <input type="hidden" name="season" value="{{ request('season') }}">
+                <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                <input type="hidden" name="group_id" value="{{ request('group_id') }}">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="enable" value="1">
+                <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer" title="Sabhi Approved students ke liye admit card allow karein">
+                    <i class="fa-solid fa-id-card-clip text-sm"></i>
+                    <span>All Allow (Admit Cards)</span>
+                </button>
+            </form>
+
+            <form method="POST" action="{{ route('admin.registrations.bulk-admit-card') }}" onsubmit="return confirm('Kya aap sabhi Approved students ke Admit Card download ko disable (lock) karna chahte hain?')">
+                @csrf
+                <input type="hidden" name="season" value="{{ request('season') }}">
+                <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                <input type="hidden" name="group_id" value="{{ request('group_id') }}">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="enable" value="0">
+                <button type="submit" class="px-3.5 py-2.5 rounded-xl bg-gray-600 hover:bg-gray-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer" title="Sabhi students ke liye admit card download lock karein">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>All Disallow</span>
+                </button>
+            </form>
+
+            <div class="h-6 w-px bg-gray-300 hidden lg:block mx-1"></div>
+
             <a href="{{ route('admin.registrations.roll-numbers', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
-                class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                class="px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-list-ol text-xs"></i>
-                <span>Print Roll Numbers</span>
+                <span>Roll Numbers</span>
             </a>
             <a href="{{ route('admin.registrations.signature-sheet', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
-                class="px-4 py-2.5 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                class="px-3.5 py-2.5 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-print text-xs"></i>
-                <span>Print Attendance Sheet</span>
+                <span>Attendance</span>
             </a>
             <a href="{{ route('admin.registrations.desk-slips', ['event_id' => request('event_id'), 'group_id' => request('group_id')]) }}" target="_blank" 
-                class="px-4 py-2.5 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                class="px-3.5 py-2.5 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                 <i class="fa-solid fa-ticket text-xs"></i>
-                <span>Print Desk Slips</span>
+                <span>Desk Slips</span>
             </a>
         </div>
     </div>
@@ -145,9 +174,20 @@
                             </td>
                             <td class="py-4 px-6">
                                 @if($reg->payment_status === 'approved')
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 flex items-center gap-1.5 w-max">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Approved
-                                    </span>
+                                    <div class="space-y-1">
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 flex items-center gap-1.5 w-max">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Approved
+                                        </span>
+                                        @if($reg->is_admit_card_allowed)
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1 w-max">
+                                                <i class="fa-solid fa-id-card text-[9px]"></i> Admit Card Allowed
+                                            </span>
+                                        @else
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-500 border border-gray-200 flex items-center gap-1 w-max">
+                                                <i class="fa-solid fa-lock text-[9px]"></i> Admit Card Locked
+                                            </span>
+                                        @endif
+                                    </div>
                                 @elseif($reg->payment_status === 'pending')
                                     <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex items-center gap-1.5 w-max animate-pulse">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Pending
