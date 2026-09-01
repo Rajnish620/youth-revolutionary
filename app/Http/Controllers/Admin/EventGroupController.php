@@ -22,7 +22,7 @@ class EventGroupController extends Controller
                   ->orWhere('class_range', 'like', '%' . $request->search . '%');
         }
 
-        $groups = $query->latest()->paginate(15);
+        $groups = $query->latest()->paginate(15)->withQueryString();
         $seasons = \App\Models\Season::oldest()->get();
         
         $eventsQuery = Event::query();

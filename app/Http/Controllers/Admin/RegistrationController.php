@@ -42,7 +42,7 @@ class RegistrationController extends Controller
             $query->where('event_group_id', $request->group_id);
         }
 
-        $registrations = $query->latest()->paginate(15);
+        $registrations = $query->latest()->paginate(15)->withQueryString();
         
         $seasons = \App\Models\Season::oldest()->get();
         $eventsQuery = Event::query();

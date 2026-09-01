@@ -31,7 +31,7 @@ class EventController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $events = $query->latest()->paginate(10);
+        $events = $query->latest()->paginate(10)->withQueryString();
         $categories = Category::oldest()->get();
         $seasons = Season::oldest()->get();
 

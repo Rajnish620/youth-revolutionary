@@ -21,7 +21,7 @@ class CompetitionController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $competitions = $query->latest()->paginate(10);
+        $competitions = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.competitions.index', compact('competitions'));
     }

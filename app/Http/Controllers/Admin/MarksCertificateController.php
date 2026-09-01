@@ -25,7 +25,7 @@ class MarksCertificateController extends Controller
             });
         }
 
-        $registrations = $query->orderBy('roll_no', 'asc')->paginate(20);
+        $registrations = $query->orderBy('roll_no', 'asc')->paginate(20)->withQueryString();
         $events = Event::all();
 
         return view('admin.marks.index', compact('registrations', 'events'));

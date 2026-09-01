@@ -70,6 +70,7 @@
     <!-- Filters Bar -->
     <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <form method="GET" action="{{ route('admin.registrations.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
             <!-- Season Filter -->
             <select name="season" onchange="this.form.event_id.value='All'; this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2 outline-none">
                 <option value="All">All Seasons</option>
