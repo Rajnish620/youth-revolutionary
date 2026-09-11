@@ -40,7 +40,7 @@ Route::get('/events', function () {
 });
 
 Route::get('/register', function (Request $request) {
-    $events = Event::with('groups')->get();
+    $events = Event::where('status', '!=', 'completed')->with('groups')->get();
     $paymentSetting = PaymentSetting::getSettings();
     return view('register', compact('events', 'paymentSetting'));
 });
