@@ -16,11 +16,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'youth@sws.com',
-            'password' => Hash::make('youth@1234'),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'youth@sws.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('youth@1234'),
+            ]
+        );
 
         // $this->call([
         //     CompetitionSeeder::class,
