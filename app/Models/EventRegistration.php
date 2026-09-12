@@ -25,6 +25,8 @@ class EventRegistration extends Model
         'transaction_id',
         'payment_status',
         'marks',
+        'correct_answers',
+        'wrong_answers',
         'rank',
         'certificate_enabled',
         'is_admit_card_allowed',
@@ -39,8 +41,38 @@ class EventRegistration extends Model
         'certificate_enabled' => 'boolean',
         'is_admit_card_allowed' => 'boolean',
         'marks' => 'decimal:2',
+        'correct_answers' => 'integer',
+        'wrong_answers' => 'integer',
         'fee_paid' => 'decimal:2',
     ];
+
+    public function getQualificationStatusAttribute(): string
+    {
+        if ($this->marks === null) {
+            return 'Pending';
+        }
+
+        $cutoff = $this->event ? $this->event->cutoff_marks : null;
+        if ($cutoff !== null) {
+            return ((float)$this->marks >= (float)$cutoff) ? 'Qualified' : 'Not Qualified';
+        }
+
+        return 'Participated';
+    }
+
+    public function getPercentageAttribute(): ?float
+    {
+        if ($this->marks === null) {
+            return null;
+        }
+
+        $totalMarks = $this->event ? $this->event->total_marks : null;
+        if ($totalMarks && (float)$totalMarks > 0) {
+            return round(((float)$this->marks / (float)$totalMarks) * 100, 2);
+        }
+
+        return null;
+    }
 
     public function event()
     {

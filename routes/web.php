@@ -183,10 +183,13 @@ Route::post('/register', function (Request $request) {
 });
 
 Route::get('/certificate/{roll_no}', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'showCertificate'])->name('certificate.show');
+Route::get('/certificate/{roll_no}/download', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'downloadCertificate'])->name('certificate.download');
 
-Route::get('/results', function () {
-    return view('result');
-});
+Route::get('/marksheet/{roll_no}', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'showMarksheet'])->name('marksheet.show');
+Route::get('/marksheet/{roll_no}/download', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'downloadMarksheet'])->name('marksheet.download');
+
+Route::get('/results', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'publicResultSearch'])->name('results.index');
+Route::post('/results/search', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'publicResultSearch'])->name('results.search');
 
 Route::get('/competitions/{slug}', function ($slug) {
     // Find category by slug
@@ -287,6 +290,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin Marks & Certificates
     Route::get('admin/marks', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'index'])->name('admin.marks.index');
+    Route::post('admin/marks/events/{event}/settings', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'updateEventSettings'])->name('admin.marks.event-settings');
     Route::post('admin/marks/{registration}/update', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'updateMarks'])->name('admin.marks.update');
     Route::post('admin/marks/{registration}/toggle-certificate', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'toggleCertificate'])->name('admin.marks.toggle-certificate');
     Route::post('admin/marks/bulk-certificate', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'bulkCertificateToggle'])->name('admin.marks.bulk-certificate');

@@ -22,12 +22,41 @@ class Event extends Model
         'description',
         'is_featured',
         'status',
+        'show_marks',
+        'show_certificate',
+        'total_questions',
+        'marks_per_question',
+        'negative_marks',
+        'total_marks',
+        'cutoff_marks',
+        'marking_scheme_notes',
     ];
 
     protected $casts = [
         'event_date' => 'date',
         'is_featured' => 'boolean',
+        'show_marks' => 'boolean',
+        'show_certificate' => 'boolean',
+        'total_questions' => 'integer',
+        'marks_per_question' => 'decimal:2',
+        'negative_marks' => 'decimal:2',
+        'total_marks' => 'decimal:2',
+        'cutoff_marks' => 'decimal:2',
     ];
+
+    public function getResultModeAttribute(): string
+    {
+        if ($this->show_marks && $this->show_certificate) {
+            return 'both';
+        }
+        if ($this->show_marks) {
+            return 'marks';
+        }
+        if ($this->show_certificate) {
+            return 'certificate';
+        }
+        return 'none';
+    }
 
     public function groups()
     {
