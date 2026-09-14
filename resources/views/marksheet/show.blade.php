@@ -55,12 +55,12 @@
 
         <div class="relative z-10 space-y-6">
 
-            <!-- Official Admit Card Header Banner -->
+            <!-- Official Admit Card Header Banner (Full Width) -->
             <div class="border-b-2 border-gray-200 pb-3 text-center">
                 @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto max-h-[120px] object-contain mx-auto" alt="Official Header Banner">
+                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto block mx-auto" alt="Official Header Banner">
                 @elseif(file_exists(public_path('images/header_banner.jpg')))
-                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto max-h-[120px] object-contain mx-auto" alt="Official Header Banner">
+                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto block mx-auto" alt="Official Header Banner">
                 @else
                     <div class="py-2">
                         <div class="flex items-center justify-center gap-3">
