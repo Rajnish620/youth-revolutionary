@@ -125,7 +125,7 @@
                     <div class="flex items-center justify-center gap-3 sm:gap-6 md:gap-8 px-4">
                         <!-- Left: Golden Nataraja Emblem -->
                         <div class="shrink-0">
-                            <img src="{{ asset('images/certificate/nataraja_gold.svg') }}" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain" alt="Nataraja Emblem">
+                            <img src="{{ asset('images/certificate/nataraja_statue.png') }}" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain" alt="Nataraja Emblem">
                         </div>
 
                         <!-- Center: Hindi Title -->
@@ -135,7 +135,7 @@
 
                         <!-- Right: Trophy with Laurel Wreath -->
                         <div class="shrink-0">
-                            <img src="{{ asset('images/certificate/trophy_laurel.svg') }}" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain" alt="Trophy Emblem">
+                            <img src="{{ asset('images/certificate/trophy_laurel.svg') }}?v=2" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain" alt="Trophy Emblem">
                         </div>
                     </div>
 

@@ -198,7 +198,7 @@
     <table class="hindi-table">
         <tr>
             <td style="width: 16%; text-align: right;">
-                <img src="{{ public_path('images/certificate/nataraja_gold.svg') }}" class="emblem-img emblem-nataraja" alt="Nataraja">
+                <img src="{{ public_path('images/certificate/nataraja_statue.png') }}" class="emblem-img emblem-nataraja" alt="Nataraja">
             </td>
             <td style="width: 68%; text-align: center;">
                 <div class="hindi-title">प्रतिभा खोज प्रतियोगिता {{ $certSeason }}</div>
