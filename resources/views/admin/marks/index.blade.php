@@ -3,7 +3,10 @@
 @section('title', 'Marks & Certificates - Admin Panel')
 
 @section('content')
-<div class="space-y-6" x-data="{ activeTab: '{{ request('tab', 'events') }}' }">
+<div class="space-y-6" x-data="{ 
+    activeTab: '{{ request('tab', 'events') }}',
+    selectedSeason: '{{ request('season', 'All') }}'
+}">
 
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -113,9 +116,63 @@
                 </span>
             </div>
 
+            <!-- Season Filter Bar -->
+            @if(isset($seasons) && $seasons->count() > 0)
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-gradient-to-r from-purple-50/90 via-indigo-50/40 to-purple-50/60 p-3.5 sm:p-4 rounded-2xl border border-purple-100/90 mb-6 shadow-xs">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <span class="text-xs font-bold text-gray-700 flex items-center gap-1.5 shrink-0">
+                            <i class="fa-solid fa-layer-group text-[#340C6F]"></i>
+                            <span>Filter by Season:</span>
+                        </span>
+                        
+                        <!-- Quick Season Pills -->
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <button type="button" @click="selectedSeason = 'All'"
+                                :class="selectedSeason === 'All' 
+                                    ? 'bg-[#340C6F] text-white shadow-sm ring-2 ring-[#340C6F]/30' 
+                                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
+                                class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer">
+                                All Seasons ({{ $events->count() }})
+                            </button>
+                            @foreach($seasons as $s)
+                                @php
+                                    $sCount = $events->where('season', $s)->count();
+                                @endphp
+                                <button type="button" @click="selectedSeason = '{{ addslashes($s) }}'"
+                                    :class="selectedSeason === '{{ addslashes($s) }}' 
+                                        ? 'bg-[#340C6F] text-white shadow-sm ring-2 ring-[#340C6F]/30' 
+                                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
+                                    class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                                    <span>{{ $s }}</span>
+                                    <span :class="selectedSeason === '{{ addslashes($s) }}' ? 'bg-white/25 text-white' : 'bg-purple-100 text-[#340C6F]'" class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold">{{ $sCount }}</span>
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Dropdown for Mobile / Compact Screens -->
+                    <div class="flex items-center gap-2 self-start lg:self-auto">
+                        <select x-model="selectedSeason" class="lg:hidden bg-white border border-gray-200 text-xs font-extrabold text-[#340C6F] rounded-xl px-3 py-1.5 outline-none focus:border-[#340C6F] shadow-sm">
+                            <option value="All">All Seasons ({{ $events->count() }})</option>
+                            @foreach($seasons as $s)
+                                <option value="{{ $s }}">{{ $s }}</option>
+                            @endforeach
+                        </select>
+                        <span class="hidden lg:inline text-xs font-semibold text-gray-500" x-show="selectedSeason !== 'All'">
+                            Showing: <strong class="text-[#340C6F]" x-text="selectedSeason"></strong>
+                        </span>
+                    </div>
+                </div>
+            @endif
+
             <div class="space-y-6">
                 @forelse($events as $event)
-                    <div class="bg-gray-50/70 border border-gray-200 rounded-2xl p-5 hover:border-[#340C6F]/40 transition-all">
+                    <div x-show="selectedSeason === 'All' || selectedSeason === '{{ addslashes($event->season ?? '') }}'"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 transform -translate-y-1"
+                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                         data-season="{{ $event->season ?? '' }}"
+                         class="bg-gray-50/70 border border-gray-200 rounded-2xl p-5 hover:border-[#340C6F]/40 transition-all">
                         
                         <!-- Event Header Row -->
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/60 pb-4">
@@ -234,6 +291,7 @@
                                     <input type="text" name="marking_scheme_notes" value="{{ old('marking_scheme_notes', $event->marking_scheme_notes) }}" placeholder="e.g. Passing cutoff is 40%. Each question carries 2 marks with no negative marking."
                                         class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:border-[#340C6F] outline-none">
                                 </div>
+                                <input type="hidden" name="season" :value="selectedSeason">
                                 <button type="submit" class="px-5 py-2 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs shadow-md transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
                                     <i class="fa-solid fa-floppy-disk"></i>
                                     <span>Save Settings</span>
@@ -248,6 +306,14 @@
                         No events found in the database.
                     </div>
                 @endforelse
+
+                @if(isset($seasons) && $seasons->count() > 0)
+                    <div x-show="selectedSeason !== 'All' && !({{ json_encode($seasons->toArray()) }}).includes(selectedSeason)" 
+                         class="py-12 text-center text-gray-400 text-sm font-semibold" style="display: none;">
+                        <i class="fa-solid fa-calendar-xmark text-2xl mb-2 text-gray-300 block"></i>
+                        No events found for this season.
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -267,11 +333,25 @@
                 <form method="GET" action="{{ route('admin.marks.index') }}" class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                     <input type="hidden" name="tab" value="students">
                     
+                    @if(isset($seasons) && $seasons->count() > 0)
+                        <!-- Season Select -->
+                        <select name="season" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
+                            <option value="All">All Seasons</option>
+                            @foreach($seasons as $s)
+                                <option value="{{ $s }}" {{ request('season') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                            @endforeach
+                        </select>
+                    @endif
+
                     <!-- Event Select -->
                     <select name="event_id" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
                         <option value="All">All Events ({{ $events->count() }})</option>
                         @foreach($events as $e)
-                            <option value="{{ $e->id }}" {{ request('event_id') == $e->id ? 'selected' : '' }}>{{ $e->title }}</option>
+                            @if(!request('season') || request('season') === 'All' || $e->season === request('season'))
+                                <option value="{{ $e->id }}" {{ request('event_id') == $e->id ? 'selected' : '' }}>
+                                    {{ $e->title }} @if($e->season)({{ $e->season }})@endif
+                                </option>
+                            @endif
                         @endforeach
                     </select>
 
@@ -294,7 +374,7 @@
                     <button type="submit" class="px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-black text-white text-xs font-bold transition-all shadow-sm">
                         Filter
                     </button>
-                    @if(request('event_id') || request('search') || request('status_filter'))
+                    @if(request('event_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
                         <a href="{{ route('admin.marks.index', ['tab' => 'students']) }}" class="px-3 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold transition-all">
                             Reset
                         </a>
@@ -305,6 +385,7 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <form method="POST" action="{{ route('admin.marks.bulk-certificate') }}">
                         @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="1">
                         <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
@@ -315,6 +396,7 @@
 
                     <form method="POST" action="{{ route('admin.marks.bulk-certificate') }}">
                         @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="0">
                         <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" class="px-3.5 py-2 rounded-xl bg-slate-600 hover:bg-slate-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">

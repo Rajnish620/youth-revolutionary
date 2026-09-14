@@ -26,8 +26,17 @@ class MarksCertificateController extends Controller
             },
         ])->orderBy('id', 'desc')->get();
 
+        // Distinct non-empty seasons
+        $seasons = $events->pluck('season')->filter()->unique()->values();
+
         // Query Registrations
         $query = EventRegistration::with(['event', 'group'])->where('payment_status', 'approved');
+
+        if ($request->filled('season') && $request->season !== 'All') {
+            $query->whereHas('event', function ($q) use ($request) {
+                $q->where('season', $request->season);
+            });
+        }
 
         if ($request->filled('event_id') && $request->event_id !== 'All') {
             $query->where('event_id', $request->event_id);
@@ -66,6 +75,7 @@ class MarksCertificateController extends Controller
         return view('admin.marks.index', compact(
             'registrations',
             'events',
+            'seasons',
             'totalApproved',
             'eventsWithMarks',
             'eventsWithCertificates',
@@ -121,11 +131,16 @@ class MarksCertificateController extends Controller
     public function bulkCertificateToggle(Request $request)
     {
         $eventId = $request->input('event_id');
+        $season = $request->input('season');
         $enable = $request->input('enable') == '1';
 
         $query = EventRegistration::where('payment_status', 'approved');
         if ($eventId && $eventId !== 'All') {
             $query->where('event_id', $eventId);
+        } elseif ($season && $season !== 'All') {
+            $query->whereHas('event', function ($q) use ($season) {
+                $q->where('season', $season);
+            });
         }
 
         $query->update(['certificate_enabled' => $enable]);
