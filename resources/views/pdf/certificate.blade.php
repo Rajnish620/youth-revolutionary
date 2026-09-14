@@ -80,8 +80,16 @@
             padding: 0 6px;
         }
         .emblem-img {
-            width: 56px;
-            height: 56px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .emblem-nataraja {
+            height: 75px;
+            width: auto;
+        }
+        .emblem-trophy {
+            height: 65px;
+            width: auto;
         }
         .hindi-title {
             font-size: 18pt;
@@ -189,14 +197,14 @@
     <!-- HINDI COMPETITION TITLE WITH ICONS -->
     <table class="hindi-table">
         <tr>
-            <td style="width: 14%; text-align: right;">
-                <img src="{{ public_path('images/certificate/nataraja_gold.svg') }}" class="emblem-img" alt="Nataraja">
+            <td style="width: 16%; text-align: right;">
+                <img src="{{ public_path('images/certificate/nataraja_gold.svg') }}" class="emblem-img emblem-nataraja" alt="Nataraja">
             </td>
-            <td style="width: 72%; text-align: center;">
+            <td style="width: 68%; text-align: center;">
                 <div class="hindi-title">प्रतिभा खोज प्रतियोगिता {{ $certSeason }}</div>
             </td>
-            <td style="width: 14%; text-align: left;">
-                <img src="{{ public_path('images/certificate/trophy_laurel.svg') }}" class="emblem-img" alt="Trophy">
+            <td style="width: 16%; text-align: left;">
+                <img src="{{ public_path('images/certificate/trophy_laurel.svg') }}" class="emblem-img emblem-trophy" alt="Trophy">
             </td>
         </tr>
     </table>
