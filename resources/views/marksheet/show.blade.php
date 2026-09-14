@@ -46,11 +46,10 @@
                 break-inside: avoid !important;
             }
             .header-banner-img {
-                max-height: 82px !important;
                 width: 100% !important;
-                object-fit: contain !important;
-                margin: 0 auto !important;
+                height: auto !important;
                 display: block !important;
+                margin: 0 auto !important;
             }
             .print-compact-gap > * + * {
                 margin-top: 0.55rem !important;
@@ -111,12 +110,12 @@
 
         <div class="relative z-10 space-y-3 sm:space-y-3.5 print-compact-gap">
 
-            <!-- Official Admit Card Header Banner (Controlled Height) -->
+            <!-- Official Admit Card Header Banner (Full Width) -->
             <div class="border-b border-gray-200 pb-2 text-center">
                 @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto max-h-[85px] sm:max-h-[92px] object-contain block mx-auto header-banner-img" alt="Official Header Banner">
+                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
                 @elseif(file_exists(public_path('images/header_banner.jpg')))
-                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto max-h-[85px] sm:max-h-[92px] object-contain block mx-auto header-banner-img" alt="Official Header Banner">
+                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
                 @else
                     <div class="py-1">
                         <div class="flex items-center justify-center gap-3">

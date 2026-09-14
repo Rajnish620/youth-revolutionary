@@ -34,7 +34,7 @@
         .header-banner img {
             display: block;
             width: 100%;
-            height: 95px;
+            height: 120px;
             margin: 0 auto;
         }
         
