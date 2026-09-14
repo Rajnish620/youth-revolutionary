@@ -143,93 +143,148 @@
                 </div>
             </div>
 
+            @php
+                $isQualifyMode = ($registration->event && ($registration->event->evaluation_type ?? 'marks') === 'qualify_only');
+            @endphp
+
             <!-- Detailed Scoring & Evaluation Scheme Table -->
             <div class="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
                 <div class="bg-gray-100/80 px-4 py-2 border-b border-gray-200 text-xs font-black text-[#340C6F] uppercase tracking-wider flex items-center justify-between">
-                    <span><i class="fa-solid fa-chart-column mr-1.5"></i> Evaluation Scheme & Score Breakdown</span>
+                    <span><i class="fa-solid fa-chart-column mr-1.5"></i> {{ $isQualifyMode ? 'Official Performance & Qualification Assessment' : 'Evaluation Scheme & Score Breakdown' }}</span>
                     <span class="text-[11px] font-semibold text-gray-500">Official Assessment Record</span>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-600 font-bold uppercase text-[10px] border-b border-gray-200">
-                                <th class="py-3 px-4">Subject / Event Component</th>
-                                @if(!empty($registration->event->total_questions))
-                                    <th class="py-3 px-3 text-center">Questions</th>
-                                    <th class="py-3 px-3 text-center">Mark / Q</th>
-                                @endif
-                                <th class="py-3 px-3 text-center">Max Marks</th>
-                                <th class="py-3 px-3 text-center">Cutoff Marks</th>
-                                <th class="py-3 px-4 text-center font-black text-[#340C6F]">Marks Obtained</th>
-                                <th class="py-3 px-3 text-center">Percentage</th>
-                                <th class="py-3 px-3 text-center">Rank / Merit</th>
-                                <th class="py-3 px-4 text-center">Result Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr class="font-medium text-gray-800">
-                                <td class="py-4 px-4 font-bold text-gray-900">
-                                    {{ $registration->event->title ?? 'Main Event Examination' }}
-                                    <div class="text-[10px] font-normal text-gray-400">Category: {{ $registration->event->category ?? 'General' }}</div>
-                                </td>
-                                
-                                @if(!empty($registration->event->total_questions))
-                                    <td class="py-4 px-3 text-center font-mono font-bold">{{ $registration->event->total_questions }}</td>
-                                    <td class="py-4 px-3 text-center font-mono text-gray-600">
-                                        +{{ number_format($registration->event->marks_per_question ?? 1, 1) }}
-                                        @if($registration->event->negative_marks > 0)
-                                            <span class="text-[9px] text-rose-500 block">(-{{ number_format($registration->event->negative_marks, 2) }})</span>
+                    @if($isQualifyMode)
+                        <!-- Qualified / Not Qualified Scheme Layout (No raw marks or questions) -->
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 font-bold uppercase text-[10px] border-b border-gray-200">
+                                    <th class="py-3 px-5">Competition / Event Component</th>
+                                    <th class="py-3 px-4">Evaluation Criteria / Mode</th>
+                                    <th class="py-3 px-4 text-center">Merit / Rank Citation</th>
+                                    <th class="py-3 px-5 text-center">Official Result Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="font-medium text-gray-800">
+                                    <td class="py-5 px-5 font-bold text-gray-900 text-sm">
+                                        {{ $registration->event->title ?? 'Cultural Competition' }}
+                                        <div class="text-[11px] font-normal text-gray-500 mt-0.5">Category: {{ $registration->event->category ?? 'General' }}</div>
+                                    </td>
+                                    <td class="py-5 px-4 text-gray-700">
+                                        <div class="font-bold text-xs text-[#340C6F]">Jury Performance & Screening Evaluation</div>
+                                        <div class="text-[10px] text-gray-400">Qualitative Assessment (Marks Withheld)</div>
+                                    </td>
+                                    <td class="py-5 px-4 text-center">
+                                        @if($registration->rank)
+                                            <span class="inline-block px-3 py-1 rounded-lg bg-amber-100 text-amber-900 font-extrabold text-xs border border-amber-300">
+                                                {{ $registration->rank }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400 text-xs">—</span>
                                         @endif
                                     </td>
-                                @endif
-
-                                <td class="py-4 px-3 text-center font-mono font-bold text-gray-700">
-                                    {{ $registration->event->total_marks !== null ? number_format($registration->event->total_marks, 2) : '100.00' }}
-                                </td>
-
-                                <td class="py-4 px-3 text-center font-mono font-bold text-amber-700 bg-amber-50/50">
-                                    {{ $registration->event->cutoff_marks !== null ? number_format($registration->event->cutoff_marks, 2) : 'N/A' }}
-                                </td>
-
-                                <td class="py-4 px-4 text-center bg-purple-50/40">
-                                    <span class="font-mono font-black text-base text-[#340C6F]">
-                                        {{ $registration->marks !== null ? number_format($registration->marks, 2) : '0.00' }}
-                                    </span>
-                                </td>
-
-                                <td class="py-4 px-3 text-center font-mono font-bold text-gray-700">
-                                    {{ $registration->percentage !== null ? $registration->percentage . '%' : 'N/A' }}
-                                </td>
-
-                                <td class="py-4 px-3 text-center">
-                                    @if($registration->rank)
-                                        <span class="inline-block px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-extrabold text-xs">
-                                            {{ $registration->rank }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400 text-xs">—</span>
+                                    <td class="py-5 px-5 text-center">
+                                        @if($registration->qualification_status === 'Qualified')
+                                            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs">
+                                                <i class="fa-solid fa-circle-check text-sm text-emerald-600"></i> QUALIFIED
+                                            </span>
+                                        @elseif($registration->qualification_status === 'Not Qualified')
+                                            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300 shadow-xs">
+                                                <i class="fa-solid fa-circle-xmark text-sm text-rose-600"></i> NOT QUALIFIED
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300 shadow-xs">
+                                                <i class="fa-solid fa-clock text-sm text-amber-600"></i> UNDER REVIEW
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @else
+                        <!-- Numeric Marks Scheme Layout (Quiz / Examination) -->
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 font-bold uppercase text-[10px] border-b border-gray-200">
+                                    <th class="py-3 px-4">Subject / Event Component</th>
+                                    @if(!empty($registration->event->total_questions))
+                                        <th class="py-3 px-3 text-center">Questions</th>
+                                        <th class="py-3 px-3 text-center">Mark / Q</th>
                                     @endif
-                                </td>
-
-                                <td class="py-4 px-4 text-center">
-                                    @if($registration->qualification_status === 'Qualified')
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                            <i class="fa-solid fa-circle-check text-[11px]"></i> QUALIFIED
-                                        </span>
-                                    @elseif($registration->qualification_status === 'Not Qualified')
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">
-                                            <i class="fa-solid fa-circle-xmark text-[11px]"></i> NOT QUALIFIED
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-300">
-                                            <i class="fa-solid fa-award text-[11px]"></i> PARTICIPATED
-                                        </span>
+                                    <th class="py-3 px-3 text-center">Max Marks</th>
+                                    <th class="py-3 px-3 text-center">Cutoff Marks</th>
+                                    <th class="py-3 px-4 text-center font-black text-[#340C6F]">Marks Obtained</th>
+                                    <th class="py-3 px-3 text-center">Percentage</th>
+                                    <th class="py-3 px-3 text-center">Rank / Merit</th>
+                                    <th class="py-3 px-4 text-center">Result Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="font-medium text-gray-800">
+                                    <td class="py-4 px-4 font-bold text-gray-900">
+                                        {{ $registration->event->title ?? 'Main Event Examination' }}
+                                        <div class="text-[10px] font-normal text-gray-400">Category: {{ $registration->event->category ?? 'General' }}</div>
+                                    </td>
+                                    
+                                    @if(!empty($registration->event->total_questions))
+                                        <td class="py-4 px-3 text-center font-mono font-bold">{{ $registration->event->total_questions }}</td>
+                                        <td class="py-4 px-3 text-center font-mono text-gray-600">
+                                            +{{ number_format($registration->event->marks_per_question ?? 1, 1) }}
+                                            @if($registration->event->negative_marks > 0)
+                                                <span class="text-[9px] text-rose-500 block">(-{{ number_format($registration->event->negative_marks, 2) }})</span>
+                                            @endif
+                                        </td>
                                     @endif
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                                    <td class="py-4 px-3 text-center font-mono font-bold text-gray-700">
+                                        {{ $registration->event->total_marks !== null ? number_format($registration->event->total_marks, 2) : '100.00' }}
+                                    </td>
+
+                                    <td class="py-4 px-3 text-center font-mono font-bold text-amber-700 bg-amber-50/50">
+                                        {{ $registration->event->cutoff_marks !== null ? number_format($registration->event->cutoff_marks, 2) : 'N/A' }}
+                                    </td>
+
+                                    <td class="py-4 px-4 text-center bg-purple-50/40">
+                                        <span class="font-mono font-black text-base text-[#340C6F]">
+                                            {{ $registration->marks !== null ? number_format($registration->marks, 2) : '0.00' }}
+                                        </span>
+                                    </td>
+
+                                    <td class="py-4 px-3 text-center font-mono font-bold text-gray-700">
+                                        {{ $registration->percentage !== null ? $registration->percentage . '%' : 'N/A' }}
+                                    </td>
+
+                                    <td class="py-4 px-3 text-center">
+                                        @if($registration->rank)
+                                            <span class="inline-block px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-extrabold text-xs">
+                                                {{ $registration->rank }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400 text-xs">—</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="py-4 px-4 text-center">
+                                        @if($registration->qualification_status === 'Qualified')
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                                <i class="fa-solid fa-circle-check text-[11px]"></i> QUALIFIED
+                                            </span>
+                                        @elseif($registration->qualification_status === 'Not Qualified')
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">
+                                                <i class="fa-solid fa-circle-xmark text-[11px]"></i> NOT QUALIFIED
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-300">
+                                                <i class="fa-solid fa-award text-[11px]"></i> PARTICIPATED
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
             </div>
 
@@ -241,6 +296,10 @@
                 <div class="text-[11px] leading-relaxed text-gray-600">
                     @if(!empty($registration->event->marking_scheme_notes))
                         {!! nl2br(e($registration->event->marking_scheme_notes)) !!}
+                    @elseif($isQualifyMode)
+                        1. Candidates are evaluated through qualitative performance and talent screening by the official examination jury.<br>
+                        2. Candidates marked <strong>QUALIFIED</strong> are eligible for certificate issuance and selection for further rounds.<br>
+                        3. This statement is a computer-generated official document issued under the authority of Youth Revolutionary Nasriganj.
                     @else
                         1. Qualifying status is determined based on the minimum qualifying cutoff score established for this competition.<br>
                         2. Candidates marked <strong>QUALIFIED</strong> are eligible for certificate issuance and merit considerations.<br>

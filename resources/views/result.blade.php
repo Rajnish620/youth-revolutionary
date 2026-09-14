@@ -106,7 +106,8 @@
                     <!-- Result Status & Action Cards -->
                     @php
                         $event = $searchedStudent->event;
-                        $hasMarksPublished = $event && $event->show_marks && $searchedStudent->marks !== null;
+                        $isQualifyOnly = $event && ($event->evaluation_type ?? 'marks') === 'qualify_only';
+                        $hasMarksPublished = $event && $event->show_marks && ($isQualifyOnly ? $searchedStudent->is_qualified !== null : $searchedStudent->marks !== null);
                         $hasCertPublished = $event && $event->show_certificate && $searchedStudent->certificate_enabled;
                     @endphp
 
@@ -121,7 +122,7 @@
                                     <div class="space-y-3">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-black uppercase tracking-wider text-[#340C6F] flex items-center gap-1.5">
-                                                <i class="fa-solid fa-file-invoice text-blue-600"></i> Official Marksheet
+                                                <i class="fa-solid fa-file-invoice text-blue-600"></i> {{ $isQualifyOnly ? 'Official Assessment Statement' : 'Official Marksheet' }}
                                             </span>
                                             @if($searchedStudent->qualification_status === 'Qualified')
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -129,25 +130,38 @@
                                                 </span>
                                             @elseif($searchedStudent->qualification_status === 'Not Qualified')
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300">
-                                                    BELOW CUTOFF
+                                                    {{ $isQualifyOnly ? 'NOT QUALIFIED' : 'BELOW CUTOFF' }}
                                                 </span>
                                             @endif
                                         </div>
 
-                                        <div class="bg-white p-4 rounded-xl border border-purple-100 grid grid-cols-3 gap-2 text-center">
-                                            <div>
-                                                <span class="block text-[10px] font-bold text-gray-400 uppercase">Score</span>
-                                                <span class="text-lg font-black text-[#340C6F]">{{ $searchedStudent->marks }}</span>
+                                        @if($isQualifyOnly)
+                                            <div class="bg-white p-4 rounded-xl border border-purple-100 grid grid-cols-2 gap-2 text-center">
+                                                <div>
+                                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Assessment</span>
+                                                    <span class="text-sm font-black text-[#340C6F]">Jury Screening</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Rank / Merit</span>
+                                                    <span class="text-sm font-black text-gray-800">{{ $searchedStudent->rank ?? '—' }}</span>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span class="block text-[10px] font-bold text-gray-400 uppercase">Cutoff</span>
-                                                <span class="text-lg font-black text-amber-600">{{ $event->cutoff_marks ?? 'N/A' }}</span>
+                                        @else
+                                            <div class="bg-white p-4 rounded-xl border border-purple-100 grid grid-cols-3 gap-2 text-center">
+                                                <div>
+                                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Score</span>
+                                                    <span class="text-lg font-black text-[#340C6F]">{{ $searchedStudent->marks }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Cutoff</span>
+                                                    <span class="text-lg font-black text-amber-600">{{ $event->cutoff_marks ?? 'N/A' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Rank</span>
+                                                    <span class="text-lg font-black text-gray-800">{{ $searchedStudent->rank ?? '—' }}</span>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span class="block text-[10px] font-bold text-gray-400 uppercase">Rank</span>
-                                                <span class="text-lg font-black text-gray-800">{{ $searchedStudent->rank ?? '—' }}</span>
-                                            </div>
-                                        </div>
+                                        @endif
                                     </div>
 
                                     <div class="flex items-center gap-2 pt-2">

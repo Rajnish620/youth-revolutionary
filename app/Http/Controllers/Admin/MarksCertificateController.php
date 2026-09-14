@@ -19,7 +19,9 @@ class MarksCertificateController extends Controller
                 $q->where('payment_status', 'approved');
             },
             'registrations as marks_entered_count' => function ($q) {
-                $q->where('payment_status', 'approved')->whereNotNull('marks');
+                $q->where('payment_status', 'approved')->where(function ($sub) {
+                    $sub->whereNotNull('marks')->orWhereNotNull('is_qualified');
+                });
             },
             'registrations as certificates_enabled_count' => function ($q) {
                 $q->where('payment_status', 'approved')->where('certificate_enabled', true);
@@ -54,9 +56,31 @@ class MarksCertificateController extends Controller
 
         if ($request->filled('status_filter')) {
             if ($request->status_filter === 'with_marks') {
-                $query->whereNotNull('marks');
+                $query->where(function ($q) {
+                    $q->whereNotNull('marks')->orWhereNotNull('is_qualified');
+                });
             } elseif ($request->status_filter === 'without_marks') {
-                $query->whereNull('marks');
+                $query->whereNull('marks')->whereNull('is_qualified');
+            } elseif ($request->status_filter === 'qualified') {
+                $query->where(function ($q) {
+                    $q->where('is_qualified', true)
+                      ->orWhere(function ($sub) {
+                          $sub->whereNotNull('marks')
+                              ->whereHas('event', function ($eq) {
+                                  $eq->whereRaw('event_registrations.marks >= events.cutoff_marks');
+                              });
+                      });
+                });
+            } elseif ($request->status_filter === 'not_qualified') {
+                $query->where(function ($q) {
+                    $q->where('is_qualified', false)
+                      ->orWhere(function ($sub) {
+                          $sub->whereNotNull('marks')
+                              ->whereHas('event', function ($eq) {
+                                  $eq->whereRaw('event_registrations.marks < events.cutoff_marks');
+                              });
+                      });
+                });
             } elseif ($request->status_filter === 'cert_enabled') {
                 $query->where('certificate_enabled', true);
             } elseif ($request->status_filter === 'cert_disabled') {
@@ -88,6 +112,7 @@ class MarksCertificateController extends Controller
         $validated = $request->validate([
             'show_marks' => 'nullable|boolean',
             'show_certificate' => 'nullable|boolean',
+            'evaluation_type' => 'nullable|string|in:marks,qualify_only',
             'total_questions' => 'nullable|integer|min:0|max:1000',
             'marks_per_question' => 'nullable|numeric|min:0|max:1000',
             'negative_marks' => 'nullable|numeric|min:0|max:100',
@@ -98,6 +123,7 @@ class MarksCertificateController extends Controller
 
         $validated['show_marks'] = $request->boolean('show_marks');
         $validated['show_certificate'] = $request->boolean('show_certificate');
+        $validated['evaluation_type'] = $request->input('evaluation_type', 'marks') ?: 'marks';
 
         $event->update($validated);
 
@@ -108,14 +134,65 @@ class MarksCertificateController extends Controller
     {
         $validated = $request->validate([
             'marks' => 'nullable|numeric|min:0|max:10000',
+            'is_qualified' => 'nullable|in:0,1,true,false',
             'rank' => 'nullable|string|max:100',
             'correct_answers' => 'nullable|integer|min:0|max:1000',
             'wrong_answers' => 'nullable|integer|min:0|max:1000',
         ]);
 
+        if ($request->has('is_qualified')) {
+            $val = $request->input('is_qualified');
+            $validated['is_qualified'] = ($val === '' || $val === null) ? null : (bool)$val;
+        }
+
         $registration->update($validated);
 
-        return redirect()->back()->with('success', "Marks updated for {$registration->student_name} (Roll: {$registration->roll_no})!");
+        return redirect()->back()->with('success', "Evaluation record updated for {$registration->student_name} (Roll: {$registration->roll_no})!");
+    }
+
+    public function toggleQualification(EventRegistration $registration)
+    {
+        // Cycle: null -> true (Qualified) -> false (Not Qualified) -> true
+        $newStatus = ($registration->is_qualified === true) ? false : true;
+
+        $registration->update([
+            'is_qualified' => $newStatus,
+        ]);
+
+        $statusText = $newStatus ? 'QUALIFIED' : 'NOT QUALIFIED';
+        return redirect()->back()->with('success', "Status set to {$statusText} for Roll No: {$registration->roll_no} ({$registration->student_name}).");
+    }
+
+    public function bulkQualificationToggle(Request $request)
+    {
+        $eventId = $request->input('event_id');
+        $season = $request->input('season');
+        $status = $request->input('status'); // 'qualified', 'not_qualified', or 'pending'
+
+        $query = EventRegistration::where('payment_status', 'approved');
+        if ($eventId && $eventId !== 'All') {
+            $query->where('event_id', $eventId);
+        } elseif ($season && $season !== 'All') {
+            $query->whereHas('event', function ($q) use ($season) {
+                $q->where('season', $season);
+            });
+        }
+
+        $val = null;
+        if ($status === 'qualified') {
+            $val = true;
+            $statusText = 'QUALIFIED';
+        } elseif ($status === 'not_qualified') {
+            $val = false;
+            $statusText = 'NOT QUALIFIED';
+        } else {
+            $val = null;
+            $statusText = 'PENDING';
+        }
+
+        $count = $query->update(['is_qualified' => $val]);
+
+        return redirect()->back()->with('success', "Marked {$count} candidate(s) as {$statusText}!");
     }
 
     public function toggleCertificate(EventRegistration $registration)
@@ -158,8 +235,15 @@ class MarksCertificateController extends Controller
             if (!$registration->event || !$registration->event->show_marks) {
                 abort(403, 'Marksheet has not been published yet for this event by the Administrator.');
             }
-            if ($registration->marks === null) {
-                abort(404, 'Marks have not yet been uploaded for this candidate.');
+            $isQualifyOnly = ($registration->event->evaluation_type ?? 'marks') === 'qualify_only';
+            if ($isQualifyOnly) {
+                if ($registration->is_qualified === null) {
+                    abort(404, 'Evaluation status has not yet been declared for this candidate.');
+                }
+            } else {
+                if ($registration->marks === null) {
+                    abort(404, 'Marks have not yet been uploaded for this candidate.');
+                }
             }
         }
 
@@ -176,8 +260,15 @@ class MarksCertificateController extends Controller
             if (!$registration->event || !$registration->event->show_marks) {
                 abort(403, 'Marksheet has not been published yet for this event by the Administrator.');
             }
-            if ($registration->marks === null) {
-                abort(404, 'Marks have not yet been uploaded for this candidate.');
+            $isQualifyOnly = ($registration->event->evaluation_type ?? 'marks') === 'qualify_only';
+            if ($isQualifyOnly) {
+                if ($registration->is_qualified === null) {
+                    abort(404, 'Evaluation status has not yet been declared for this candidate.');
+                }
+            } else {
+                if ($registration->marks === null) {
+                    abort(404, 'Marks have not yet been uploaded for this candidate.');
+                }
             }
         }
 

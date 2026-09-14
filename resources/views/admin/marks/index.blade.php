@@ -214,18 +214,20 @@
                         </div>
 
                         <!-- Settings Form for this Event -->
-                        <form method="POST" action="{{ route('admin.marks.event-settings', $event->id) }}" class="mt-4 space-y-4">
+                        <form method="POST" action="{{ route('admin.marks.event-settings', $event->id) }}"
+                              x-data="{ evalType: '{{ $event->evaluation_type ?? 'marks' }}' }"
+                              class="mt-4 space-y-4">
                             @csrf
                             
-                            <!-- Toggles Row -->
+                            <!-- Toggles Row: Marksheet & Certificate -->
                             <div class="bg-white p-4 rounded-xl border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <!-- Show Marks Toggle -->
                                 <label class="flex items-center justify-between p-3 rounded-xl border {{ $event->show_marks ? 'border-blue-300 bg-blue-50/40' : 'border-gray-200 bg-gray-50/50' }} cursor-pointer hover:border-blue-400 transition-all">
                                     <div class="pr-2">
                                         <div class="text-xs font-extrabold text-gray-800 flex items-center gap-1.5">
-                                            <i class="fa-solid fa-file-invoice text-blue-600"></i> Show Marks / Marksheet
+                                            <i class="fa-solid fa-file-invoice text-blue-600"></i> Show Marksheet / Result
                                         </div>
-                                        <p class="text-[11px] text-gray-500 mt-0.5">Students can view & download their official Marksheet</p>
+                                        <p class="text-[11px] text-gray-500 mt-0.5">Students can view & download their official Marksheet / Scorecard</p>
                                     </div>
                                     <input type="checkbox" name="show_marks" value="1" {{ $event->show_marks ? 'checked' : '' }}
                                         class="w-5 h-5 text-blue-600 rounded-md focus:ring-blue-500 cursor-pointer">
@@ -244,8 +246,46 @@
                                 </label>
                             </div>
 
-                            <!-- Scoring Inputs Grid -->
-                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                            <!-- Evaluation Scheme Selector -->
+                            <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-2.5">
+                                <label class="block text-xs font-black text-gray-800 uppercase tracking-wider">
+                                    <i class="fa-solid fa-graduation-cap text-[#340C6F] mr-1"></i> Evaluation & Marksheet Scheme
+                                </label>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <!-- Option 1: Numeric Marks (Quiz / Exam) -->
+                                    <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all"
+                                           :class="evalType === 'marks' ? 'border-[#340C6F] bg-purple-50/60 shadow-xs ring-1 ring-[#340C6F]/30' : 'border-gray-200 hover:border-gray-300 bg-gray-50/30'">
+                                        <input type="radio" name="evaluation_type" value="marks" x-model="evalType" class="mt-0.5 text-[#340C6F] focus:ring-[#340C6F]">
+                                        <div>
+                                            <div class="text-xs font-black text-gray-900 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-square-poll-vertical text-[#340C6F]"></i>
+                                                <span>Numeric Marks Scheme (Quiz / Exam)</span>
+                                            </div>
+                                            <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                                                Marksheet displays numeric scores, cutoff, questions, negative marking, and percentage.
+                                            </p>
+                                        </div>
+                                    </label>
+
+                                    <!-- Option 2: Qualified / Not Qualified (Cultural / Essay / Talent) -->
+                                    <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all"
+                                           :class="evalType === 'qualify_only' ? 'border-emerald-600 bg-emerald-50/60 shadow-xs ring-1 ring-emerald-600/30' : 'border-gray-200 hover:border-gray-300 bg-gray-50/30'">
+                                        <input type="radio" name="evaluation_type" value="qualify_only" x-model="evalType" class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
+                                        <div>
+                                            <div class="text-xs font-black text-gray-900 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-clipboard-check text-emerald-600"></i>
+                                                <span>Qualified / Not Qualified Scheme (Cultural / Essay)</span>
+                                            </div>
+                                            <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                                                Marksheet displays official <strong>QUALIFIED</strong> / <strong>NOT QUALIFIED</strong> status badge without numeric marks.
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Numeric Scoring Inputs Grid (Visible only in 'marks' mode) -->
+                            <div x-show="evalType === 'marks'" x-transition class="grid grid-cols-2 sm:grid-cols-5 gap-3">
                                 <div>
                                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Questions</label>
                                     <input type="number" min="0" name="total_questions" value="{{ old('total_questions', $event->total_questions) }}" placeholder="e.g. 50"
@@ -274,6 +314,19 @@
                                     <label class="block text-[10px] font-bold text-[#F1400C] uppercase tracking-wider mb-1">Passing Cutoff Score</label>
                                     <input type="number" step="0.01" min="0" name="cutoff_marks" value="{{ old('cutoff_marks', $event->cutoff_marks) }}" placeholder="e.g. 40.00"
                                         class="w-full bg-amber-50/60 border border-amber-300 rounded-xl px-3 py-2 text-xs font-black text-amber-900 focus:border-[#F1400C] outline-none">
+                                </div>
+                            </div>
+
+                            <!-- Qualified Mode Notice Box (Visible in 'qualify_only' mode) -->
+                            <div x-show="evalType === 'qualify_only'" x-transition class="p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs text-emerald-950 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-clipboard-check text-base"></i>
+                                </div>
+                                <div>
+                                    <div class="font-extrabold text-xs text-emerald-900">Qualified / Not Qualified Scheme Active for this Event</div>
+                                    <p class="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">
+                                        Numeric marks and question counts are not required. In Tab 2 (Students), you will be able to toggle each student as <strong>Qualified</strong> or <strong>Not Qualified</strong> with 1-click. Marksheets will display the official qualification status without numbers.
+                                    </p>
                                 </div>
                             </div>
 
@@ -351,8 +404,10 @@
                     <!-- Status Filter -->
                     <select name="status_filter" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
                         <option value="">All Students</option>
-                        <option value="with_marks" {{ request('status_filter') == 'with_marks' ? 'selected' : '' }}>With Marks Entered</option>
-                        <option value="without_marks" {{ request('status_filter') == 'without_marks' ? 'selected' : '' }}>Pending Marks</option>
+                        <option value="with_marks" {{ request('status_filter') == 'with_marks' ? 'selected' : '' }}>With Marks/Status Entered</option>
+                        <option value="without_marks" {{ request('status_filter') == 'without_marks' ? 'selected' : '' }}>Pending Evaluation</option>
+                        <option value="qualified" {{ request('status_filter') == 'qualified' ? 'selected' : '' }}>Qualified Only</option>
+                        <option value="not_qualified" {{ request('status_filter') == 'not_qualified' ? 'selected' : '' }}>Not Qualified Only</option>
                         <option value="cert_enabled" {{ request('status_filter') == 'cert_enabled' ? 'selected' : '' }}>Certificate Enabled</option>
                         <option value="cert_disabled" {{ request('status_filter') == 'cert_disabled' ? 'selected' : '' }}>Certificate Disabled</option>
                     </select>
@@ -374,14 +429,38 @@
                     @endif
                 </form>
 
-                <!-- Bulk Certificate Action Buttons -->
+                <!-- Bulk Action Buttons -->
                 <div class="flex flex-wrap items-center gap-2">
+                    <!-- Bulk Qualification Actions -->
+                    <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
+                        @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="status" value="qualified">
+                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as QUALIFIED?')" class="px-3 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer" title="Mark selected students as Qualified">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>Mark All Qualified</span>
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
+                        @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="status" value="not_qualified">
+                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as NOT QUALIFIED?')" class="px-3 py-2 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer" title="Mark selected students as Not Qualified">
+                            <i class="fa-solid fa-xmark"></i>
+                            <span>Mark All Not Qualified</span>
+                        </button>
+                    </form>
+
+                    <!-- Bulk Certificate Actions -->
                     <form method="POST" action="{{ route('admin.marks.bulk-certificate') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="1">
-                        <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                        <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-certificate"></i>
                             <span>Enable All Certs</span>
                         </button>
@@ -392,7 +471,7 @@
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="0">
-                        <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" class="px-3.5 py-2 rounded-xl bg-slate-600 hover:bg-slate-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                        <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" class="px-3 py-2 rounded-xl bg-slate-600 hover:bg-slate-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-ban"></i>
                             <span>Disable All Certs</span>
                         </button>
@@ -410,16 +489,19 @@
                     <thead>
                         <tr class="bg-gray-50/80 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
                             <th class="py-4 px-6">Student / Roll No</th>
-                            <th class="py-4 px-4">Event & Cutoff</th>
-                            <th class="py-4 px-4">Marks (Score)</th>
+                            <th class="py-4 px-4">Event & Scheme</th>
+                            <th class="py-4 px-4">Marks / Evaluation</th>
                             <th class="py-4 px-4">Rank / Merit</th>
-                            <th class="py-4 px-4">Cutoff Status</th>
+                            <th class="py-4 px-4">Result Status</th>
                             <th class="py-4 px-4">Certificate</th>
                             <th class="py-4 px-6 text-right">View / Preview</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 text-xs">
                         @forelse($registrations as $reg)
+                            @php
+                                $isQualify = ($reg->event && ($reg->event->evaluation_type ?? 'marks') === 'qualify_only');
+                            @endphp
                             <tr class="hover:bg-gray-50/60 transition-colors">
                                 
                                 <!-- Student Meta -->
@@ -449,45 +531,103 @@
                                 <td class="py-4 px-4">
                                     <div class="font-bold text-gray-800 line-clamp-1">{{ $reg->event->title ?? 'N/A' }}</div>
                                     <div class="text-[11px] text-[#F1400C] font-semibold mt-0.5">{{ $reg->group->group_name ?? 'General Group' }}</div>
-                                    <div class="text-[10px] text-gray-500 font-semibold mt-1">
-                                        Cutoff: <span class="font-bold text-amber-700">{{ $reg->event && $reg->event->cutoff_marks !== null ? $reg->event->cutoff_marks : 'Not Set' }}</span>
-                                    </div>
+                                    @if($isQualify)
+                                        <div class="text-[10px] text-emerald-700 font-black mt-1 inline-flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                            <i class="fa-solid fa-clipboard-check"></i> Status-Only Event
+                                        </div>
+                                    @else
+                                        <div class="text-[10px] text-gray-500 font-semibold mt-1">
+                                            Cutoff: <span class="font-bold text-amber-700">{{ $reg->event && $reg->event->cutoff_marks !== null ? $reg->event->cutoff_marks : 'Not Set' }}</span>
+                                        </div>
+                                    @endif
                                 </td>
 
-                                <!-- Inline Marks Edit Form -->
+                                <!-- Marks / Evaluation Column -->
                                 <td class="py-4 px-4">
-                                    <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}">
-                                        @csrf
-                                        <div class="flex items-center gap-2">
-                                            <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="Marks"
-                                                class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none">
-                                            <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Marks & Rank"
-                                                class="w-8 h-8 rounded-lg bg-[#340C6F] hover:bg-purple-900 text-white flex items-center justify-center text-xs transition-all shadow-sm cursor-pointer shrink-0">
+                                    @if($isQualify)
+                                        <!-- 1-Click Toggle for Qualified / Not Qualified -->
+                                        <form method="POST" action="{{ route('admin.marks.toggle-qualification', $reg->id) }}">
+                                            @csrf
+                                            @if($reg->is_qualified === true)
+                                                <button type="submit" title="Click to change to NOT QUALIFIED" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                    <i class="fa-solid fa-circle-check"></i>
+                                                    <span>QUALIFIED</span>
+                                                </button>
+                                            @elseif($reg->is_qualified === false)
+                                                <button type="submit" title="Click to change to QUALIFIED" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                    <i class="fa-solid fa-circle-xmark"></i>
+                                                    <span>NOT QUALIFIED</span>
+                                                </button>
+                                            @else
+                                                <button type="submit" title="Click to mark QUALIFIED" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                    <i class="fa-solid fa-clock text-amber-600"></i>
+                                                    <span>Set Status</span>
+                                                </button>
+                                            @endif
+                                        </form>
+                                    @else
+                                        <!-- Inline Marks Edit Form -->
+                                        <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}">
+                                            @csrf
+                                            <div class="flex items-center gap-2">
+                                                <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="Marks"
+                                                    class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none">
+                                                <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Marks & Rank"
+                                                    class="w-8 h-8 rounded-lg bg-[#340C6F] hover:bg-purple-900 text-white flex items-center justify-center text-xs transition-all shadow-sm cursor-pointer shrink-0">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </button>
+                                            </div>
+                                    @endif
+                                </td>
+
+                                <!-- Rank / Merit Column -->
+                                <td class="py-4 px-4">
+                                    @if($isQualify)
+                                        <form method="POST" action="{{ route('admin.marks.update', $reg->id) }}" class="flex items-center gap-1">
+                                            @csrf
+                                            <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st / Merit"
+                                                class="w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
+                                            <button type="submit" title="Save Rank" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
                                                 <i class="fa-solid fa-check"></i>
                                             </button>
-                                        </div>
-                                </td>
-
-                                <td class="py-4 px-4">
-                                        <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st / Merit" form="form-marks-{{ $reg->id }}"
-                                            class="w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
-                                    </form>
-                                </td>
-
-                                <!-- Qualification Status Badge -->
-                                <td class="py-4 px-4">
-                                    @if($reg->qualification_status === 'Qualified')
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
-                                            <i class="fa-solid fa-circle-check"></i> Qualified
-                                        </span>
-                                    @elseif($reg->qualification_status === 'Not Qualified')
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
-                                            <i class="fa-solid fa-circle-xmark"></i> Below Cutoff
-                                        </span>
+                                        </form>
                                     @else
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500 inline-flex items-center gap-1">
-                                            Pending
-                                        </span>
+                                            <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st / Merit" form="form-marks-{{ $reg->id }}"
+                                                class="w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
+                                        </form>
+                                    @endif
+                                </td>
+
+                                <!-- Result Status Badge -->
+                                <td class="py-4 px-4">
+                                    @if($isQualify)
+                                        @if($reg->is_qualified === true)
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-circle-check"></i> Qualified
+                                            </span>
+                                        @elseif($reg->is_qualified === false)
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-circle-xmark"></i> Not Qualified
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500 inline-flex items-center gap-1">
+                                                Pending
+                                            </span>
+                                        @endif
+                                    @else
+                                        @if($reg->qualification_status === 'Qualified')
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-circle-check"></i> Qualified
+                                            </span>
+                                        @elseif($reg->qualification_status === 'Not Qualified')
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-circle-xmark"></i> Below Cutoff
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500 inline-flex items-center gap-1">
+                                                Pending
+                                            </span>
+                                        @endif
                                     @endif
                                 </td>
 

@@ -294,6 +294,8 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/marks/{registration}/update', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'updateMarks'])->name('admin.marks.update');
     Route::post('admin/marks/{registration}/toggle-certificate', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'toggleCertificate'])->name('admin.marks.toggle-certificate');
     Route::post('admin/marks/bulk-certificate', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'bulkCertificateToggle'])->name('admin.marks.bulk-certificate');
+    Route::post('admin/marks/{registration}/toggle-qualification', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'toggleQualification'])->name('admin.marks.toggle-qualification');
+    Route::post('admin/marks/bulk-qualification', [\App\Http\Controllers\Admin\MarksCertificateController::class, 'bulkQualificationToggle'])->name('admin.marks.bulk-qualification');
 
     // Admin Payment Settings
     Route::get('admin/settings/payment', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.payment.index');

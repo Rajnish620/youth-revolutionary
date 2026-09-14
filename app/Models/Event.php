@@ -24,6 +24,7 @@ class Event extends Model
         'status',
         'show_marks',
         'show_certificate',
+        'evaluation_type',
         'total_questions',
         'marks_per_question',
         'negative_marks',
@@ -37,12 +38,23 @@ class Event extends Model
         'is_featured' => 'boolean',
         'show_marks' => 'boolean',
         'show_certificate' => 'boolean',
+        'evaluation_type' => 'string',
         'total_questions' => 'integer',
         'marks_per_question' => 'decimal:2',
         'negative_marks' => 'decimal:2',
         'total_marks' => 'decimal:2',
         'cutoff_marks' => 'decimal:2',
     ];
+
+    public function getEvaluationTypeAttribute($value): string
+    {
+        return $value ?: 'marks';
+    }
+
+    public function isQualifyOnly(): bool
+    {
+        return $this->evaluation_type === 'qualify_only';
+    }
 
     public function getResultModeAttribute(): string
     {

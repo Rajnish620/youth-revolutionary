@@ -25,6 +25,7 @@ class EventRegistration extends Model
         'transaction_id',
         'payment_status',
         'marks',
+        'is_qualified',
         'correct_answers',
         'wrong_answers',
         'rank',
@@ -40,6 +41,7 @@ class EventRegistration extends Model
     protected $casts = [
         'certificate_enabled' => 'boolean',
         'is_admit_card_allowed' => 'boolean',
+        'is_qualified' => 'boolean',
         'marks' => 'decimal:2',
         'correct_answers' => 'integer',
         'wrong_answers' => 'integer',
@@ -48,6 +50,13 @@ class EventRegistration extends Model
 
     public function getQualificationStatusAttribute(): string
     {
+        if ($this->event && ($this->event->evaluation_type ?? 'marks') === 'qualify_only') {
+            if ($this->is_qualified === null) {
+                return 'Pending';
+            }
+            return $this->is_qualified ? 'Qualified' : 'Not Qualified';
+        }
+
         if ($this->marks === null) {
             return 'Pending';
         }
