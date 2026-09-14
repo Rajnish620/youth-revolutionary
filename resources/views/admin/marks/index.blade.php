@@ -5,7 +5,12 @@
 @section('content')
 <div class="space-y-6" x-data="{ 
     activeTab: '{{ request('tab', 'events') }}',
-    selectedSeason: '{{ request('season', 'All') }}'
+    selectedSeason: '{{ request('season', 'All') }}',
+    showCertModal: false,
+    presidentName: '{{ addslashes($setting->president_name ?? 'NIKETAN SINGH') }}',
+    presidentRole: '{{ addslashes($setting->president_role ?? 'अध्यक्ष') }}',
+    secretaryName: '{{ addslashes($setting->secretary_name ?? 'SHYAM SUNDAR KR.') }}',
+    secretaryRole: '{{ addslashes($setting->secretary_role ?? 'सचिव') }}'
 }">
 
     <!-- Header Section -->
@@ -20,19 +25,31 @@
             </p>
         </div>
         
-        <!-- Navigation Tab Switchers -->
-        <div class="inline-flex p-1 bg-gray-200/80 rounded-2xl border border-gray-300/60 shadow-inner">
-            <button @click="activeTab = 'events'" 
-                :class="activeTab === 'events' ? 'bg-[#340C6F] text-white shadow-md' : 'text-gray-700 hover:text-black'"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-sliders"></i>
-                <span>1. Event Settings & Cutoffs</span>
-            </button>
-            <button @click="activeTab = 'students'" 
-                :class="activeTab === 'students' ? 'bg-[#340C6F] text-white shadow-md' : 'text-gray-700 hover:text-black'"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-user-graduate"></i>
-                <span>2. Student Marks & Results</span>
+        <!-- Navigation Tab Switchers & Certificate Settings Gear Button -->
+        <div class="flex items-center gap-2.5">
+            <div class="inline-flex p-1 bg-gray-200/80 rounded-2xl border border-gray-300/60 shadow-inner">
+                <button @click="activeTab = 'events'" 
+                    :class="activeTab === 'events' ? 'bg-[#340C6F] text-white shadow-md' : 'text-gray-700 hover:text-black'"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>1. Event Settings & Cutoffs</span>
+                </button>
+                <button @click="activeTab = 'students'" 
+                    :class="activeTab === 'students' ? 'bg-[#340C6F] text-white shadow-md' : 'text-gray-700 hover:text-black'"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>2. Student Marks & Results</span>
+                </button>
+            </div>
+
+            <!-- Small Settings Icon Button -->
+            <button @click="showCertModal = true" 
+                    type="button" 
+                    title="Certificate Signatories Settings (अध्यक्ष & सचिव)"
+                    style="background-color: #ffffff !important; color: #340C6F !important; border: 1px solid #e2e8f0 !important;"
+                    class="w-10 h-10 rounded-2xl shadow-xs flex items-center justify-center text-gray-700 hover:text-[#340C6F] hover:bg-purple-50 hover:border-purple-300 transition-all cursor-pointer group"
+                    id="btn-cert-modal-open">
+                <i class="fa-solid fa-gear text-base group-hover:rotate-45 transition-transform duration-300"></i>
             </button>
         </div>
     </div>
@@ -1010,6 +1027,143 @@
                     <i class="fa-solid fa-ban"></i>
                     <span style="color: #ffffff !important;">Take Offline</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- CERTIFICATE OFFICIALS SETTINGS MODAL (अध्यक्ष & सचिव)                    -->
+        <!-- ========================================================================= -->
+        <div x-show="showCertModal" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+             style="display: none;">
+            
+            <div @click.outside="showCertModal = false"
+                 x-show="showCertModal"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+                 class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden relative">
+                
+                <!-- Modal Header -->
+                <div class="p-5 sm:px-6 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(135deg, #fbf7ff 0%, #ffffff 100%);">
+                    <div class="flex items-center gap-3">
+                        <span style="background-color: #f3e8ff !important; color: #340C6F !important;" class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg font-black shadow-xs">
+                            <i class="fa-solid fa-award"></i>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-extrabold text-gray-900">Certificate Signatories</h3>
+                            <p class="text-xs text-gray-500">Configure Adhyaksh (अध्यक्ष) & Sachiv (सचिव) for Certificates</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="showCertModal = false" class="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-800 flex items-center justify-center text-sm transition-all cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body Form -->
+                <form method="POST" action="{{ route('admin.marks.certificate-settings') }}" class="p-5 sm:p-6 space-y-5">
+                    @csrf
+
+                    <!-- Section 1: Adhyaksh (अध्यक्ष / Left) -->
+                    <div class="bg-gray-50/80 border border-gray-200/70 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-gray-800 flex items-center gap-1.5 uppercase tracking-wider">
+                                <i class="fa-solid fa-signature text-[#340C6F]"></i>
+                                <span>1. Adhyaksh (Left Side)</span>
+                            </span>
+                            <span style="background-color: #ede9fe !important; color: #5b21b6 !important;" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
+                                अध्यक्ष
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-600 mb-1">Official Name</label>
+                                <input type="text" name="president_name" x-model="presidentName"
+                                       placeholder="e.g. NIKETAN SINGH"
+                                       class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:border-[#340C6F] outline-none transition-all shadow-2xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-600 mb-1">Designation / Role</label>
+                                <input type="text" name="president_role" x-model="presidentRole"
+                                       placeholder="e.g. अध्यक्ष"
+                                       class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:border-[#340C6F] outline-none transition-all shadow-2xs">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Sachiv (सचिव / Right) -->
+                    <div class="bg-gray-50/80 border border-gray-200/70 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-gray-800 flex items-center gap-1.5 uppercase tracking-wider">
+                                <i class="fa-solid fa-signature text-emerald-700"></i>
+                                <span>2. Sachiv (Right Side)</span>
+                            </span>
+                            <span style="background-color: #d1fae5 !important; color: #065f46 !important;" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
+                                सचिव
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-600 mb-1">Official Name</label>
+                                <input type="text" name="secretary_name" x-model="secretaryName"
+                                       placeholder="e.g. SHYAM SUNDAR KR."
+                                       class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:border-[#340C6F] outline-none transition-all shadow-2xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-600 mb-1">Designation / Role</label>
+                                <input type="text" name="secretary_role" x-model="secretaryRole"
+                                       placeholder="e.g. सचिव"
+                                       class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:border-[#340C6F] outline-none transition-all shadow-2xs">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Certificate Bottom Preview -->
+                    <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5 space-y-2">
+                        <div class="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-eye text-amber-600"></i>
+                            <span>Live Certificate Signature Preview:</span>
+                        </div>
+                        <div class="bg-white rounded-xl p-3 border border-amber-100/80 flex items-center justify-between text-center shadow-2xs">
+                            <div class="w-32">
+                                <div class="text-[11px] font-black text-gray-900 uppercase border-b-2 border-gray-800 pb-0.5 tracking-wider truncate" x-text="presidentName || 'NIKETAN SINGH'"></div>
+                                <div class="text-[11px] font-bold text-gray-700 pt-0.5" x-text="presidentRole || 'अध्यक्ष'"></div>
+                            </div>
+                            <div class="text-amber-500 text-xl shrink-0 px-2">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                            <div class="w-32">
+                                <div class="text-[11px] font-black text-gray-900 uppercase border-b-2 border-gray-800 pb-0.5 tracking-wider truncate" x-text="secretaryName || 'SHYAM SUNDAR KR.'"></div>
+                                <div class="text-[11px] font-bold text-gray-700 pt-0.5" x-text="secretaryRole || 'सचिव'"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-gray-100">
+                        <button type="button" @click="showCertModal = false"
+                                class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all cursor-pointer">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                style="background-color: #340C6F !important; color: #ffffff !important;"
+                                class="px-5 py-2 rounded-xl text-xs font-black shadow-md hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Save Certificate Settings</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 

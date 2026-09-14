@@ -15,6 +15,10 @@ class AdmitCardSetting extends Model
         'logo_path',
         'signature_path',
         'instructions',
+        'president_name',
+        'president_role',
+        'secretary_name',
+        'secretary_role',
     ];
 
     public static function getSettings()
@@ -24,6 +28,10 @@ class AdmitCardSetting extends Model
         if (!$settings) {
             $settings = self::create([
                 'instructions' => "1. This is a computer-generated admit card.\n2. Please bring a valid photo ID to the examination center.\n3. Electronic devices are strictly prohibited.",
+                'president_name' => 'NIKETAN SINGH',
+                'president_role' => 'अध्यक्ष',
+                'secretary_name' => 'SHYAM SUNDAR KR.',
+                'secretary_role' => 'सचिव',
             ]);
         }
 

@@ -96,6 +96,8 @@ class MarksCertificateController extends Controller
         $eventsWithCertificates = Event::where('show_certificate', true)->count();
         $totalCertsEnabled = EventRegistration::where('payment_status', 'approved')->where('certificate_enabled', true)->count();
 
+        $setting = AdmitCardSetting::getSettings();
+
         return view('admin.marks.index', compact(
             'registrations',
             'events',
@@ -103,7 +105,8 @@ class MarksCertificateController extends Controller
             'totalApproved',
             'eventsWithMarks',
             'eventsWithCertificates',
-            'totalCertsEnabled'
+            'totalCertsEnabled',
+            'setting'
         ));
     }
 
@@ -369,6 +372,21 @@ class MarksCertificateController extends Controller
         $eventNames = $events->pluck('title')->implode(', ');
 
         return redirect()->back()->with('success', "Event [{$eventNames}] is now {$statusStr}");
+    }
+
+    public function updateCertificateSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'president_name' => 'nullable|string|max:150',
+            'president_role' => 'nullable|string|max:100',
+            'secretary_name' => 'nullable|string|max:150',
+            'secretary_role' => 'nullable|string|max:100',
+        ]);
+
+        $setting = AdmitCardSetting::getSettings();
+        $setting->update($validated);
+
+        return redirect()->back()->with('success', 'Certificate settings updated successfully! Signatures for Adhyaksh (अध्यक्ष) & Sachiv (सचिव) have been updated on all certificates.');
     }
 
     public function showMarksheet($roll_no)

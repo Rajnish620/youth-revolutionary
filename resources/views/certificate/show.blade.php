@@ -170,11 +170,11 @@
                         <div class="text-center w-36 sm:w-52">
                             <div class="border-b-2 border-gray-900 pb-1 mb-1">
                                 <span class="font-cinzel text-xs sm:text-base font-extrabold text-gray-900 uppercase tracking-wider block">
-                                    {{ $setting->president_name ?? 'NIKETAN SINGH' }}
+                                    {{ !empty($setting->president_name) ? $setting->president_name : 'NIKETAN SINGH' }}
                                 </span>
                             </div>
                             <span class="font-hindi text-xs sm:text-sm font-bold text-gray-800 block">
-                                {{ $setting->president_role ?? 'अध्यक्ष' }}
+                                {{ !empty($setting->president_role) ? $setting->president_role : 'अध्यक्ष' }}
                             </span>
                         </div>
 
@@ -187,11 +187,11 @@
                         <div class="text-center w-36 sm:w-52">
                             <div class="border-b-2 border-gray-900 pb-1 mb-1">
                                 <span class="font-cinzel text-xs sm:text-base font-extrabold text-gray-900 uppercase tracking-wider block">
-                                    {{ $setting->secretary_name ?? 'SHYAM SUNDAR KR.' }}
+                                    {{ !empty($setting->secretary_name) ? $setting->secretary_name : 'SHYAM SUNDAR KR.' }}
                                 </span>
                             </div>
                             <span class="font-hindi text-xs sm:text-sm font-bold text-gray-800 block">
-                                {{ $setting->secretary_role ?? 'सचिव' }}
+                                {{ !empty($setting->secretary_role) ? $setting->secretary_role : 'सचिव' }}
                             </span>
                         </div>
 

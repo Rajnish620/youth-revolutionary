@@ -225,15 +225,15 @@
     <table class="sig-table">
         <tr>
             <td class="sig-col" style="width: 40%;">
-                <div class="sig-line">{{ $setting->president_name ?? 'NIKETAN SINGH' }}</div>
-                <div class="sig-role">{{ $setting->president_role ?? 'अध्यक्ष' }}</div>
+                <div class="sig-line">{{ !empty($setting->president_name) ? $setting->president_name : 'NIKETAN SINGH' }}</div>
+                <div class="sig-role">{{ !empty($setting->president_role) ? $setting->president_role : 'अध्यक्ष' }}</div>
             </td>
             <td class="sig-col" style="width: 20%; text-align: center;">
                 <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" class="rosette-img" alt="Seal">
             </td>
             <td class="sig-col" style="width: 40%;">
-                <div class="sig-line">{{ $setting->secretary_name ?? 'SHYAM SUNDAR KR.' }}</div>
-                <div class="sig-role">{{ $setting->secretary_role ?? 'सचिव' }}</div>
+                <div class="sig-line">{{ !empty($setting->secretary_name) ? $setting->secretary_name : 'SHYAM SUNDAR KR.' }}</div>
+                <div class="sig-role">{{ !empty($setting->secretary_role) ? $setting->secretary_role : 'सचिव' }}</div>
             </td>
         </tr>
     </table>
