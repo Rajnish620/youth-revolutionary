@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional UI Preview - Marks & Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f1f5f9; padding: 28px 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-7xl mx-auto space-y-4">
+
+        <!-- Card 1: Search & Filter Toolbar -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            
+            <!-- Header Row -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span style="background-color: #f3e8ff !important; color: #340C6F !important;" class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-black shadow-xs">
+                        <i class="fa-solid fa-filter"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xs font-black text-gray-900 uppercase tracking-wider">Search & Filter Roster</h3>
+                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Result Status, or Search keywords</p>
+                    </div>
+                </div>
+
+                <a href="#" 
+                   style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #e2e8f0 !important;"
+                   class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 hover:bg-gray-200">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Reset Filters</span>
+                </a>
+            </div>
+
+            <!-- Responsive Filters Form -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+                
+                <!-- Season Dropdown -->
+                <div class="lg:col-span-2">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-calendar-week text-purple-600"></i> Season
+                    </label>
+                    <select class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
+                        <option>Season -05</option>
+                        <option>All Seasons</option>
+                    </select>
+                </div>
+
+                <!-- Event Dropdown -->
+                <div class="lg:col-span-4">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-trophy text-amber-500"></i> Event
+                    </label>
+                    <select class="w-full bg-purple-50/50 hover:bg-white text-xs font-black text-[#340C6F] rounded-xl px-3 py-2.5 border border-purple-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
+                        <option>State Talent Quiz Competition (Season -05)</option>
+                        <option>Cultural Dance & Drama</option>
+                        <option>All Events (12)</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="lg:col-span-3">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-clipboard-check text-emerald-600"></i> Result & Cert Status
+                    </label>
+                    <select class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
+                        <option>All Students (248)</option>
+                        <option>With Marks/Status</option>
+                        <option>Pending Evaluation</option>
+                        <option>Qualified Only</option>
+                        <option>Certificate Active</option>
+                    </select>
+                </div>
+
+                <!-- Search Input + Go Button -->
+                <div class="lg:col-span-3">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i> Quick Search
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" placeholder="Roll no, name, reg no..." 
+                                class="w-full bg-gray-50 text-xs pl-8 pr-3 py-2.5 rounded-xl border border-gray-200 focus:border-[#340C6F] focus:bg-white outline-none transition-all font-medium text-gray-900 placeholder-gray-400">
+                        </div>
+                        <button type="button" 
+                            style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 10px 16px !important; border-radius: 12px !important;"
+                            class="text-xs font-black shadow-sm transition-all cursor-pointer hover:opacity-90 shrink-0">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            <span style="color: #ffffff !important;">Go</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Card 2: Dedicated Event Live Publishing & Bulk Actions Toolbar -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            
+            <!-- Row 1: Live Status & Publishing Action -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                
+                <!-- Left: Event Name & Website Live Badge -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Selected Event:</span>
+                        <span class="text-xs font-black text-gray-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">State Talent Quiz Competition</span>
+                    </div>
+                    <span style="background-color: #ecfdf5 !important; color: #065f46 !important; border: 1px solid #a7f3d0 !important;" 
+                          class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-2 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>100% LIVE ON WEBSITE (Marks & Certs)</span>
+                    </span>
+                </div>
+
+                <!-- Right: Make All Live & Take Offline Buttons -->
+                <div class="flex flex-wrap items-center gap-2.5">
+                    
+                    <!-- Make All Live Button (Guaranteed Rich Emerald with Bold White Text) -->
+                    <button type="button" 
+                            style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 9px 18px !important; border-radius: 12px !important; box-shadow: 0 2px 5px rgba(5,150,105,0.3) !important;"
+                            class="text-xs font-black hover:opacity-95 transition-all cursor-pointer"
+                            title="Publish all results & certificates to website">
+                        <i class="fa-solid fa-satellite-dish" style="color: #fef08a !important; font-size: 14px;"></i>
+                        <span style="color: #ffffff !important; font-weight: 800; font-size: 12px; letter-spacing: 0.02em;">Make All Live</span>
+                    </button>
+
+                    <!-- Take Offline Button -->
+                    <button type="button" 
+                            style="background-color: #334155 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 9px 14px !important; border-radius: 12px !important;"
+                            class="text-xs font-bold hover:opacity-90 transition-all cursor-pointer"
+                            title="Take results offline">
+                        <i class="fa-solid fa-eye-slash" style="color: #cbd5e1 !important; font-size: 12px;"></i>
+                        <span style="color: #ffffff !important; font-weight: 700; font-size: 12px;">Take Offline</span>
+                    </button>
+
+                    <a href="#" 
+                       style="background-color: #f5f3ff !important; color: #340C6F !important; border: 1px solid #ddd6fe !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                       class="text-xs font-bold hover:bg-purple-100 transition-all shadow-xs">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                        <span>Check /results</span>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Row 2: Bulk Actions for Entire Selection -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                        <span>Bulk Actions (All 248 Students):</span>
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Mark All Qualified -->
+                    <button type="button" 
+                            style="background-color: #047857 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                            class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90">
+                        <i class="fa-solid fa-check-double" style="color: #a7f3d0 !important;"></i>
+                        <span style="color: #ffffff !important; font-weight: 700;">Mark All Qualified</span>
+                    </button>
+
+                    <!-- Mark All Not Qualified -->
+                    <button type="button" 
+                            style="background-color: #be123c !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                            class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90">
+                        <i class="fa-solid fa-xmark" style="color: #fecdd3 !important;"></i>
+                        <span style="color: #ffffff !important; font-weight: 700;">Mark All Not Qualified</span>
+                    </button>
+
+                    <div class="h-5 w-[1px] bg-gray-200 mx-1 hidden sm:block"></div>
+
+                    <!-- Enable All Certs -->
+                    <button type="button" 
+                            style="background-color: #0284c7 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                            class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90">
+                        <i class="fa-solid fa-award" style="color: #bae6fd !important;"></i>
+                        <span style="color: #ffffff !important; font-weight: 700;">Enable All Certs</span>
+                    </button>
+
+                    <!-- Disable All Certs -->
+                    <button type="button" 
+                            style="background-color: #475569 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                            class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90">
+                        <i class="fa-solid fa-ban" style="color: #cbd5e1 !important;"></i>
+                        <span style="color: #ffffff !important; font-weight: 700;">Disable All Certs</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sample Table Row Preview -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/80 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="py-4 px-3 w-10 text-center"><input type="checkbox" class="w-4 h-4 rounded text-[#340C6F]"></th>
+                        <th class="py-4 px-5">Student / Roll No</th>
+                        <th class="py-4 px-4">Event & Scheme</th>
+                        <th class="py-4 px-4">Marks / Evaluation</th>
+                        <th class="py-4 px-4">Rank / Merit</th>
+                        <th class="py-4 px-4">Result Status</th>
+                        <th class="py-4 px-4 text-center">Certificate & Live</th>
+                        <th class="py-4 px-6 text-right">View / Preview</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-xs">
+                    <tr class="hover:bg-gray-50/60">
+                        <td class="py-4 px-3 text-center"><input type="checkbox" class="w-4 h-4 rounded text-[#340C6F]"></td>
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full border border-gray-200 bg-purple-100 text-[#340C6F] font-black flex items-center justify-center">AS</div>
+                                <div>
+                                    <div class="font-extrabold text-gray-900 text-xs flex items-center gap-1.5">
+                                        <span>Aarav Sharma</span>
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-purple-100 text-[#340C6F] font-black">YR-2026-1001</span>
+                                    </div>
+                                    <div class="text-[11px] text-gray-400 mt-0.5">Class 10 | Delhi Public School</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <div class="font-bold text-gray-800">State Talent Quiz Competition</div>
+                            <div class="text-[10px] text-gray-500 font-semibold mt-1">Cutoff: <span class="font-bold text-amber-700">60.00</span></div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="88.50" class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#340C6F]">
+                                <button type="button" style="background-color: #340C6F; color: #ffffff;" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs shadow-sm"><i class="fa-solid fa-check"></i></button>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <input type="text" value="1st Rank" class="w-24 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800">
+                        </td>
+                        <td class="py-4 px-4">
+                            <span style="background-color: #d1fae5 !important; color: #065f46 !important; border: 1px solid #6ee7b7 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> Qualified
+                            </span>
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <button type="button" 
+                                    style="background-color: #ecfdf5 !important; color: #047857 !important; border: 1px solid #6ee7b7 !important; display: inline-flex !important; align-items: center !important; gap: 5px !important; padding: 6px 11px !important; border-radius: 9px !important;"
+                                    class="text-[11px] font-black shadow-xs cursor-pointer">
+                                <i class="fa-solid fa-circle-check" style="color: #059669 !important;"></i>
+                                <span style="color: #047857 !important;">Live on Web</span>
+                            </button>
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="#" style="background-color: #eff6ff !important; color: #0284c7 !important; border: 1px solid #bfdbfe !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 6px 10px !important; border-radius: 8px !important;" class="text-xs font-bold shadow-xs">
+                                    <i class="fa-solid fa-file-invoice"></i> Marksheet
+                                </a>
+                                <a href="#" style="background-color: #fffbeb !important; color: #b45309 !important; border: 1px solid #fde68a !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 6px 10px !important; border-radius: 8px !important;" class="text-xs font-bold shadow-xs">
+                                    <i class="fa-solid fa-award"></i> Cert
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

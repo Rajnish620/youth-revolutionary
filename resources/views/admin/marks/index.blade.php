@@ -415,27 +415,58 @@
             $selectedEvent = ($currentEventId && $currentEventId !== 'All') ? $events->firstWhere('id', $currentEventId) : null;
         @endphp
 
-        <!-- Filters and Bulk Controls -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
+        <!-- Card 1: Search & Filter Toolbar -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
             
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <!-- Header Row -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span style="background-color: #f3e8ff !important; color: #340C6F !important;" class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-black shadow-xs">
+                        <i class="fa-solid fa-filter"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xs font-black text-gray-900 uppercase tracking-wider">Search & Filter Roster</h3>
+                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Result Status, or Search keywords</p>
+                    </div>
+                </div>
+
+                @if(request('event_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
+                    <a href="{{ route('admin.marks.index', ['tab' => 'students']) }}" 
+                       style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #e2e8f0 !important;"
+                       class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 hover:bg-gray-200">
+                        <i class="fa-solid fa-rotate-left text-xs"></i>
+                        <span>Reset Filters</span>
+                    </a>
+                @endif
+            </div>
+
+            <!-- Responsive Filters Form -->
+            <form method="GET" action="{{ route('admin.marks.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+                <input type="hidden" name="tab" value="students">
                 
-                <!-- Search & Filters Form -->
-                <form method="GET" action="{{ route('admin.marks.index') }}" class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                    <input type="hidden" name="tab" value="students">
-                    
-                    @if(isset($seasons) && $seasons->count() > 0)
-                        <!-- Season Select -->
-                        <select name="season" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
+                @if(isset($seasons) && $seasons->count() > 0)
+                    <!-- Season Dropdown -->
+                    <div class="lg:col-span-2">
+                        <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-calendar-week text-purple-600"></i> Season
+                        </label>
+                        <select name="season" onchange="this.form.submit()" 
+                            class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
                             <option value="All">All Seasons</option>
                             @foreach($seasons as $s)
                                 <option value="{{ $s }}" {{ request('season') == $s ? 'selected' : '' }}>{{ $s }}</option>
                             @endforeach
                         </select>
-                    @endif
+                    </div>
+                @endif
 
-                    <!-- Event Select -->
-                    <select name="event_id" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
+                <!-- Event Dropdown -->
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-4' : 'lg:col-span-5' }}">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-trophy text-amber-500"></i> Event
+                    </label>
+                    <select name="event_id" onchange="this.form.submit()" 
+                        class="w-full bg-purple-50/50 hover:bg-white text-xs font-black text-[#340C6F] rounded-xl px-3 py-2.5 border border-purple-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
                         <option value="All">All Events ({{ $events->count() }})</option>
                         @foreach($events as $e)
                             @if(!request('season') || request('season') === 'All' || $e->season === request('season'))
@@ -445,152 +476,208 @@
                             @endif
                         @endforeach
                     </select>
+                </div>
 
-                    <!-- Status Filter -->
-                    <select name="status_filter" onchange="this.form.submit()" class="bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl px-3 py-2.5 outline-none focus:border-[#340C6F]">
-                        <option value="">All Students</option>
-                        <option value="with_marks" {{ request('status_filter') == 'with_marks' ? 'selected' : '' }}>With Marks/Status Entered</option>
+                <!-- Status Filter -->
+                <div class="lg:col-span-3">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-clipboard-check text-emerald-600"></i> Result & Cert Status
+                    </label>
+                    <select name="status_filter" onchange="this.form.submit()" 
+                        class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
+                        <option value="">All Students ({{ $registrations->total() }})</option>
+                        <option value="with_marks" {{ request('status_filter') == 'with_marks' ? 'selected' : '' }}>With Marks/Status</option>
                         <option value="without_marks" {{ request('status_filter') == 'without_marks' ? 'selected' : '' }}>Pending Evaluation</option>
                         <option value="qualified" {{ request('status_filter') == 'qualified' ? 'selected' : '' }}>Qualified Only</option>
                         <option value="not_qualified" {{ request('status_filter') == 'not_qualified' ? 'selected' : '' }}>Not Qualified Only</option>
-                        <option value="cert_enabled" {{ request('status_filter') == 'cert_enabled' ? 'selected' : '' }}>Certificate Enabled</option>
+                        <option value="cert_enabled" {{ request('status_filter') == 'cert_enabled' ? 'selected' : '' }}>Certificate Active</option>
                         <option value="cert_disabled" {{ request('status_filter') == 'cert_disabled' ? 'selected' : '' }}>Certificate Disabled</option>
                     </select>
+                </div>
 
-                    <!-- Search Input -->
-                    <div class="relative flex-1 sm:w-64">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Roll no, name, reg no..." 
-                            class="w-full bg-gray-100/80 text-xs pl-9 pr-4 py-2.5 rounded-xl border border-transparent focus:border-[#340C6F] focus:bg-white outline-none transition-all">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
+                <!-- Search Input + Go Button -->
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-3' : 'lg:col-span-4' }}">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i> Quick Search
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Roll no, name, reg no..." 
+                                class="w-full bg-gray-50 text-xs pl-8 pr-3 py-2.5 rounded-xl border border-gray-200 focus:border-[#340C6F] focus:bg-white outline-none transition-all font-medium text-gray-900 placeholder-gray-400">
+                        </div>
+                        <button type="submit" 
+                            style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 10px 16px !important; border-radius: 12px !important;"
+                            class="text-xs font-black shadow-sm transition-all cursor-pointer hover:opacity-90 shrink-0">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            <span style="color: #ffffff !important;">Go</span>
+                        </button>
                     </div>
+                </div>
 
-                    <button type="submit" class="px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-black text-white text-xs font-bold transition-all shadow-sm">
-                        Filter
-                    </button>
-                    @if(request('event_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
-                        <a href="{{ route('admin.marks.index', ['tab' => 'students']) }}" class="px-3 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold transition-all">
-                            Reset
-                        </a>
+            </form>
+        </div>
+
+        <!-- Card 2: Dedicated Event Live Publishing & Bulk Actions Toolbar -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            
+            <!-- Row 1: Live Status & Publishing Action -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                
+                <!-- Left: Event Name & Website Live Badge -->
+                <div class="flex flex-wrap items-center gap-3">
+                    @if($selectedEvent)
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Event:</span>
+                            <span class="text-xs font-black text-gray-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">{{ $selectedEvent->title }}</span>
+                        </div>
+                        @if($selectedEvent->show_marks && $selectedEvent->show_certificate)
+                            <span style="background-color: #ecfdf5 !important; color: #065f46 !important; border: 1px solid #a7f3d0 !important;" 
+                                  class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-2 shadow-xs">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>100% LIVE ON WEBSITE (Marks & Certs)</span>
+                            </span>
+                        @elseif($selectedEvent->show_marks)
+                            <span style="background-color: #eff6ff !important; color: #1e40af !important; border: 1px solid #bfdbfe !important;" 
+                                  class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-2 shadow-xs">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                                <span>MARKSHEET LIVE (Certs Hidden)</span>
+                            </span>
+                        @else
+                            <span style="background-color: #fffbeb !important; color: #92400e !important; border: 1px solid #fde68a !important;" 
+                                  class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-2 shadow-xs">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                <span>OFFLINE / DRAFT (Hidden from Students)</span>
+                            </span>
+                        @endif
+                    @else
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-purple-600 text-sm"></i>
+                            <span class="text-xs font-extrabold text-gray-700">Displaying All Events Roster ({{ $events->count() }} Events)</span>
+                        </div>
                     @endif
-                </form>
+                </div>
 
-                <!-- Bulk Action Buttons -->
-                <div class="flex flex-wrap items-center gap-2">
+                <!-- Right: Make All Live & Take Offline Buttons -->
+                <div class="flex flex-wrap items-center gap-2.5">
                     
-                    <!-- Make All Live Button -->
+                    <!-- Make All Live Button (Guaranteed Rich Emerald with Bold White Text) -->
                     <form method="POST" action="{{ route('admin.marks.publish-event') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="is_live" value="1">
-                        <button type="submit" onclick="return confirm('Make all results & certificates for this event LIVE on website? Students will be able to search with Roll No & DOB.')"
-                                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                        <button type="submit" 
+                                onclick="return confirm('Make all results & certificates for this selection LIVE on the website? Students will be able to search using Roll No & DOB.')"
+                                style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 9px 18px !important; border-radius: 12px !important; box-shadow: 0 2px 5px rgba(5,150,105,0.3) !important;"
+                                class="text-xs font-black hover:opacity-95 transition-all cursor-pointer"
                                 title="Publish all results & certificates to website">
-                            <i class="fa-solid fa-satellite-dish animate-pulse text-amber-300"></i>
-                            <span>Make All Live</span>
+                            <i class="fa-solid fa-satellite-dish" style="color: #fef08a !important; font-size: 14px;"></i>
+                            <span style="color: #ffffff !important; font-weight: 800; font-size: 12px; letter-spacing: 0.02em;">Make All Live</span>
                         </button>
                     </form>
 
                     @if($selectedEvent && ($selectedEvent->show_marks || $selectedEvent->show_certificate))
+                        <!-- Take Offline Button -->
                         <form method="POST" action="{{ route('admin.marks.publish-event') }}">
                             @csrf
                             <input type="hidden" name="season" value="{{ request('season') }}">
                             <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                             <input type="hidden" name="is_live" value="0">
-                            <button type="submit" onclick="return confirm('Take results for this event OFFLINE (hide from website search)?')"
-                                    class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                            <button type="submit" 
+                                    onclick="return confirm('Take results for this event OFFLINE (hide from website search)?')"
+                                    style="background-color: #334155 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 9px 14px !important; border-radius: 12px !important;"
+                                    class="text-xs font-bold hover:opacity-90 transition-all cursor-pointer"
                                     title="Take results offline">
-                                <i class="fa-solid fa-eye-slash"></i>
-                                <span>Take Offline</span>
+                                <i class="fa-solid fa-eye-slash" style="color: #cbd5e1 !important; font-size: 12px;"></i>
+                                <span style="color: #ffffff !important; font-weight: 700; font-size: 12px;">Take Offline</span>
                             </button>
                         </form>
                     @endif
 
-                    <!-- Bulk Qualification Actions -->
+                    <a href="{{ route('results.index') }}" target="_blank" 
+                       style="background-color: #f5f3ff !important; color: #340C6F !important; border: 1px solid #ddd6fe !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                       class="text-xs font-bold hover:bg-purple-100 transition-all shadow-xs">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                        <span>Check /results</span>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Row 2: Bulk Actions for Entire Selection -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                        <span>Bulk Actions (All {{ $registrations->total() }} Students):</span>
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Mark All Qualified -->
                     <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="status" value="qualified">
-                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as QUALIFIED?')" class="px-3 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer" title="Mark selected students as Qualified">
-                            <i class="fa-solid fa-check-double"></i>
-                            <span>Mark All Qualified</span>
+                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as QUALIFIED?')" 
+                                style="background-color: #047857 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90" 
+                                title="Mark selected students as Qualified">
+                            <i class="fa-solid fa-check-double" style="color: #a7f3d0 !important;"></i>
+                            <span style="color: #ffffff !important; font-weight: 700;">Mark All Qualified</span>
                         </button>
                     </form>
 
+                    <!-- Mark All Not Qualified -->
                     <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="status" value="not_qualified">
-                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as NOT QUALIFIED?')" class="px-3 py-2 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer" title="Mark selected students as Not Qualified">
-                            <i class="fa-solid fa-xmark"></i>
-                            <span>Mark All Not Qualified</span>
+                        <button type="submit" onclick="return confirm('Mark all matching students in this selection as NOT QUALIFIED?')" 
+                                style="background-color: #be123c !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90" 
+                                title="Mark selected students as Not Qualified">
+                            <i class="fa-solid fa-xmark" style="color: #fecdd3 !important;"></i>
+                            <span style="color: #ffffff !important; font-weight: 700;">Mark All Not Qualified</span>
                         </button>
                     </form>
 
-                    <!-- Bulk Certificate Actions -->
+                    <div class="h-5 w-[1px] bg-gray-200 mx-1 hidden sm:block"></div>
+
+                    <!-- Enable All Certs -->
                     <form method="POST" action="{{ route('admin.marks.bulk-certificate') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="1">
-                        <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
-                            <i class="fa-solid fa-certificate"></i>
-                            <span>Enable All Certs</span>
+                        <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" 
+                                style="background-color: #0284c7 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90"
+                                title="Enable Certificates for all matching students">
+                            <i class="fa-solid fa-award" style="color: #bae6fd !important;"></i>
+                            <span style="color: #ffffff !important; font-weight: 700;">Enable All Certs</span>
                         </button>
                     </form>
 
+                    <!-- Disable All Certs -->
                     <form method="POST" action="{{ route('admin.marks.bulk-certificate') }}">
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
                         <input type="hidden" name="enable" value="0">
-                        <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" class="px-3 py-2 rounded-xl bg-slate-600 hover:bg-slate-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
-                            <i class="fa-solid fa-ban"></i>
-                            <span>Disable All Certs</span>
+                        <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" 
+                                style="background-color: #475569 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90"
+                                title="Disable Certificates for all matching students">
+                            <i class="fa-solid fa-ban" style="color: #cbd5e1 !important;"></i>
+                            <span style="color: #ffffff !important; font-weight: 700;">Disable All Certs</span>
                         </button>
                     </form>
                 </div>
-
             </div>
-
-            <!-- Selected Event Live Status Ribbon -->
-            @if($selectedEvent)
-                <div class="p-3.5 rounded-xl border flex flex-wrap items-center justify-between gap-3 {{ $selectedEvent->show_marks && $selectedEvent->show_certificate ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950' : ($selectedEvent->show_marks ? 'bg-blue-50/90 border-blue-300 text-blue-950' : 'bg-amber-50/90 border-amber-300 text-amber-950') }}">
-                    <div class="flex items-center gap-2.5">
-                        @if($selectedEvent->show_marks && $selectedEvent->show_certificate)
-                            <span class="relative flex h-3 w-3">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-600"></span>
-                            </span>
-                            <div>
-                                <span class="font-black text-xs text-emerald-800">100% LIVE ON WEBSITE:</span>
-                                <span class="text-xs font-semibold text-emerald-950 ml-1">Students can search & download Marksheet & Certificate for <strong>{{ $selectedEvent->title }}</strong></span>
-                            </div>
-                        @elseif($selectedEvent->show_marks)
-                            <span class="w-3 h-3 rounded-full bg-blue-600"></span>
-                            <div>
-                                <span class="font-black text-xs text-blue-800">MARKSHEET LIVE ONLY:</span>
-                                <span class="text-xs font-semibold text-blue-950 ml-1">Certificates are currently hidden for <strong>{{ $selectedEvent->title }}</strong></span>
-                            </div>
-                        @else
-                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-                            <div>
-                                <span class="font-black text-xs text-amber-800">OFFLINE / DRAFT:</span>
-                                <span class="text-xs font-semibold text-amber-950 ml-1">Results for <strong>{{ $selectedEvent->title }}</strong> are hidden from website. Click <strong>"Make All Live"</strong> button above to publish.</span>
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('results.index') }}" target="_blank" class="px-3 py-1 rounded-lg bg-white hover:bg-gray-50 text-xs font-bold text-[#340C6F] border border-gray-200 transition-all flex items-center gap-1.5 shadow-xs">
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                            <span>Test Search on Website (/results)</span>
-                        </a>
-                    </div>
-                </div>
-            @endif
 
         </div>
 
@@ -676,17 +763,23 @@
                                         <form method="POST" action="{{ route('admin.marks.toggle-qualification', $reg->id) }}">
                                             @csrf
                                             @if($reg->is_qualified === true)
-                                                <button type="submit" title="Click to change to NOT QUALIFIED" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                <button type="submit" title="Click to change to NOT QUALIFIED" 
+                                                        style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                        class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
                                                     <i class="fa-solid fa-circle-check"></i>
-                                                    <span>QUALIFIED</span>
+                                                    <span style="color: #ffffff !important; font-weight: 800;">QUALIFIED</span>
                                                 </button>
                                             @elseif($reg->is_qualified === false)
-                                                <button type="submit" title="Click to change to QUALIFIED" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                <button type="submit" title="Click to change to QUALIFIED" 
+                                                        style="background-color: #e11d48 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                        class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
                                                     <i class="fa-solid fa-circle-xmark"></i>
-                                                    <span>NOT QUALIFIED</span>
+                                                    <span style="color: #ffffff !important; font-weight: 800;">NOT QUALIFIED</span>
                                                 </button>
                                             @else
-                                                <button type="submit" title="Click to mark QUALIFIED" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                                <button type="submit" title="Click to mark QUALIFIED" 
+                                                        style="background-color: #fef3c7 !important; color: #92400e !important; border: 1px solid #fcd34d !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                        class="font-bold text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
                                                     <i class="fa-solid fa-clock text-amber-600"></i>
                                                     <span>Set Status</span>
                                                 </button>
@@ -700,7 +793,8 @@
                                                 <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="Marks"
                                                     class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none">
                                                 <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Marks & Rank"
-                                                    class="w-8 h-8 rounded-lg bg-[#340C6F] hover:bg-purple-900 text-white flex items-center justify-center text-xs transition-all shadow-sm cursor-pointer shrink-0">
+                                                    style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;"
+                                                    class="w-8 h-8 rounded-lg text-white text-xs transition-all shadow-sm cursor-pointer shrink-0 hover:opacity-90">
                                                     <i class="fa-solid fa-check"></i>
                                                 </button>
                                             </div>
@@ -729,11 +823,11 @@
                                 <td class="py-4 px-4">
                                     @if($isQualify)
                                         @if($reg->is_qualified === true)
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                                            <span style="background-color: #d1fae5 !important; color: #065f46 !important; border: 1px solid #6ee7b7 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
                                                 <i class="fa-solid fa-circle-check"></i> Qualified
                                             </span>
                                         @elseif($reg->is_qualified === false)
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                                            <span style="background-color: #ffe4e6 !important; color: #9f1239 !important; border: 1px solid #fecdd3 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
                                                 <i class="fa-solid fa-circle-xmark"></i> Not Qualified
                                             </span>
                                         @else
@@ -743,11 +837,11 @@
                                         @endif
                                     @else
                                         @if($reg->qualification_status === 'Qualified')
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                                            <span style="background-color: #d1fae5 !important; color: #065f46 !important; border: 1px solid #6ee7b7 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
                                                 <i class="fa-solid fa-circle-check"></i> Qualified
                                             </span>
                                         @elseif($reg->qualification_status === 'Not Qualified')
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                                            <span style="background-color: #ffe4e6 !important; color: #9f1239 !important; border: 1px solid #fecdd3 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
                                                 <i class="fa-solid fa-circle-xmark"></i> Below Cutoff
                                             </span>
                                         @else
@@ -764,9 +858,10 @@
                                         @csrf
                                         <button type="submit" 
                                                 title="{{ $reg->certificate_enabled ? 'Active & Live on Website - Click to Disable' : 'Disabled - Click to Make Live & Enable Certificate' }}" 
-                                                class="px-2.5 py-1.5 rounded-lg text-[11px] font-black transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer {{ $reg->certificate_enabled ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
-                                            <i class="fa-solid {{ $reg->certificate_enabled ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-gray-400' }}"></i>
-                                            <span>{{ $reg->certificate_enabled ? 'Live on Web' : 'Disabled' }}</span>
+                                                style="{{ $reg->certificate_enabled ? 'background-color: #ecfdf5 !important; color: #047857 !important; border: 1px solid #6ee7b7 !important;' : 'background-color: #f1f5f9 !important; color: #64748b !important; border: 1px solid #cbd5e1 !important;' }} display: inline-flex !important; align-items: center !important; gap: 5px !important; padding: 6px 11px !important; border-radius: 9px !important;"
+                                                class="text-[11px] font-black transition-all shadow-xs cursor-pointer hover:opacity-90">
+                                            <i class="fa-solid {{ $reg->certificate_enabled ? 'fa-circle-check' : 'fa-circle-xmark' }}" style="{{ $reg->certificate_enabled ? 'color: #059669 !important;' : 'color: #94a3b8 !important;' }}"></i>
+                                            <span style="{{ $reg->certificate_enabled ? 'color: #047857 !important;' : 'color: #64748b !important;' }}">{{ $reg->certificate_enabled ? 'Live on Web' : 'Disabled' }}</span>
                                         </button>
                                     </form>
                                 </td>
@@ -776,7 +871,8 @@
                                     <div class="flex items-center justify-end gap-2">
                                         <!-- Marksheet Preview -->
                                         <a href="{{ route('marksheet.show', $reg->roll_no) }}" target="_blank" 
-                                           class="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-600 hover:text-white text-[#028CD4] border border-blue-200 text-xs font-bold flex items-center gap-1 transition-all" 
+                                           style="background-color: #eff6ff !important; color: #0284c7 !important; border: 1px solid #bfdbfe !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 6px 10px !important; border-radius: 8px !important;"
+                                           class="text-xs font-bold transition-all hover:bg-blue-600 hover:text-white shadow-xs" 
                                            title="View Official Marksheet">
                                             <i class="fa-solid fa-file-invoice"></i>
                                             <span>Marksheet</span>
@@ -784,7 +880,8 @@
 
                                         <!-- Certificate Preview -->
                                         <a href="{{ route('certificate.show', $reg->roll_no) }}" target="_blank" 
-                                           class="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-600 hover:text-white text-amber-700 border border-amber-200 text-xs font-bold flex items-center gap-1 transition-all" 
+                                           style="background-color: #fffbeb !important; color: #b45309 !important; border: 1px solid #fde68a !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 6px 10px !important; border-radius: 8px !important;"
+                                           class="text-xs font-bold transition-all hover:bg-amber-600 hover:text-white shadow-xs" 
                                            title="View Digital Certificate">
                                             <i class="fa-solid fa-award"></i>
                                             <span>Cert</span>
@@ -820,11 +917,12 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
              x-transition:leave-end="opacity-0 translate-y-10 scale-95"
-             class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white p-3.5 sm:px-6 rounded-2xl shadow-2xl border border-purple-500/50 flex flex-wrap items-center justify-between gap-4 max-w-4xl w-[94%] sm:w-auto"
-             style="display: none;">
+             style="display: none; background-color: rgba(15, 23, 42, 0.96) !important;"
+             class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-md text-white p-3.5 sm:px-6 rounded-2xl shadow-2xl border border-purple-500/50 flex flex-wrap items-center justify-between gap-4 max-w-4xl w-[94%] sm:w-auto">
             
             <div class="flex items-center gap-3">
-                <span class="px-3.5 py-1.5 rounded-xl bg-[#340C6F] text-amber-300 font-black text-xs border border-purple-400/40 flex items-center gap-1.5 shadow-sm">
+                <span style="background-color: #340C6F !important; color: #fde68a !important; border: 1px solid rgba(192, 132, 252, 0.4) !important;"
+                      class="px-3.5 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-sm">
                     <i class="fa-solid fa-check-double text-emerald-400"></i>
                     <span x-text="selected.length + ' Student' + (selected.length > 1 ? 's' : '') + ' Selected'"></span>
                 </span>
@@ -837,35 +935,39 @@
                 <!-- Mark Selected Qualified -->
                 <button type="button" 
                         @click="submitSelected('qualification', 'qualified')"
-                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                        style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                        class="font-black text-xs shadow-md transition-all cursor-pointer hover:opacity-90">
                     <i class="fa-solid fa-circle-check"></i>
-                    <span>Mark Selected as Qualified</span>
+                    <span style="color: #ffffff !important;">Mark Qualified</span>
                 </button>
 
                 <!-- Mark Selected Not Qualified -->
                 <button type="button" 
                         @click="submitSelected('qualification', 'not_qualified')"
-                        class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                        style="background-color: #e11d48 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                        class="font-black text-xs shadow-md transition-all cursor-pointer hover:opacity-90">
                     <i class="fa-solid fa-circle-xmark"></i>
-                    <span>Mark Selected as Not Qualified</span>
+                    <span style="color: #ffffff !important;">Mark Not Qualified</span>
                 </button>
 
                 <!-- Make Selected Live (Enable Certs & Publish) -->
                 <button type="button" 
                         @click="submitSelected('certificate', '1')"
-                        class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                        style="background-color: #0d9488 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                        class="font-extrabold text-xs shadow-md transition-all cursor-pointer hover:opacity-90"
                         title="Make selected students Live on website">
-                    <i class="fa-solid fa-satellite-dish"></i>
-                    <span>Make Selected Live</span>
+                    <i class="fa-solid fa-satellite-dish" style="color: #fde68a !important;"></i>
+                    <span style="color: #ffffff !important;">Make Selected Live</span>
                 </button>
 
                 <!-- Disable Selected Certs (Take Offline) -->
                 <button type="button" 
                         @click="submitSelected('certificate', '0')"
-                        class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                        style="background-color: #475569 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                        class="font-bold text-xs shadow-md transition-all cursor-pointer hover:opacity-90"
                         title="Disable certificates / Take offline">
                     <i class="fa-solid fa-ban"></i>
-                    <span>Take Offline</span>
+                    <span style="color: #ffffff !important;">Take Offline</span>
                 </button>
             </div>
         </div>
