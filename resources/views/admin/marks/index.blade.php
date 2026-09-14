@@ -410,6 +410,11 @@
             <input type="hidden" name="enable" id="selected-enable-input">
         </form>
 
+        @php
+            $currentEventId = request('event_id');
+            $selectedEvent = ($currentEventId && $currentEventId !== 'All') ? $events->firstWhere('id', $currentEventId) : null;
+        @endphp
+
         <!-- Filters and Bulk Controls -->
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
             
@@ -471,6 +476,36 @@
 
                 <!-- Bulk Action Buttons -->
                 <div class="flex flex-wrap items-center gap-2">
+                    
+                    <!-- Make All Live Button -->
+                    <form method="POST" action="{{ route('admin.marks.publish-event') }}">
+                        @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="is_live" value="1">
+                        <button type="submit" onclick="return confirm('Make all results & certificates for this event LIVE on website? Students will be able to search with Roll No & DOB.')"
+                                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                                title="Publish all results & certificates to website">
+                            <i class="fa-solid fa-satellite-dish animate-pulse text-amber-300"></i>
+                            <span>Make All Live</span>
+                        </button>
+                    </form>
+
+                    @if($selectedEvent && ($selectedEvent->show_marks || $selectedEvent->show_certificate))
+                        <form method="POST" action="{{ route('admin.marks.publish-event') }}">
+                            @csrf
+                            <input type="hidden" name="season" value="{{ request('season') }}">
+                            <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                            <input type="hidden" name="is_live" value="0">
+                            <button type="submit" onclick="return confirm('Take results for this event OFFLINE (hide from website search)?')"
+                                    class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                                    title="Take results offline">
+                                <i class="fa-solid fa-eye-slash"></i>
+                                <span>Take Offline</span>
+                            </button>
+                        </form>
+                    @endif
+
                     <!-- Bulk Qualification Actions -->
                     <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
                         @csrf
@@ -520,6 +555,43 @@
 
             </div>
 
+            <!-- Selected Event Live Status Ribbon -->
+            @if($selectedEvent)
+                <div class="p-3.5 rounded-xl border flex flex-wrap items-center justify-between gap-3 {{ $selectedEvent->show_marks && $selectedEvent->show_certificate ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950' : ($selectedEvent->show_marks ? 'bg-blue-50/90 border-blue-300 text-blue-950' : 'bg-amber-50/90 border-amber-300 text-amber-950') }}">
+                    <div class="flex items-center gap-2.5">
+                        @if($selectedEvent->show_marks && $selectedEvent->show_certificate)
+                            <span class="relative flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-600"></span>
+                            </span>
+                            <div>
+                                <span class="font-black text-xs text-emerald-800">100% LIVE ON WEBSITE:</span>
+                                <span class="text-xs font-semibold text-emerald-950 ml-1">Students can search & download Marksheet & Certificate for <strong>{{ $selectedEvent->title }}</strong></span>
+                            </div>
+                        @elseif($selectedEvent->show_marks)
+                            <span class="w-3 h-3 rounded-full bg-blue-600"></span>
+                            <div>
+                                <span class="font-black text-xs text-blue-800">MARKSHEET LIVE ONLY:</span>
+                                <span class="text-xs font-semibold text-blue-950 ml-1">Certificates are currently hidden for <strong>{{ $selectedEvent->title }}</strong></span>
+                            </div>
+                        @else
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <div>
+                                <span class="font-black text-xs text-amber-800">OFFLINE / DRAFT:</span>
+                                <span class="text-xs font-semibold text-amber-950 ml-1">Results for <strong>{{ $selectedEvent->title }}</strong> are hidden from website. Click <strong>"Make All Live"</strong> button above to publish.</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('results.index') }}" target="_blank" class="px-3 py-1 rounded-lg bg-white hover:bg-gray-50 text-xs font-bold text-[#340C6F] border border-gray-200 transition-all flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            <span>Test Search on Website (/results)</span>
+                        </a>
+                    </div>
+                </div>
+            @endif
+
         </div>
 
         <!-- Student Roster Table -->
@@ -540,7 +612,7 @@
                             <th class="py-4 px-4">Marks / Evaluation</th>
                             <th class="py-4 px-4">Rank / Merit</th>
                             <th class="py-4 px-4">Result Status</th>
-                            <th class="py-4 px-4">Certificate</th>
+                            <th class="py-4 px-4 text-center">Certificate & Live</th>
                             <th class="py-4 px-6 text-right">View / Preview</th>
                         </tr>
                     </thead>
@@ -686,13 +758,15 @@
                                     @endif
                                 </td>
 
-                                <!-- Certificate Toggle -->
-                                <td class="py-4 px-4">
-                                    <form method="POST" action="{{ route('admin.marks.toggle-certificate', $reg->id) }}">
+                                <!-- Certificate & Live Toggle -->
+                                <td class="py-4 px-4 text-center">
+                                    <form method="POST" action="{{ route('admin.marks.toggle-live', $reg->id) }}">
                                         @csrf
-                                        <button type="submit" class="px-2.5 py-1.5 rounded-lg text-[11px] font-black transition-all shadow-sm flex items-center gap-1.5 {{ $reg->certificate_enabled ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
+                                        <button type="submit" 
+                                                title="{{ $reg->certificate_enabled ? 'Active & Live on Website - Click to Disable' : 'Disabled - Click to Make Live & Enable Certificate' }}" 
+                                                class="px-2.5 py-1.5 rounded-lg text-[11px] font-black transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer {{ $reg->certificate_enabled ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
                                             <i class="fa-solid {{ $reg->certificate_enabled ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-gray-400' }}"></i>
-                                            <span>{{ $reg->certificate_enabled ? 'Active' : 'Disabled' }}</span>
+                                            <span>{{ $reg->certificate_enabled ? 'Live on Web' : 'Disabled' }}</span>
                                         </button>
                                     </form>
                                 </td>
@@ -776,20 +850,22 @@
                     <span>Mark Selected as Not Qualified</span>
                 </button>
 
-                <!-- Enable Selected Certs -->
+                <!-- Make Selected Live (Enable Certs & Publish) -->
                 <button type="button" 
                         @click="submitSelected('certificate', '1')"
-                        class="px-3.5 py-2 rounded-xl bg-[#028CD4] hover:bg-blue-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-award"></i>
-                    <span>Enable Certs</span>
+                        class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                        title="Make selected students Live on website">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span>Make Selected Live</span>
                 </button>
 
-                <!-- Disable Selected Certs -->
+                <!-- Disable Selected Certs (Take Offline) -->
                 <button type="button" 
                         @click="submitSelected('certificate', '0')"
-                        class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                        class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                        title="Disable certificates / Take offline">
                     <i class="fa-solid fa-ban"></i>
-                    <span>Disable Certs</span>
+                    <span>Take Offline</span>
                 </button>
             </div>
         </div>

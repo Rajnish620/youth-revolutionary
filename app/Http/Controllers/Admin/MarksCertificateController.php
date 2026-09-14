@@ -145,9 +145,14 @@ class MarksCertificateController extends Controller
             $validated['is_qualified'] = ($val === '' || $val === null) ? null : (bool)$val;
         }
 
+        // Auto-activate certificate when marks or qualified status is entered
+        if ($request->filled('marks') || $request->input('is_qualified') == '1' || $request->input('is_qualified') === true) {
+            $validated['certificate_enabled'] = true;
+        }
+
         $registration->update($validated);
 
-        return redirect()->back()->with('success', "Evaluation record updated for {$registration->student_name} (Roll: {$registration->roll_no})!");
+        return redirect()->back()->with('success', "Evaluation saved for {$registration->student_name} (Roll: {$registration->roll_no})! Certificate activated.");
     }
 
     public function toggleQualification(EventRegistration $registration)
@@ -155,11 +160,14 @@ class MarksCertificateController extends Controller
         // Cycle: null -> true (Qualified) -> false (Not Qualified) -> true
         $newStatus = ($registration->is_qualified === true) ? false : true;
 
-        $registration->update([
-            'is_qualified' => $newStatus,
-        ]);
+        $data = ['is_qualified' => $newStatus];
+        if ($newStatus === true) {
+            $data['certificate_enabled'] = true;
+        }
 
-        $statusText = $newStatus ? 'QUALIFIED' : 'NOT QUALIFIED';
+        $registration->update($data);
+
+        $statusText = $newStatus ? 'QUALIFIED (Certificate Active)' : 'NOT QUALIFIED';
         return redirect()->back()->with('success', "Status set to {$statusText} for Roll No: {$registration->roll_no} ({$registration->student_name}).");
     }
 
@@ -188,18 +196,23 @@ class MarksCertificateController extends Controller
         }
 
         $val = null;
+        $updateData = [];
         if ($status === 'qualified') {
             $val = true;
             $statusText = 'QUALIFIED';
+            $updateData['is_qualified'] = true;
+            $updateData['certificate_enabled'] = true;
         } elseif ($status === 'not_qualified') {
             $val = false;
             $statusText = 'NOT QUALIFIED';
+            $updateData['is_qualified'] = false;
         } else {
             $val = null;
             $statusText = 'PENDING';
+            $updateData['is_qualified'] = null;
         }
 
-        $count = $query->update(['is_qualified' => $val]);
+        $count = $query->update($updateData);
 
         return redirect()->back()->with('success', "Marked {$count} candidate(s) as {$statusText}!");
     }
@@ -210,8 +223,30 @@ class MarksCertificateController extends Controller
             'certificate_enabled' => !$registration->certificate_enabled,
         ]);
 
-        $status = $registration->certificate_enabled ? 'ENABLED' : 'DISABLED';
+        $status = $registration->certificate_enabled ? 'ENABLED (ACTIVE)' : 'DISABLED';
         return redirect()->back()->with('success', "Certificate {$status} for Roll No: {$registration->roll_no}.");
+    }
+
+    public function toggleStudentLive(EventRegistration $registration)
+    {
+        $event = $registration->event;
+        $currentlyLive = ($event && $event->show_marks && $event->show_certificate && $registration->certificate_enabled);
+
+        if (!$currentlyLive) {
+            // Make Live: Ensure event has show_marks & show_certificate = true, and student has certificate_enabled = true
+            if ($event) {
+                $event->update([
+                    'show_marks' => true,
+                    'show_certificate' => true,
+                ]);
+            }
+            $registration->update(['certificate_enabled' => true]);
+            return redirect()->back()->with('success', "Roll No {$registration->roll_no} ({$registration->student_name}) is now 100% LIVE on website! Marksheet & Certificate can be downloaded.");
+        } else {
+            // Take Offline
+            $registration->update(['certificate_enabled' => false]);
+            return redirect()->back()->with('success', "Certificate & Live access for Roll No {$registration->roll_no} set to OFFLINE.");
+        }
     }
 
     public function bulkCertificateToggle(Request $request)
@@ -240,8 +275,68 @@ class MarksCertificateController extends Controller
 
         $count = $query->update(['certificate_enabled' => $enable]);
 
-        $status = $enable ? 'ENABLED' : 'DISABLED';
-        return redirect()->back()->with('success', "Certificates {$status} for {$count} selected participant(s)!");
+        // If enabling certificates and making live, also ensure events have show_marks and show_certificate enabled
+        if ($enable) {
+            $eventQuery = Event::query();
+            if (!empty($selectedIds)) {
+                $eventIds = EventRegistration::whereIn('id', (array)$selectedIds)->pluck('event_id')->unique();
+                $eventQuery->whereIn('id', $eventIds);
+            } elseif ($eventId && $eventId !== 'All') {
+                $eventQuery->where('id', $eventId);
+            } elseif ($season && $season !== 'All') {
+                $eventQuery->where('season', $season);
+            }
+            $eventQuery->update([
+                'show_marks' => true,
+                'show_certificate' => true,
+            ]);
+        }
+
+        $status = $enable ? 'ENABLED & LIVE ON WEBSITE' : 'DISABLED';
+        return redirect()->back()->with('success', "Certificates {$status} for {$count} participant(s)!");
+    }
+
+    public function publishEventLive(Request $request)
+    {
+        $eventId = $request->input('event_id');
+        $season = $request->input('season');
+        $isLive = $request->input('is_live', 1) == 1;
+
+        $eventQuery = Event::query();
+        if ($eventId && $eventId !== 'All') {
+            $eventQuery->where('id', $eventId);
+        } elseif ($season && $season !== 'All') {
+            $eventQuery->where('season', $season);
+        }
+
+        $events = $eventQuery->get();
+
+        if ($events->isEmpty()) {
+            return redirect()->back()->with('error', 'Please select a specific Event or Season to publish.');
+        }
+
+        foreach ($events as $event) {
+            $event->update([
+                'show_marks' => $isLive,
+                'show_certificate' => $isLive,
+            ]);
+
+            if ($isLive) {
+                // Auto-enable certificate for all students in this event who have marks or are qualified
+                EventRegistration::where('event_id', $event->id)
+                    ->where('payment_status', 'approved')
+                    ->where(function ($q) {
+                        $q->whereNotNull('marks')
+                          ->orWhere('is_qualified', true);
+                    })
+                    ->update(['certificate_enabled' => true]);
+            }
+        }
+
+        $statusStr = $isLive ? '100% LIVE on Website! Students can now check Result with Roll No & DOB.' : 'OFFLINE (Hidden from Website Search)';
+        $eventNames = $events->pluck('title')->implode(', ');
+
+        return redirect()->back()->with('success', "Event [{$eventNames}] is now {$statusStr}");
     }
 
     public function showMarksheet($roll_no)
