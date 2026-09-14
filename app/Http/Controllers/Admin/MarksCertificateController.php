@@ -165,17 +165,26 @@ class MarksCertificateController extends Controller
 
     public function bulkQualificationToggle(Request $request)
     {
+        $selectedIds = $request->input('selected_ids');
         $eventId = $request->input('event_id');
         $season = $request->input('season');
         $status = $request->input('status'); // 'qualified', 'not_qualified', or 'pending'
 
         $query = EventRegistration::where('payment_status', 'approved');
-        if ($eventId && $eventId !== 'All') {
-            $query->where('event_id', $eventId);
-        } elseif ($season && $season !== 'All') {
-            $query->whereHas('event', function ($q) use ($season) {
-                $q->where('season', $season);
-            });
+
+        if (!empty($selectedIds)) {
+            if (is_string($selectedIds)) {
+                $selectedIds = array_filter(explode(',', $selectedIds));
+            }
+            $query->whereIn('id', (array)$selectedIds);
+        } else {
+            if ($eventId && $eventId !== 'All') {
+                $query->where('event_id', $eventId);
+            } elseif ($season && $season !== 'All') {
+                $query->whereHas('event', function ($q) use ($season) {
+                    $q->where('season', $season);
+                });
+            }
         }
 
         $val = null;
@@ -207,23 +216,32 @@ class MarksCertificateController extends Controller
 
     public function bulkCertificateToggle(Request $request)
     {
+        $selectedIds = $request->input('selected_ids');
         $eventId = $request->input('event_id');
         $season = $request->input('season');
         $enable = $request->input('enable') == '1';
 
         $query = EventRegistration::where('payment_status', 'approved');
-        if ($eventId && $eventId !== 'All') {
-            $query->where('event_id', $eventId);
-        } elseif ($season && $season !== 'All') {
-            $query->whereHas('event', function ($q) use ($season) {
-                $q->where('season', $season);
-            });
+
+        if (!empty($selectedIds)) {
+            if (is_string($selectedIds)) {
+                $selectedIds = array_filter(explode(',', $selectedIds));
+            }
+            $query->whereIn('id', (array)$selectedIds);
+        } else {
+            if ($eventId && $eventId !== 'All') {
+                $query->where('event_id', $eventId);
+            } elseif ($season && $season !== 'All') {
+                $query->whereHas('event', function ($q) use ($season) {
+                    $q->where('season', $season);
+                });
+            }
         }
 
-        $query->update(['certificate_enabled' => $enable]);
+        $count = $query->update(['certificate_enabled' => $enable]);
 
         $status = $enable ? 'ENABLED' : 'DISABLED';
-        return redirect()->back()->with('success', "Certificates {$status} for selected participants!");
+        return redirect()->back()->with('success', "Certificates {$status} for {$count} selected participant(s)!");
     }
 
     public function showMarksheet($roll_no)

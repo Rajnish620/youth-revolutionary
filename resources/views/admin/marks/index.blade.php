@@ -368,7 +368,47 @@
     <!-- ========================================================================= -->
     <!-- TAB 2: STUDENT MARKS ENTRY & RESULTS ROSTER                                -->
     <!-- ========================================================================= -->
-    <div x-show="activeTab === 'students'" class="space-y-6">
+    <div x-show="activeTab === 'students'" 
+         x-data="{
+             selected: [],
+             allIds: {{ json_encode($registrations->pluck('id')->values()->all()) }},
+             toggleAll() {
+                 if (this.selected.length === this.allIds.length) {
+                     this.selected = [];
+                 } else {
+                     this.selected = [...this.allIds];
+                 }
+             },
+             submitSelected(actionType, value) {
+                 if (this.selected.length === 0) {
+                     alert('Please select at least one student checkbox.');
+                     return;
+                 }
+                 if (actionType === 'qualification') {
+                     document.getElementById('action-selected-ids').value = this.selected.join(',');
+                     document.getElementById('selected-status-input').value = value;
+                     document.getElementById('form-selected-qualification').submit();
+                 } else if (actionType === 'certificate') {
+                     document.getElementById('cert-selected-ids').value = this.selected.join(',');
+                     document.getElementById('selected-enable-input').value = value;
+                     document.getElementById('form-selected-certificate').submit();
+                 }
+             }
+         }"
+         class="space-y-6 relative">
+
+        <!-- Hidden forms for bulk selected actions -->
+        <form id="form-selected-qualification" method="POST" action="{{ route('admin.marks.bulk-qualification') }}" style="display: none;">
+            @csrf
+            <input type="hidden" name="selected_ids" id="action-selected-ids">
+            <input type="hidden" name="status" id="selected-status-input">
+        </form>
+
+        <form id="form-selected-certificate" method="POST" action="{{ route('admin.marks.bulk-certificate') }}" style="display: none;">
+            @csrf
+            <input type="hidden" name="selected_ids" id="cert-selected-ids">
+            <input type="hidden" name="enable" id="selected-enable-input">
+        </form>
 
         <!-- Filters and Bulk Controls -->
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
@@ -488,7 +528,14 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-50/80 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-                            <th class="py-4 px-6">Student / Roll No</th>
+                            <th class="py-4 px-3 w-10 text-center">
+                                <input type="checkbox" 
+                                       @click="toggleAll()" 
+                                       :checked="selected.length === allIds.length && allIds.length > 0"
+                                       class="w-4 h-4 text-[#340C6F] rounded border-gray-300 focus:ring-[#340C6F] cursor-pointer"
+                                       title="Select / Deselect all students on this page">
+                            </th>
+                            <th class="py-4 px-5">Student / Roll No</th>
                             <th class="py-4 px-4">Event & Scheme</th>
                             <th class="py-4 px-4">Marks / Evaluation</th>
                             <th class="py-4 px-4">Rank / Merit</th>
@@ -502,10 +549,18 @@
                             @php
                                 $isQualify = ($reg->event && ($reg->event->evaluation_type ?? 'marks') === 'qualify_only');
                             @endphp
-                            <tr class="hover:bg-gray-50/60 transition-colors">
+                            <tr :class="selected.includes({{ $reg->id }}) ? 'bg-purple-50/70 border-l-4 border-[#340C6F] transition-all' : 'hover:bg-gray-50/60 transition-colors'">
                                 
+                                <!-- Selection Checkbox -->
+                                <td class="py-4 px-3 text-center">
+                                    <input type="checkbox" 
+                                           :value="{{ $reg->id }}" 
+                                           x-model="selected"
+                                           class="w-4 h-4 text-[#340C6F] rounded border-gray-300 focus:ring-[#340C6F] cursor-pointer">
+                                </td>
+
                                 <!-- Student Meta -->
-                                <td class="py-4 px-6">
+                                <td class="py-4 px-5">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full border border-gray-200 overflow-hidden bg-gray-100 shrink-0 flex items-center justify-center">
                                             @if($reg->photo && file_exists(public_path($reg->photo)))
@@ -666,7 +721,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="py-12 text-center text-gray-400 text-sm">
+                                <td colspan="8" class="py-12 text-center text-gray-400 text-sm">
                                     No approved student registrations found matching your query.
                                 </td>
                             </tr>
@@ -681,6 +736,62 @@
                     {{ $registrations->links() }}
                 </div>
             @endif
+        </div>
+
+        <!-- Floating Bulk Action Bar for Selected Students -->
+        <div x-show="selected.length > 0" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-10 scale-95"
+             class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white p-3.5 sm:px-6 rounded-2xl shadow-2xl border border-purple-500/50 flex flex-wrap items-center justify-between gap-4 max-w-4xl w-[94%] sm:w-auto"
+             style="display: none;">
+            
+            <div class="flex items-center gap-3">
+                <span class="px-3.5 py-1.5 rounded-xl bg-[#340C6F] text-amber-300 font-black text-xs border border-purple-400/40 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-check-double text-emerald-400"></i>
+                    <span x-text="selected.length + ' Student' + (selected.length > 1 ? 's' : '') + ' Selected'"></span>
+                </span>
+                <button type="button" @click="selected = []" class="text-xs text-gray-300 hover:text-white underline cursor-pointer">
+                    Clear Selection
+                </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Mark Selected Qualified -->
+                <button type="button" 
+                        @click="submitSelected('qualification', 'qualified')"
+                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Mark Selected as Qualified</span>
+                </button>
+
+                <!-- Mark Selected Not Qualified -->
+                <button type="button" 
+                        @click="submitSelected('qualification', 'not_qualified')"
+                        class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Mark Selected as Not Qualified</span>
+                </button>
+
+                <!-- Enable Selected Certs -->
+                <button type="button" 
+                        @click="submitSelected('certificate', '1')"
+                        class="px-3.5 py-2 rounded-xl bg-[#028CD4] hover:bg-blue-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-award"></i>
+                    <span>Enable Certs</span>
+                </button>
+
+                <!-- Disable Selected Certs -->
+                <button type="button" 
+                        @click="submitSelected('certificate', '0')"
+                        class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-ban"></i>
+                    <span>Disable Certs</span>
+                </button>
+            </div>
         </div>
 
     </div>
