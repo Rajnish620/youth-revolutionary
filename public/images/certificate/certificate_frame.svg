@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1122 793" width="100%" height="100%">
+  <defs>
+    <!-- Dark Navy Palette -->
+    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1a38" />
+      <stop offset="100%" stop-color="#182d5a" />
+    </linearGradient>
+
+    <!-- Golden Yellow Palette -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <linearGradient id="goldSlashGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fde68a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Clean Canvas Background -->
+  <rect width="1122" height="793" fill="#ffffff" />
+
+  <!-- GUILLOCHE WAVE RIBBONS (LEFT SIDE) -->
+  <g fill="none" stroke="#334155" stroke-linecap="round">
+    <path d="M -10,60 C 130,120 40,240 10,320 C -20,400 90,520 20,680" stroke-width="1.2" stroke-opacity="0.35" />
+    <path d="M -15,75 C 120,135 50,250 18,330 C -12,410 98,530 28,690" stroke-width="1.0" stroke-opacity="0.4" />
+    <path d="M -20,90 C 110,150 60,260 26,340 C -4,420 106,540 36,700" stroke-width="0.9" stroke-opacity="0.3" />
+    <path d="M -25,105 C 100,165 70,270 34,350 C 4,430 114,550 44,710" stroke-width="0.8" stroke-opacity="0.45" />
+    <path d="M -30,120 C 90,180 80,280 42,360 C 12,440 122,560 52,720" stroke-width="0.7" stroke-opacity="0.35" />
+    <path d="M -35,135 C 80,195 90,290 50,370 C 20,450 130,570 60,730" stroke-width="0.8" stroke-opacity="0.5" />
+    <path d="M -40,150 C 70,210 100,300 58,380 C 28,460 138,580 68,740" stroke-width="0.7" stroke-opacity="0.3" />
+    <path d="M -45,165 C 60,225 110,310 66,390 C 36,470 146,590 76,750" stroke-width="0.9" stroke-opacity="0.4" />
+    
+    <path d="M 15,10 C 65,90 -10,190 45,280 C 100,370 20,490 85,610" stroke-width="1.1" stroke-opacity="0.3" />
+    <path d="M 25,20 C 75,100 0,200 55,290 C 110,380 30,500 95,620" stroke-width="0.8" stroke-opacity="0.45" />
+    <path d="M 35,30 C 85,110 10,210 65,300 C 120,390 40,510 105,630" stroke-width="0.7" stroke-opacity="0.35" />
+    <path d="M 45,40 C 95,120 20,220 75,310 C 130,400 50,520 115,640" stroke-width="0.6" stroke-opacity="0.25" />
+  </g>
+
+  <!-- GUILLOCHE WAVE RIBBONS (RIGHT SIDE) -->
+  <g fill="none" stroke="#334155" stroke-linecap="round">
+    <path d="M 1130,680 C 990,620 1080,500 1110,420 C 1140,340 1030,220 1100,60" stroke-width="1.2" stroke-opacity="0.35" />
+    <path d="M 1135,665 C 1000,605 1070,490 1102,410 C 1132,330 1022,210 1092,50" stroke-width="1.0" stroke-opacity="0.4" />
+    <path d="M 1140,650 C 1010,590 1060,480 1094,400 C 1124,320 1014,200 1084,40" stroke-width="0.9" stroke-opacity="0.3" />
+    <path d="M 1145,635 C 1020,575 1050,470 1086,390 C 1116,310 1006,190 1076,30" stroke-width="0.8" stroke-opacity="0.45" />
+    <path d="M 1150,620 C 1030,560 1040,460 1078,380 C 1108,300 998,180 1068,20" stroke-width="0.7" stroke-opacity="0.35" />
+    <path d="M 1155,605 C 1040,545 1030,450 1070,370 C 1100,290 990,170 1060,10" stroke-width="0.8" stroke-opacity="0.5" />
+    
+    <path d="M 1105,780 C 1045,700 1130,600 1075,510 C 1020,420 1100,300 1035,180" stroke-width="1.1" stroke-opacity="0.3" />
+    <path d="M 1095,770 C 1035,690 1120,590 1065,500 C 1010,410 1090,290 1025,170" stroke-width="0.8" stroke-opacity="0.45" />
+    <path d="M 1085,760 C 1025,680 1110,580 1055,490 C 1000,400 1080,280 1015,160" stroke-width="0.7" stroke-opacity="0.35" />
+    <path d="M 1075,750 C 1015,670 1100,570 1045,480 C 990,390 1070,270 1005,150" stroke-width="0.6" stroke-opacity="0.25" />
+  </g>
+
+  <!-- GEOMETRIC CORNER GRAPHICS -->
+  <!-- TOP-LEFT -->
+  <g id="corner-top-left">
+    <polygon points="0,0 230,0 170,42 0,64" fill="url(#navyGrad)" />
+    <polygon points="0,64 170,42 185,50 0,72" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- TOP-CENTER -->
+  <g id="top-center-chevron">
+    <polygon points="440,0 682,0 660,18 462,18" fill="url(#navyGrad)" />
+    <polygon points="462,18 660,18 652,24 470,24" fill="url(#goldGrad)" opacity="0.85" />
+  </g>
+
+  <!-- TOP-RIGHT -->
+  <g id="corner-top-right">
+    <polygon points="970,0 1122,0 1122,175 1060,90" fill="url(#navyGrad)" />
+    <polygon points="860,0 990,0 1122,180 1122,250" fill="url(#goldSlashGrad)" />
+    <polygon points="850,0 860,0 1122,250 1122,256" fill="url(#navyGrad)" />
+  </g>
+
+  <!-- BOTTOM-LEFT -->
+  <g id="corner-bottom-left">
+    <polygon points="0,520 185,793 155,793 0,560" fill="url(#goldSlashGrad)" />
+    <polygon points="0,550 165,793 0,793" fill="url(#navyGrad)" />
+  </g>
+
+  <!-- BOTTOM-CENTER -->
+  <g id="bottom-center-notch">
+    <polygon points="360,793 450,772 475,793" fill="url(#navyGrad)" />
+    <polygon points="450,772 462,772 485,793 475,793" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- BOTTOM-RIGHT -->
+  <g id="corner-bottom-right">
+    <polygon points="1075,793 1122,740 1122,793" fill="url(#navyGrad)" />
+  </g>
+</svg>

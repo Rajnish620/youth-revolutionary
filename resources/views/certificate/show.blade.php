@@ -6,32 +6,65 @@
     <title>Certificate of Achievement - {{ $registration->student_name }} ({{ $registration->roll_no }})</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500;1,600&family=Noto+Sans+Devanagari:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
         @media print {
             .no-print { display: none !important; }
-            body { background: white !important; padding: 0 !important; }
-            .cert-container { box-shadow: none !important; border: 10px solid #340C6F !important; }
+            body { 
+                background: white !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .cert-outer-wrapper {
+                padding: 0 !important;
+                margin: 0 !important;
+                min-height: 100vh !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .cert-card {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: none !important;
+                border-radius: 0 !important;
+            }
         }
-        .font-cinzel { font-family: 'Cinzel', serif; }
-        .font-signature { font-family: 'Great Vibes', cursive; }
-        .font-serif-heading { font-family: 'Playfair Display', serif; }
-        .bg-parchment {
-            background: linear-gradient(135deg, #ffffff 0%, #fffdf7 50%, #fefcf0 100%);
-        }
+        .font-cinzel { font-family: 'Cinzel', Georgia, serif; }
+        .font-serif-title { font-family: 'Playfair Display', Georgia, serif; }
+        .font-hindi { font-family: 'Noto Sans Devanagari', 'DejaVu Sans', Arial, sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 min-h-screen p-4 sm:p-8 flex flex-col items-center justify-start text-gray-900 font-sans">
+<body class="bg-slate-900 min-h-screen p-3 sm:p-6 flex flex-col items-center justify-start text-gray-900 font-sans">
+
+    @php
+        $certSubject = $registration->event->category ?? $registration->event->title ?? 'Dance';
+        if (strcasecmp($certSubject, 'general') === 0 && !empty($registration->event->title)) {
+            $certSubject = $registration->event->title;
+        }
+        $certSeason = $registration->event->season ?? '2025 SEASON -4';
+        if (!str_contains(strtoupper($certSeason), 'SEASON')) {
+            $certSeason = $certSeason . ' SEASON -4';
+        }
+    @endphp
 
     <!-- Action Bar -->
-    <div class="max-w-4xl w-full mb-6 flex flex-wrap items-center justify-between gap-3 no-print bg-slate-800 p-4 rounded-2xl border border-slate-700 text-white shadow-xl">
+    <div class="max-w-5xl w-full mb-5 flex flex-wrap items-center justify-between gap-3 no-print bg-slate-800 p-3.5 sm:p-4 rounded-2xl border border-slate-700 text-white shadow-xl">
         <div class="flex items-center gap-3">
             <a href="{{ url('/results') }}" class="w-10 h-10 rounded-xl bg-slate-700 hover:bg-slate-600 flex items-center justify-center text-white transition-colors">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
             <div>
-                <h1 class="font-extrabold text-sm sm:text-base text-white">Digital Certificate of Achievement</h1>
-                <p class="text-xs text-gray-400">Awarded to: <span class="text-amber-400 font-bold">{{ $registration->student_name }}</span> ({{ $registration->roll_no }})</p>
+                <h1 class="font-extrabold text-sm sm:text-base text-white">Certificate of Achievement</h1>
+                <p class="text-xs text-gray-400">Awarded to: <span class="text-amber-400 font-bold">{{ $registration->student_name }}</span> (Roll No: {{ $registration->roll_no }})</p>
             </div>
         </div>
         <div class="flex items-center gap-2">
@@ -46,148 +79,128 @@
         </div>
     </div>
 
-    <!-- Official Certificate Frame (Distinct Royal Design) -->
-    <div class="cert-container max-w-4xl w-full bg-parchment p-6 sm:p-12 rounded-3xl border-[12px] border-[#340C6F] relative overflow-hidden shadow-2xl">
-        
-        <!-- Corner Ornaments -->
-        <div class="absolute top-3 left-3 w-16 h-16 border-t-4 border-l-4 border-amber-500 pointer-events-none rounded-tl-lg"></div>
-        <div class="absolute top-3 right-3 w-16 h-16 border-t-4 border-r-4 border-amber-500 pointer-events-none rounded-tr-lg"></div>
-        <div class="absolute bottom-3 left-3 w-16 h-16 border-b-4 border-l-4 border-amber-500 pointer-events-none rounded-bl-lg"></div>
-        <div class="absolute bottom-3 right-3 w-16 h-16 border-b-4 border-r-4 border-amber-500 pointer-events-none rounded-br-lg"></div>
+    <!-- Certificate Outer Container (Landscape Ratio 1.414:1) -->
+    <div class="cert-outer-wrapper w-full flex justify-center items-center">
+        <div class="cert-card relative w-full max-w-5xl bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200" style="aspect-ratio: 1.414 / 1;">
+            
+            <!-- Exact Vector Background Frame (Navy & Gold Geometrics + Side Guilloche Waves) -->
+            <img src="{{ asset('images/certificate/certificate_frame.svg') }}" class="absolute inset-0 w-full h-full object-fill pointer-events-none select-none z-0" alt="Certificate Border Frame">
 
-        <!-- Inner Gold Filigree Border -->
-        <div class="border-2 border-amber-600/70 p-6 sm:p-10 rounded-2xl relative z-10 text-center space-y-6 bg-white/60 backdrop-blur-sm">
-
-            <!-- Official Admit Card Header Banner -->
-            <div class="border-b border-amber-200 pb-4">
-                @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto max-h-[115px] object-contain mx-auto" alt="Header Banner">
-                @elseif(file_exists(public_path('images/header_banner.jpg')))
-                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto max-h-[115px] object-contain mx-auto" alt="Header Banner">
-                @else
-                    <div class="space-y-1">
-                        <div class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#F1400C]">
-                            <i class="fa-solid fa-crown text-amber-600 text-sm"></i> YOUTH REVOLUTIONARY NASRIGANJ
-                        </div>
-                        <h2 class="font-cinzel text-2xl sm:text-3xl font-black text-[#340C6F] tracking-wide">
-                            {{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}
-                        </h2>
-                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-widest">{{ $setting->header_subtitle ?? 'A Unit of SWS (Talent Search Council)' }}</p>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Title & Presentation Header -->
-            <div class="space-y-2 pt-2">
-                <div class="inline-flex items-center gap-3">
-                    <span class="w-12 h-0.5 bg-amber-500"></span>
-                    <span class="text-xs uppercase font-extrabold tracking-[0.25em] text-amber-700">Official Honor & Recognition</span>
-                    <span class="w-12 h-0.5 bg-amber-500"></span>
-                </div>
-                <h2 class="font-cinzel text-3xl sm:text-5xl font-black text-[#340C6F] tracking-wide drop-shadow-sm">
-                    CERTIFICATE OF MERIT
-                </h2>
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">THIS IS PROUDLY PRESENTED TO</p>
-            </div>
-
-            <!-- Recipient Candidate Name -->
-            <div class="py-2 border-b-2 border-amber-500/50 max-w-xl mx-auto">
-                <h3 class="font-signature text-5xl sm:text-7xl text-[#F1400C] leading-tight select-none">
-                    {{ $registration->student_name }}
-                </h3>
-            </div>
-
-            <!-- Commendation Text -->
-            <div class="max-w-2xl mx-auto text-sm sm:text-base text-gray-700 leading-relaxed font-medium">
-                <p>
-                    In recognition of outstanding dedication, knowledge, and exemplary achievement in 
-                    <span class="font-bold text-[#340C6F]">{{ $registration->event->title ?? 'the Youth Competition' }}</span>
-                    organized under <span class="font-bold text-gray-900">{{ $registration->group->group_name ?? 'General Category' }}</span>.
-                </p>
-
-                <!-- Performance Highlight Badges -->
-                <div class="flex flex-wrap items-center justify-center gap-3 pt-3">
-                    @if($registration->rank)
-                        <div class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-md">
-                            <i class="fa-solid fa-trophy"></i>
-                            <span>Rank: {{ $registration->rank }}</span>
-                        </div>
-                    @endif
-                    @if($registration->marks !== null)
-                        <div class="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#340C6F] to-purple-900 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-md">
-                            <i class="fa-solid fa-star"></i>
-                            <span>Score: {{ $registration->marks }} Marks</span>
-                        </div>
-                    @endif
-                    @if($registration->qualification_status === 'Qualified')
-                        <div class="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-md">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Status: Qualified</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Credential Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto pt-2 text-xs font-semibold text-gray-700">
-                <div class="bg-white/90 p-2.5 rounded-xl border border-amber-200 shadow-sm">
-                    <span class="block text-[10px] text-gray-400 uppercase">Roll Number</span>
-                    <span class="font-mono font-extrabold text-[#340C6F]">{{ $registration->roll_no }}</span>
-                </div>
-                <div class="bg-white/90 p-2.5 rounded-xl border border-amber-200 shadow-sm">
-                    <span class="block text-[10px] text-gray-400 uppercase">Registration No</span>
-                    <span class="font-mono font-extrabold text-gray-800">{{ $registration->registration_no ?? 'N/A' }}</span>
-                </div>
-                <div class="bg-white/90 p-2.5 rounded-xl border border-amber-200 shadow-sm">
-                    <span class="block text-[10px] text-gray-400 uppercase">Class / Group</span>
-                    <span class="font-extrabold text-gray-800">{{ $registration->student_class }}</span>
-                </div>
-                <div class="bg-white/90 p-2.5 rounded-xl border border-amber-200 shadow-sm">
-                    <span class="block text-[10px] text-gray-400 uppercase">Issue Date</span>
-                    <span class="font-extrabold text-gray-800">{{ date('d M, Y') }}</span>
-                </div>
-            </div>
-
-            <!-- Signatures Section -->
-            <div class="pt-8 flex items-end justify-between max-w-2xl mx-auto">
+            <!-- Content Area Layer -->
+            <div class="relative z-10 w-full h-full flex flex-col justify-between py-6 sm:py-10 px-6 sm:px-16 text-center select-none">
                 
-                <!-- President -->
-                <div class="text-center space-y-1 w-44">
-                    <div class="font-signature text-2xl text-gray-800">Rajnish Kumar</div>
-                    <div class="border-t border-gray-400 pt-1 text-[11px] font-bold text-gray-700 uppercase">
-                        President & Patron
-                    </div>
-                </div>
-
-                <!-- Central Gold Medal Seal -->
-                <div class="relative flex flex-col items-center">
-                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 text-white flex items-center justify-center shadow-xl border-4 border-white transform hover:scale-105 transition-transform">
-                        <div class="text-center">
-                            <i class="fa-solid fa-ribbon text-2xl text-yellow-100"></i>
-                            <span class="block text-[8px] font-black uppercase tracking-widest text-white">SEAL</span>
-                        </div>
-                    </div>
-                    <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest mt-1">Certified Excellence</span>
-                </div>
-
-                <!-- Controller of Examination Signature (from AdmitCardSetting) -->
-                <div class="text-center space-y-1 w-44">
-                    <div class="h-10 flex items-center justify-center">
-                        @if(!empty($setting->signature_path) && file_exists(public_path($setting->signature_path)))
-                            <img src="{{ asset($setting->signature_path) }}" class="h-9 max-w-[130px] object-contain" alt="Authorized Signature">
-                        @else
-                            <div class="font-signature text-2xl text-gray-800">Controller of Exam</div>
+                <!-- TOP HEADER SECTION -->
+                <div class="space-y-1 sm:space-y-1.5 pt-1 sm:pt-2">
+                    <!-- Circular Youth Revolutionary Logo -->
+                    <div class="flex justify-center mb-1">
+                        @if(!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)))
+                            <img src="{{ asset($setting->logo_path) }}" class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-contain shadow-sm bg-white p-0.5 border border-gray-200" alt="Logo">
+                        @elseif(file_exists(public_path('logo/logo.jpeg')))
+                            <img src="{{ asset('logo/logo.jpeg') }}" class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-contain shadow-sm bg-white p-0.5 border border-gray-200" alt="Logo">
                         @endif
                     </div>
-                    <div class="border-t border-gray-400 pt-1 text-[11px] font-bold text-gray-700 uppercase">
-                        Controller of Exam
+
+                    <!-- Main Organization Title -->
+                    <h1 class="font-cinzel text-xl sm:text-3xl md:text-4xl font-extrabold text-[#132448] tracking-[0.08em] uppercase leading-tight">
+                        {{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}
+                    </h1>
+
+                    <!-- City / Unit Subtitle -->
+                    <h2 class="font-cinzel text-base sm:text-xl md:text-2xl font-black text-[#132448] tracking-[0.12em] uppercase leading-tight">
+                        {{ $setting->header_subtitle ?? 'NASRIGANJ' }}
+                    </h2>
+
+                    <!-- Red Certificate Title -->
+                    <div class="pt-1">
+                        <h3 class="font-serif-title text-xl sm:text-2xl md:text-3xl font-bold text-[#c0262d] tracking-wide">
+                            Certificate of Achievement in {{ $certSubject }}
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- MIDDLE COMPETITION & AWARDEE SECTION -->
+                <div class="space-y-3 sm:space-y-4 my-auto">
+                    
+                    <!-- Hindi Event Title with Nataraja & Trophy Icons -->
+                    <div class="flex items-center justify-center gap-3 sm:gap-6 px-4">
+                        <!-- Left: Golden Nataraja Emblem -->
+                        <div class="shrink-0">
+                            <img src="{{ asset('images/certificate/nataraja_gold.svg') }}" class="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain" alt="Nataraja Emblem">
+                        </div>
+
+                        <!-- Center: Hindi Title -->
+                        <div class="font-hindi text-lg sm:text-2xl md:text-3xl font-black text-gray-900 tracking-wide">
+                            प्रतिभा खोज प्रतियोगिता {{ $certSeason }}
+                        </div>
+
+                        <!-- Right: Trophy with Laurel Wreath -->
+                        <div class="shrink-0">
+                            <img src="{{ asset('images/certificate/trophy_laurel.svg') }}" class="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain" alt="Trophy Emblem">
+                        </div>
+                    </div>
+
+                    <!-- Proudly Awarded To Lead Text -->
+                    <div class="pt-1">
+                        <p class="text-xs sm:text-base md:text-lg font-bold text-gray-800 tracking-normal">
+                            This certificate is proudly awarded to
+                        </p>
+                    </div>
+
+                    <!-- Student Name with Underline -->
+                    <div class="w-4/5 max-w-xl mx-auto border-b-2 border-gray-900 pb-1 pt-1">
+                        <span class="font-cinzel text-xl sm:text-3xl md:text-4xl font-extrabold uppercase text-gray-900 tracking-wider">
+                            {{ $registration->student_name }}
+                        </span>
+                    </div>
+
+                    <!-- Commendation Quote -->
+                    <div class="max-w-2xl mx-auto px-4 pt-1">
+                        <p class="font-serif-title text-[11px] sm:text-sm md:text-base text-gray-700 italic leading-relaxed">
+                            “This certificate is a testament to your talent, dedication, and hard work, propelling you one step closer to achieving your goals.”
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- BOTTOM SIGNATURES & ROSETTE SECTION -->
+                <div class="pt-2 pb-1 px-4 sm:px-10">
+                    <div class="flex items-end justify-between max-w-3xl mx-auto">
+                        
+                        <!-- Left Signatory: NIKETAN SINGH / अध्यक्ष -->
+                        <div class="text-center w-36 sm:w-52">
+                            <div class="border-b-2 border-gray-900 pb-1 mb-1">
+                                <span class="font-cinzel text-xs sm:text-base font-extrabold text-gray-900 uppercase tracking-wider block">
+                                    {{ $setting->president_name ?? 'NIKETAN SINGH' }}
+                                </span>
+                            </div>
+                            <span class="font-hindi text-xs sm:text-sm font-bold text-gray-800 block">
+                                {{ $setting->president_role ?? 'अध्यक्ष' }}
+                            </span>
+                        </div>
+
+                        <!-- Center: Golden Rosette Ribbon Medal Badge -->
+                        <div class="shrink-0 flex justify-center -mb-2">
+                            <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 object-contain drop-shadow-md" alt="Golden Seal">
+                        </div>
+
+                        <!-- Right Signatory: SHYAM SUNDAR KR. / सचिव -->
+                        <div class="text-center w-36 sm:w-52">
+                            <div class="border-b-2 border-gray-900 pb-1 mb-1">
+                                <span class="font-cinzel text-xs sm:text-base font-extrabold text-gray-900 uppercase tracking-wider block">
+                                    {{ $setting->secretary_name ?? 'SHYAM SUNDAR KR.' }}
+                                </span>
+                            </div>
+                            <span class="font-hindi text-xs sm:text-sm font-bold text-gray-800 block">
+                                {{ $setting->secretary_role ?? 'सचिव' }}
+                            </span>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
 
         </div>
-
     </div>
 
 </body>

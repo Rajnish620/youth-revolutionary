@@ -223,11 +223,11 @@ class MarksCertificateController extends Controller
         $html = view('pdf.certificate', compact('registration', 'setting'))->render();
 
         $mpdf = new Mpdf([
-            'format' => 'A4',
-            'margin_left' => 6,
-            'margin_right' => 6,
-            'margin_top' => 6,
-            'margin_bottom' => 6,
+            'format' => 'A4-L',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
             'autoScriptToLang' => true,
             'autoLangToFont' => true,
         ]);
