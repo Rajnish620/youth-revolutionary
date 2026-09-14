@@ -104,66 +104,59 @@
     <div x-show="activeTab === 'events'" class="space-y-6" style="display: none;">
         
         <div class="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
                 <div>
-                    <h2 class="text-lg font-extrabold text-gray-900">Event Publication & Scoring Configuration</h2>
-                    <p class="text-xs text-gray-500 mt-0.5">
+                    <h2 class="text-lg font-extrabold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-[#340C6F]"></i>
+                        <span>Event Publication & Scoring Configuration</span>
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">
                         Choose which event shows Marks, which shows Certificate, or Both. Set specific cutoffs and question schemes.
                     </p>
                 </div>
-                <span class="px-3 py-1 bg-purple-50 text-[#340C6F] font-extrabold text-xs rounded-xl border border-purple-200 inline-flex items-center gap-1.5 self-start sm:self-auto">
-                    <i class="fa-solid fa-calendar-check"></i> Total {{ $events->count() }} Events
-                </span>
+
+                <!-- Right Action Bar: Season Dropdown Filter + Total Count -->
+                <div class="flex flex-wrap items-center gap-3 self-start md:self-auto">
+                    @if(isset($seasons) && $seasons->count() > 0)
+                        <div class="flex items-center gap-2 bg-purple-50/60 p-1.5 pl-3 rounded-2xl border border-purple-100/90 shadow-xs">
+                            <span class="text-xs font-bold text-gray-600 flex items-center gap-1.5 shrink-0">
+                                <i class="fa-solid fa-layer-group text-[#340C6F]"></i>
+                                <span class="hidden sm:inline">Season:</span>
+                            </span>
+                            <div class="relative">
+                                <select x-model="selectedSeason" 
+                                    class="bg-white hover:bg-gray-50 text-xs font-extrabold text-[#340C6F] rounded-xl pl-3 pr-8 py-2 border border-purple-200/80 outline-none focus:border-[#340C6F] focus:ring-2 focus:ring-[#340C6F]/20 transition-all shadow-xs cursor-pointer appearance-none">
+                                    <option value="All">All Seasons ({{ $events->count() }})</option>
+                                    @foreach($seasons as $s)
+                                        @php
+                                            $sCount = $events->where('season', $s)->count();
+                                        @endphp
+                                        <option value="{{ $s }}">{{ $s }} ({{ $sCount }} {{ Str::plural('Event', $sCount) }})</option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute right-2.5 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none text-[10px]">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <span class="px-3.5 py-2.5 bg-purple-50 text-[#340C6F] font-extrabold text-xs rounded-2xl border border-purple-200 inline-flex items-center gap-1.5 shadow-xs shrink-0">
+                        <i class="fa-solid fa-calendar-check"></i> Total {{ $events->count() }} Events
+                    </span>
+                </div>
             </div>
 
-            <!-- Season Filter Bar -->
-            @if(isset($seasons) && $seasons->count() > 0)
-                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-gradient-to-r from-purple-50/90 via-indigo-50/40 to-purple-50/60 p-3.5 sm:p-4 rounded-2xl border border-purple-100/90 mb-6 shadow-xs">
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <span class="text-xs font-bold text-gray-700 flex items-center gap-1.5 shrink-0">
-                            <i class="fa-solid fa-layer-group text-[#340C6F]"></i>
-                            <span>Filter by Season:</span>
-                        </span>
-                        
-                        <!-- Quick Season Pills -->
-                        <div class="flex flex-wrap items-center gap-1.5">
-                            <button type="button" @click="selectedSeason = 'All'"
-                                :class="selectedSeason === 'All' 
-                                    ? 'bg-[#340C6F] text-white shadow-sm ring-2 ring-[#340C6F]/30' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
-                                class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer">
-                                All Seasons ({{ $events->count() }})
-                            </button>
-                            @foreach($seasons as $s)
-                                @php
-                                    $sCount = $events->where('season', $s)->count();
-                                @endphp
-                                <button type="button" @click="selectedSeason = '{{ addslashes($s) }}'"
-                                    :class="selectedSeason === '{{ addslashes($s) }}' 
-                                        ? 'bg-[#340C6F] text-white shadow-sm ring-2 ring-[#340C6F]/30' 
-                                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
-                                    class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
-                                    <span>{{ $s }}</span>
-                                    <span :class="selectedSeason === '{{ addslashes($s) }}' ? 'bg-white/25 text-white' : 'bg-purple-100 text-[#340C6F]'" class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold">{{ $sCount }}</span>
-                                </button>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Dropdown for Mobile / Compact Screens -->
-                    <div class="flex items-center gap-2 self-start lg:self-auto">
-                        <select x-model="selectedSeason" class="lg:hidden bg-white border border-gray-200 text-xs font-extrabold text-[#340C6F] rounded-xl px-3 py-1.5 outline-none focus:border-[#340C6F] shadow-sm">
-                            <option value="All">All Seasons ({{ $events->count() }})</option>
-                            @foreach($seasons as $s)
-                                <option value="{{ $s }}">{{ $s }}</option>
-                            @endforeach
-                        </select>
-                        <span class="hidden lg:inline text-xs font-semibold text-gray-500" x-show="selectedSeason !== 'All'">
-                            Showing: <strong class="text-[#340C6F]" x-text="selectedSeason"></strong>
-                        </span>
-                    </div>
+            <!-- Active Season Filter Indicator Banner (when not 'All') -->
+            <div x-show="selectedSeason !== 'All'" x-cloak class="flex items-center justify-between bg-purple-50/80 px-4 py-2.5 rounded-xl border border-purple-100 text-xs text-purple-950 font-semibold mb-6 shadow-xs" style="display: none;">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#340C6F] animate-pulse"></span>
+                    <span>Filtered by Season: <strong class="text-[#340C6F]" x-text="selectedSeason"></strong></span>
                 </div>
-            @endif
+                <button type="button" @click="selectedSeason = 'All'" class="text-[#340C6F] hover:text-purple-900 hover:underline font-bold text-xs flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-[11px]"></i> Clear Filter (Show All)
+                </button>
+            </div>
 
             <div class="space-y-6">
                 @forelse($events as $event)
