@@ -155,20 +155,50 @@ class MarksCertificateController extends Controller
         return redirect()->back()->with('success', "Evaluation saved for {$registration->student_name} (Roll: {$registration->roll_no})! Certificate activated.");
     }
 
-    public function toggleQualification(EventRegistration $registration)
+    public function toggleQualification(Request $request, EventRegistration $registration)
     {
-        // Cycle: null -> true (Qualified) -> false (Not Qualified) -> true
-        $newStatus = ($registration->is_qualified === true) ? false : true;
+        // 1. Direct reset or explicit status action
+        if ($request->has('action') && $request->input('action') === 'reset') {
+            $newStatus = null;
+        } elseif ($request->filled('status')) {
+            $reqStatus = $request->input('status');
+            if ($reqStatus === 'qualified' || $reqStatus === '1') {
+                $newStatus = true;
+            } elseif ($reqStatus === 'not_qualified' || $reqStatus === '0') {
+                $newStatus = false;
+            } else {
+                $newStatus = null;
+            }
+        } else {
+            // 2. 3-State Cycle: null (Pending / Set Status) -> true (QUALIFIED) -> false (NOT QUALIFIED) -> null (Set Status)
+            if ($registration->is_qualified === null) {
+                $newStatus = true;
+            } elseif ($registration->is_qualified === true) {
+                $newStatus = false;
+            } else {
+                $newStatus = null;
+            }
+        }
 
         $data = ['is_qualified' => $newStatus];
         if ($newStatus === true) {
             $data['certificate_enabled'] = true;
+        } else {
+            // If Not Qualified or reset to Pending (Set Status), disable certificate
+            $data['certificate_enabled'] = false;
         }
 
         $registration->update($data);
 
-        $statusText = $newStatus ? 'QUALIFIED (Certificate Active)' : 'NOT QUALIFIED';
-        return redirect()->back()->with('success', "Status set to {$statusText} for Roll No: {$registration->roll_no} ({$registration->student_name}).");
+        if ($newStatus === true) {
+            $statusText = 'QUALIFIED (Certificate Active)';
+        } elseif ($newStatus === false) {
+            $statusText = 'NOT QUALIFIED';
+        } else {
+            $statusText = 'SET STATUS (Pending)';
+        }
+
+        return redirect()->back()->with('success', "Status updated to {$statusText} for Roll No: {$registration->roll_no} ({$registration->student_name}).");
     }
 
     public function bulkQualificationToggle(Request $request)
@@ -206,15 +236,17 @@ class MarksCertificateController extends Controller
             $val = false;
             $statusText = 'NOT QUALIFIED';
             $updateData['is_qualified'] = false;
+            $updateData['certificate_enabled'] = false;
         } else {
             $val = null;
-            $statusText = 'PENDING';
+            $statusText = 'SET STATUS (PENDING)';
             $updateData['is_qualified'] = null;
+            $updateData['certificate_enabled'] = false;
         }
 
         $count = $query->update($updateData);
 
-        return redirect()->back()->with('success', "Marked {$count} candidate(s) as {$statusText}!");
+        return redirect()->back()->with('success', "Updated {$count} candidate(s) to {$statusText}!");
     }
 
     public function toggleCertificate(EventRegistration $registration)

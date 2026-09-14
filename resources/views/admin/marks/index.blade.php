@@ -645,6 +645,21 @@
                         </button>
                     </form>
 
+                    <!-- Reset All to Set Status (Pending) -->
+                    <form method="POST" action="{{ route('admin.marks.bulk-qualification') }}">
+                        @csrf
+                        <input type="hidden" name="season" value="{{ request('season') }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="status" value="pending">
+                        <button type="submit" onclick="return confirm('Reset status for all matching students in this selection back to SET STATUS (Pending)?')" 
+                                style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1 !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:bg-gray-200" 
+                                title="Reset all students to Set Status (Pending)">
+                            <i class="fa-solid fa-rotate-left text-gray-500"></i>
+                            <span style="color: #475569 !important; font-weight: 700;">Reset to Set Status</span>
+                        </button>
+                    </form>
+
                     <div class="h-5 w-[1px] bg-gray-200 mx-1 hidden sm:block"></div>
 
                     <!-- Enable All Certs -->
@@ -759,32 +774,48 @@
                                 <!-- Marks / Evaluation Column -->
                                 <td class="py-4 px-4">
                                     @if($isQualify)
-                                        <!-- 1-Click Toggle for Qualified / Not Qualified -->
-                                        <form method="POST" action="{{ route('admin.marks.toggle-qualification', $reg->id) }}">
-                                            @csrf
-                                            @if($reg->is_qualified === true)
-                                                <button type="submit" title="Click to change to NOT QUALIFIED" 
-                                                        style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
-                                                        class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
-                                                    <i class="fa-solid fa-circle-check"></i>
-                                                    <span style="color: #ffffff !important; font-weight: 800;">QUALIFIED</span>
-                                                </button>
-                                            @elseif($reg->is_qualified === false)
-                                                <button type="submit" title="Click to change to QUALIFIED" 
-                                                        style="background-color: #e11d48 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
-                                                        class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
-                                                    <i class="fa-solid fa-circle-xmark"></i>
-                                                    <span style="color: #ffffff !important; font-weight: 800;">NOT QUALIFIED</span>
-                                                </button>
-                                            @else
-                                                <button type="submit" title="Click to mark QUALIFIED" 
-                                                        style="background-color: #fef3c7 !important; color: #92400e !important; border: 1px solid #fcd34d !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
-                                                        class="font-bold text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
-                                                    <i class="fa-solid fa-clock text-amber-600"></i>
-                                                    <span>Set Status</span>
-                                                </button>
+                                        <div class="flex items-center gap-1.5">
+                                            <!-- 1-Click 3-State Cycle for Qualified / Not Qualified / Set Status -->
+                                            <form method="POST" action="{{ route('admin.marks.toggle-qualification', $reg->id) }}" class="inline-flex">
+                                                @csrf
+                                                @if($reg->is_qualified === true)
+                                                    <button type="submit" title="Click to cycle to NOT QUALIFIED (or use ↺ to reset)" 
+                                                            style="background-color: #059669 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                            class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
+                                                        <i class="fa-solid fa-circle-check"></i>
+                                                        <span style="color: #ffffff !important; font-weight: 800;">QUALIFIED</span>
+                                                    </button>
+                                                @elseif($reg->is_qualified === false)
+                                                    <button type="submit" title="Click to cycle back to SET STATUS (Pending)" 
+                                                            style="background-color: #e11d48 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                            class="text-white font-black text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
+                                                        <i class="fa-solid fa-circle-xmark"></i>
+                                                        <span style="color: #ffffff !important; font-weight: 800;">NOT QUALIFIED</span>
+                                                    </button>
+                                                @else
+                                                    <button type="submit" title="Click to mark QUALIFIED" 
+                                                            style="background-color: #fef3c7 !important; color: #92400e !important; border: 1px solid #fcd34d !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 10px !important;"
+                                                            class="font-bold text-xs shadow-xs transition-all cursor-pointer hover:opacity-90">
+                                                        <i class="fa-solid fa-clock text-amber-600"></i>
+                                                        <span>Set Status</span>
+                                                    </button>
+                                                @endif
+                                            </form>
+
+                                            <!-- Dedicated Reset Button (shown when status is set to Qualified or Not Qualified) -->
+                                            @if($reg->is_qualified !== null)
+                                                <form method="POST" action="{{ route('admin.marks.toggle-qualification', $reg->id) }}" class="inline-flex">
+                                                    @csrf
+                                                    <input type="hidden" name="action" value="reset">
+                                                    <button type="submit" title="Reset back to Set Status (Pending)" 
+                                                            style="background-color: #f8fafc !important; color: #64748b !important; border: 1px solid #cbd5e1 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 28px !important; height: 28px !important; border-radius: 8px !important;"
+                                                            class="text-xs transition-all cursor-pointer hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 shadow-2xs"
+                                                            onclick="return confirm('Reset status to Pending (Set Status) for this student?')">
+                                                        <i class="fa-solid fa-rotate-left"></i>
+                                                    </button>
+                                                </form>
                                             @endif
-                                        </form>
+                                        </div>
                                     @else
                                         <!-- Inline Marks Edit Form -->
                                         <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}">
@@ -948,6 +979,16 @@
                         class="font-black text-xs shadow-md transition-all cursor-pointer hover:opacity-90">
                     <i class="fa-solid fa-circle-xmark"></i>
                     <span style="color: #ffffff !important;">Mark Not Qualified</span>
+                </button>
+
+                <!-- Reset Selected Status (Pending) -->
+                <button type="button" 
+                        @click="submitSelected('qualification', 'pending')"
+                        style="background-color: #334155 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 14px !important; border-radius: 12px !important;"
+                        class="font-bold text-xs shadow-md transition-all cursor-pointer hover:bg-slate-700"
+                        title="Reset selected students back to Set Status (Pending)">
+                    <i class="fa-solid fa-rotate-left text-amber-300"></i>
+                    <span style="color: #ffffff !important;">Reset Status</span>
                 </button>
 
                 <!-- Make Selected Live (Enable Certs & Publish) -->
