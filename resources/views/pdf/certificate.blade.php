@@ -256,6 +256,11 @@
             @if(!empty($registration->group->group_name))
                 <span class="meta-val" style="color: #132448;">({{ $registration->group->group_name }})</span>
             @endif
+            @if(!empty($registration->rank))
+                <span style="color: #cbd5e1; margin: 0 4px;">|</span>
+                <span class="meta-label">Rank:</span>
+                <span class="meta-val" style="display: inline-block; background-color: #fef3c7; color: #78350f; border: 1px solid #fcd34d; padding: 1px 7px; border-radius: 4px; font-weight: 900;">{{ $registration->rank }}</span>
+            @endif
         </div>
         @if(!empty($registration->school_name))
             <div>

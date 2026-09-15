@@ -158,9 +158,9 @@
                         </span>
                     </div>
 
-                    <!-- Candidate Credentials (Father Name, Class/Group, School/Coaching) -->
+                    <!-- Candidate Credentials (Father Name, Class/Group, School/Coaching, Rank) -->
                     <div class="max-w-3xl mx-auto px-2 pt-1.5 pb-0.5 space-y-1">
-                        <div class="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-4 gap-y-0.5 text-xs sm:text-sm md:text-[15px] text-gray-800 font-serif-title">
+                        <div class="flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-4 gap-y-1 text-xs sm:text-sm md:text-[15px] text-gray-800 font-serif-title">
                             @if(!empty($registration->father_name))
                                 <span>
                                     <span class="text-gray-500 font-normal">S/o / D/o:</span>
@@ -175,6 +175,13 @@
                                     <span class="font-bold text-[#132448]">({{ $registration->group->group_name }})</span>
                                 @endif
                             </span>
+                            @if(!empty($registration->rank))
+                                <span class="text-gray-300 font-light">•</span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-300 font-bold shadow-xs">
+                                    <i class="fa-solid fa-trophy text-amber-600 text-[11px]"></i>
+                                    <span>Rank: <strong class="font-black text-amber-950">{{ $registration->rank }}</strong></span>
+                                </span>
+                            @endif
                         </div>
 
                         @if(!empty($registration->school_name))
