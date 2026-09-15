@@ -113,9 +113,9 @@
             <!-- Official Admit Card Header Banner (Full Width) -->
             <div class="border-b border-gray-200 pb-2 text-center">
                 @if(!empty($setting->header_banner_path) && file_exists(public_path($setting->header_banner_path)))
-                    <img src="{{ asset($setting->header_banner_path) }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
+                    <img src="{{ asset($setting->header_banner_path) }}?v={{ filemtime(public_path($setting->header_banner_path)) }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
                 @elseif(file_exists(public_path('images/header_banner.jpg')))
-                    <img src="{{ asset('images/header_banner.jpg') }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
+                    <img src="{{ asset('images/header_banner.jpg') }}?v={{ filemtime(public_path('images/header_banner.jpg')) }}" class="w-full h-auto block mx-auto header-banner-img" alt="Official Header Banner">
                 @else
                     <div class="py-1">
                         <div class="flex items-center justify-center gap-3">
