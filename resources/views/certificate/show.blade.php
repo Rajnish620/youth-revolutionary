@@ -147,10 +147,37 @@
                     </div>
 
                     <!-- Student Name with Underline -->
-                    <div class="w-4/5 max-w-xl mx-auto border-b-2 border-gray-900 pb-1 pt-1">
+                    <div class="w-4/5 max-w-xl mx-auto border-b-2 border-gray-900 pb-1 pt-0.5">
                         <span class="font-cinzel text-xl sm:text-3xl md:text-4xl font-extrabold uppercase text-gray-900 tracking-wider">
                             {{ $registration->student_name }}
                         </span>
+                    </div>
+
+                    <!-- Candidate Credentials (Father Name, Class/Group, School/Coaching) -->
+                    <div class="max-w-3xl mx-auto px-2 pt-1.5 pb-0.5 space-y-1">
+                        <div class="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-4 gap-y-0.5 text-xs sm:text-sm md:text-[15px] text-gray-800 font-serif-title">
+                            @if(!empty($registration->father_name))
+                                <span>
+                                    <span class="text-gray-500 font-normal">S/o / D/o:</span>
+                                    <strong class="font-bold text-gray-900 uppercase tracking-wide">{{ $registration->father_name }}</strong>
+                                </span>
+                                <span class="text-gray-300 font-light">•</span>
+                            @endif
+                            <span>
+                                <span class="text-gray-500 font-normal">Class:</span>
+                                <strong class="font-bold text-gray-900">{{ $registration->student_class }}</strong>
+                                @if(!empty($registration->group->group_name))
+                                    <span class="font-bold text-[#132448]">({{ $registration->group->group_name }})</span>
+                                @endif
+                            </span>
+                        </div>
+
+                        @if(!empty($registration->school_name))
+                            <div class="text-xs sm:text-sm md:text-[15px] text-gray-800 font-serif-title">
+                                <span class="text-gray-500 font-normal">School / Coaching:</span>
+                                <strong class="font-bold text-gray-900 tracking-wide">{{ $registration->school_name }}</strong>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Commendation Quote -->
@@ -178,9 +205,13 @@
                             </span>
                         </div>
 
-                        <!-- Center: Golden Rosette Ribbon Medal Badge -->
+                        <!-- Center: Official Examination Seal / Stamp or Golden Rosette -->
                         <div class="shrink-0 flex justify-center -mb-2">
-                            <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 object-contain drop-shadow-md" alt="Golden Seal">
+                            @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
+                                <img src="{{ asset($setting->seal_path) }}" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-md" alt="Official Examination Seal">
+                            @else
+                                <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 object-contain drop-shadow-md" alt="Golden Seal">
+                            @endif
                         </div>
 
                         <!-- Right Signatory: SHYAM SUNDAR KR. / सचिव -->

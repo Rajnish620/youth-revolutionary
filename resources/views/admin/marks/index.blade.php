@@ -10,7 +10,10 @@
     presidentName: '{{ addslashes($setting->president_name ?? 'NIKETAN SINGH') }}',
     presidentRole: '{{ addslashes($setting->president_role ?? 'अध्यक्ष') }}',
     secretaryName: '{{ addslashes($setting->secretary_name ?? 'SHYAM SUNDAR KR.') }}',
-    secretaryRole: '{{ addslashes($setting->secretary_role ?? 'सचिव') }}'
+    secretaryRole: '{{ addslashes($setting->secretary_role ?? 'सचिव') }}',
+    existingSeal: '{{ !empty($setting->seal_path) && file_exists(public_path($setting->seal_path)) ? asset($setting->seal_path) : '' }}',
+    sealPreview: '{{ !empty($setting->seal_path) && file_exists(public_path($setting->seal_path)) ? asset($setting->seal_path) : '' }}',
+    removeSeal: false
 }">
 
     <!-- Header Section -->
@@ -1070,7 +1073,7 @@
                 </div>
 
                 <!-- Modal Body Form -->
-                <form method="POST" action="{{ route('admin.marks.certificate-settings') }}" class="p-5 sm:p-6 space-y-5">
+                <form method="POST" action="{{ route('admin.marks.certificate-settings') }}" enctype="multipart/form-data" class="p-5 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
                     @csrf
 
                     <!-- Section 1: Adhyaksh (अध्यक्ष / Left) -->
@@ -1129,20 +1132,90 @@
                         </div>
                     </div>
 
+                    <!-- Section 3: Official Examination Seal / Stamp -->
+                    <div class="bg-purple-50/50 border border-purple-200/70 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-gray-800 flex items-center gap-1.5 uppercase tracking-wider">
+                                <i class="fa-solid fa-stamp text-[#340C6F]"></i>
+                                <span>3. Official Examination Seal / Stamp</span>
+                            </span>
+                            <span style="background-color: #f3e8ff !important; color: #6b21a8 !important;" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
+                                मुहर / Stamp
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">
+                            Upload your official circular seal/rubber stamp image (PNG/JPG/WEBP, max 2MB). This seal will dynamically appear on both the <strong>Official Marksheet</strong> and <strong>Certificate</strong>.
+                        </p>
+
+                        <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-purple-100 shadow-2xs">
+                            <!-- Seal Thumbnail Preview -->
+                            <div class="w-16 h-16 rounded-xl border border-dashed border-purple-300 bg-purple-50/40 flex items-center justify-center shrink-0 overflow-hidden relative group">
+                                <template x-if="sealPreview">
+                                    <img :src="sealPreview" class="w-full h-full object-contain p-1" alt="Official Seal">
+                                </template>
+                                <template x-if="!sealPreview">
+                                    <div class="text-center text-gray-400 p-1">
+                                        <i class="fa-solid fa-stamp text-xl text-purple-300"></i>
+                                        <span class="block text-[8px] font-bold text-gray-400 mt-0.5">No Seal</span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="flex-1 space-y-1.5">
+                                <input type="file" name="seal" x-ref="sealInput" accept="image/png,image/jpeg,image/webp" class="hidden"
+                                       @change="const file = $event.target.files[0]; if (file) { removeSeal = false; sealPreview = URL.createObjectURL(file); }">
+                                <input type="hidden" name="remove_seal" :value="removeSeal ? '1' : '0'">
+
+                                <div class="flex items-center gap-2">
+                                    <button type="button" @click="$refs.sealInput.click()"
+                                            class="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#340C6F] text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-upload"></i>
+                                        <span x-text="sealPreview ? 'Change Seal Image' : 'Upload Seal Image'"></span>
+                                    </button>
+
+                                    <template x-if="sealPreview">
+                                        <button type="button" @click="sealPreview = ''; removeSeal = true; $refs.sealInput.value = '';"
+                                                class="px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                                                title="Remove Stamp Image">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            <span>Remove</span>
+                                        </button>
+                                    </template>
+                                </div>
+                                <p class="text-[10px] text-gray-400">Transparent PNG circular stamp works best.</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Real-time Certificate Bottom Preview -->
                     <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5 space-y-2">
                         <div class="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-eye text-amber-600"></i>
-                            <span>Live Certificate Signature Preview:</span>
+                            <span>Live Certificate Signature & Seal Preview:</span>
                         </div>
                         <div class="bg-white rounded-xl p-3 border border-amber-100/80 flex items-center justify-between text-center shadow-2xs">
                             <div class="w-32">
                                 <div class="text-[11px] font-black text-gray-900 uppercase border-b-2 border-gray-800 pb-0.5 tracking-wider truncate" x-text="presidentName || 'NIKETAN SINGH'"></div>
                                 <div class="text-[11px] font-bold text-gray-700 pt-0.5" x-text="presidentRole || 'अध्यक्ष'"></div>
                             </div>
-                            <div class="text-amber-500 text-xl shrink-0 px-2">
-                                <i class="fa-solid fa-medal"></i>
+                            
+                            <!-- Center Stamp / Seal Preview -->
+                            <div class="shrink-0 px-2 flex flex-col items-center justify-center">
+                                <template x-if="sealPreview">
+                                    <div class="flex flex-col items-center">
+                                        <img :src="sealPreview" class="w-9 h-9 object-contain rounded-full border border-purple-200 p-0.5 bg-purple-50 shadow-xs" alt="Seal Preview">
+                                        <span class="text-[8px] font-extrabold text-[#340C6F] uppercase mt-0.5 tracking-tighter">Seal / Stamp</span>
+                                    </div>
+                                </template>
+                                <template x-if="!sealPreview">
+                                    <div class="flex flex-col items-center text-amber-500">
+                                        <i class="fa-solid fa-medal text-xl"></i>
+                                        <span class="text-[8px] font-bold text-amber-800 uppercase mt-0.5 tracking-tighter">Rosette Medal</span>
+                                    </div>
+                                </template>
                             </div>
+
                             <div class="w-32">
                                 <div class="text-[11px] font-black text-gray-900 uppercase border-b-2 border-gray-800 pb-0.5 tracking-wider truncate" x-text="secretaryName || 'SHYAM SUNDAR KR.'"></div>
                                 <div class="text-[11px] font-bold text-gray-700 pt-0.5" x-text="secretaryRole || 'सचिव'"></div>
@@ -1160,7 +1233,7 @@
                                 style="background-color: #340C6F !important; color: #ffffff !important;"
                                 class="px-5 py-2 rounded-xl text-xs font-black shadow-md hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
                             <i class="fa-solid fa-check"></i>
-                            <span>Save Certificate Settings</span>
+                            <span>Save Settings</span>
                         </button>
                     </div>
                 </form>

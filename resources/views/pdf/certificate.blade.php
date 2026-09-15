@@ -25,7 +25,7 @@
         .cert-body {
             width: 100%;
             height: 100%;
-            padding: 16mm 28mm 12mm 28mm;
+            padding: 13mm 26mm 10mm 26mm;
             box-sizing: border-box;
             text-align: center;
         }
@@ -101,39 +101,56 @@
 
         /* Awarded to */
         .award-lead {
-            font-size: 13.5pt;
+            font-size: 13pt;
             font-weight: bold;
             color: #1f2937;
-            margin-top: 14px;
-            margin-bottom: 8px;
+            margin-top: 8px;
+            margin-bottom: 4px;
         }
         .name-box {
             border-bottom: 2px solid #0f172a;
             width: 76%;
-            margin: 6px auto 14px auto;
-            padding-bottom: 5px;
+            margin: 3px auto 6px auto;
+            padding-bottom: 3px;
         }
         .student-name {
-            font-size: 28pt;
+            font-size: 26pt;
             font-weight: 900;
             color: #0f172a;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-family: 'Times New Roman', 'FreeSerif', serif;
         }
+        .award-meta {
+            width: 86%;
+            margin: 0 auto 5px auto;
+            font-size: 10.5pt;
+            color: #0f172a;
+            line-height: 1.35;
+            font-family: 'Times New Roman', 'FreeSerif', serif;
+        }
+        .meta-label {
+            color: #475569;
+            font-size: 9.5pt;
+        }
+        .meta-val {
+            font-weight: bold;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
         .citation {
-            font-size: 11.5pt;
+            font-size: 10.5pt;
             font-style: italic;
             color: #334155;
             width: 82%;
-            margin: 12px auto 0 auto;
-            line-height: 1.45;
+            margin: 6px auto 0 auto;
+            line-height: 1.35;
         }
 
         /* Signatures Table */
         .sig-table {
             width: 90%;
-            margin: 16mm auto 0 auto;
+            margin: 9mm auto 0 auto;
             border-collapse: collapse;
         }
         .sig-col {
@@ -216,6 +233,28 @@
         <div class="student-name">{{ $registration->student_name }}</div>
     </div>
 
+    <!-- CANDIDATE PROFILE DETAILS -->
+    <div class="award-meta">
+        <div style="margin-bottom: 2px;">
+            @if(!empty($registration->father_name))
+                <span class="meta-label">S/o / D/o:</span>
+                <span class="meta-val">{{ $registration->father_name }}</span>
+                <span style="color: #cbd5e1; margin: 0 4px;">|</span>
+            @endif
+            <span class="meta-label">Class:</span>
+            <span class="meta-val">{{ $registration->student_class }}</span>
+            @if(!empty($registration->group->group_name))
+                <span class="meta-val" style="color: #132448;">({{ $registration->group->group_name }})</span>
+            @endif
+        </div>
+        @if(!empty($registration->school_name))
+            <div>
+                <span class="meta-label">School / Coaching:</span>
+                <span class="meta-val">{{ $registration->school_name }}</span>
+            </div>
+        @endif
+    </div>
+
     <!-- COMMENDATION QUOTE -->
     <div class="citation">
         “This certificate is a testament to your talent, dedication, and hard work, propelling you one step closer to achieving your goals.”
@@ -229,7 +268,11 @@
                 <div class="sig-role">{{ !empty($setting->president_role) ? $setting->president_role : 'अध्यक्ष' }}</div>
             </td>
             <td class="sig-col" style="width: 20%; text-align: center;">
-                <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" class="rosette-img" alt="Seal">
+                @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
+                    <img src="{{ public_path($setting->seal_path) }}" class="seal-img" style="height: 75px; width: auto; max-width: 90px; margin-bottom: -5px;" alt="Official Seal">
+                @else
+                    <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" class="rosette-img" alt="Seal">
+                @endif
             </td>
             <td class="sig-col" style="width: 40%;">
                 <div class="sig-line">{{ !empty($setting->secretary_name) ? $setting->secretary_name : 'SHYAM SUNDAR KR.' }}</div>

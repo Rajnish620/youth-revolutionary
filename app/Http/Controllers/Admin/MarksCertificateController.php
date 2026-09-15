@@ -376,17 +376,33 @@ class MarksCertificateController extends Controller
 
     public function updateCertificateSettings(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'president_name' => 'nullable|string|max:150',
             'president_role' => 'nullable|string|max:100',
             'secretary_name' => 'nullable|string|max:150',
             'secretary_role' => 'nullable|string|max:100',
+            'seal' => 'nullable|image|max:2048',
+            'remove_seal' => 'nullable',
         ]);
 
         $setting = AdmitCardSetting::getSettings();
-        $setting->update($validated);
+        $setting->president_name = $request->input('president_name');
+        $setting->president_role = $request->input('president_role');
+        $setting->secretary_name = $request->input('secretary_name');
+        $setting->secretary_role = $request->input('secretary_role');
 
-        return redirect()->back()->with('success', 'Certificate settings updated successfully! Signatures for Adhyaksh (अध्यक्ष) & Sachiv (सचिव) have been updated on all certificates.');
+        if ($request->hasFile('seal')) {
+            $file = $request->file('seal');
+            $filename = 'official_seal_' . time() . '.' . $file->extension();
+            $file->move(public_path('uploads/settings'), $filename);
+            $setting->seal_path = 'uploads/settings/' . $filename;
+        } elseif ($request->boolean('remove_seal') || $request->input('remove_seal') === '1') {
+            $setting->seal_path = null;
+        }
+
+        $setting->save();
+
+        return redirect()->back()->with('success', 'Marksheet & Certificate settings updated successfully! Stamp and Signatures have been updated.');
     }
 
     public function showMarksheet($roll_no)

@@ -383,9 +383,13 @@
             </td>
             <td class="sig-td">
                 <div class="sig-container">
-                    <div style="width: 38px; height: 38px; border: 1px dashed #340C6F; border-radius: 50%; margin: 0 auto; line-height: 38px; font-size: 7px; color: #340C6F; font-weight: bold;">SEAL</div>
+                    @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
+                        <img src="{{ public_path($setting->seal_path) }}" style="height: 38px; width: auto; max-width: 65px; margin: 0 auto;" alt="Seal">
+                    @else
+                        &nbsp;
+                    @endif
                 </div>
-                <div class="sig-line">Examination Seal</div>
+                <div class="sig-line">Official Examination Seal</div>
             </td>
             <td class="sig-td">
                 <div class="sig-container">
