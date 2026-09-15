@@ -107,13 +107,13 @@
 
                     <!-- Main Organization Title -->
                     <h1 class="font-cinzel text-xl sm:text-3xl md:text-4xl font-extrabold text-[#132448] tracking-[0.08em] uppercase leading-tight">
-                        {{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}
+                        {{ !empty($setting->header_title) ? (str_contains(strtoupper($setting->header_title), 'NASRIGANJ') ? $setting->header_title : $setting->header_title . ' NASRIGANJ') : 'YOUTH REVOLUTIONARY NASRIGANJ' }}
                     </h1>
 
                     <!-- City / Unit Subtitle -->
-                    <h2 class="font-cinzel text-base sm:text-xl md:text-2xl font-black text-[#132448] tracking-[0.12em] uppercase leading-tight">
+                    {{-- <h2 class="font-cinzel text-base sm:text-xl md:text-2xl font-black text-[#132448] tracking-[0.12em] uppercase leading-tight">
                         {{ $setting->header_subtitle ?? 'NASRIGANJ' }}
-                    </h2>
+                    </h2> --}}
 
                     <!-- Red Certificate Title -->
                     <div class="pt-1">

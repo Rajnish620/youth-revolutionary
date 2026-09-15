@@ -212,8 +212,8 @@
                     @endif
                 </div>
 
-                <div class="title-main">{{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}</div>
-                <div class="title-sub">{{ $setting->header_subtitle ?? 'NASRIGANJ' }}</div>
+                <div class="title-main">{{ !empty($setting->header_title) ? (str_contains(strtoupper($setting->header_title), 'NASRIGANJ') ? $setting->header_title : $setting->header_title . ' NASRIGANJ') : 'YOUTH REVOLUTIONARY NASRIGANJ' }}</div>
+                {{-- <div class="title-sub">{{ $setting->header_subtitle ?? 'NASRIGANJ' }}</div> --}}
             </td>
             <td style="width: 22%;">&nbsp;</td>
         </tr>
