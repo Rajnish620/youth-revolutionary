@@ -19,6 +19,7 @@ class AdmitCardSetting extends Model
         'president_role',
         'secretary_name',
         'secretary_role',
+        'seal_path',
     ];
 
     public static function getSettings()
