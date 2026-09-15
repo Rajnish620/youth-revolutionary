@@ -93,8 +93,8 @@
                 <div class="relative space-y-1 sm:space-y-1.5 pt-1 sm:pt-2">
 
                     <!-- Luxury Golden Rosette Badge on Left of Youth Header -->
-                    <div class="absolute left-2 sm:left-6 top-1 sm:top-2 flex flex-col items-center pointer-events-none">
-                        <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-12 h-16 sm:w-16 sm:h-22 md:w-20 md:h-26 object-contain drop-shadow-md" alt="Excellence Medal">
+                    <div class="absolute left-3 sm:left-6 md:left-8 lg:left-10 top-5 sm:top-9 md:top-12 lg:top-14 flex flex-col items-center pointer-events-none">
+                        <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-16 h-22 sm:w-22 sm:h-30 md:w-26 md:h-36 lg:w-28 lg:h-38 object-contain drop-shadow-lg" alt="Excellence Medal">
                     </div>
                     <!-- Circular Youth Revolutionary Logo -->
                     <div class="flex justify-center mb-1">

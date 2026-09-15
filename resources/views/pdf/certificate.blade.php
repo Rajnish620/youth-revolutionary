@@ -200,8 +200,8 @@
     <!-- TOP HEADER -->
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 2px;">
         <tr>
-            <td style="width: 22%; text-align: left; vertical-align: middle; padding-left: 2mm;">
-                <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" style="height: 68px; width: auto;" alt="Excellence Medal">
+            <td style="width: 22%; text-align: left; vertical-align: middle; padding-top: 3mm; padding-left: 5mm;">
+                <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" style="height: 84px; width: auto;" alt="Excellence Medal">
             </td>
             <td style="width: 56%; text-align: center; vertical-align: middle;">
                 <div class="logo-box">
