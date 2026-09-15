@@ -93,10 +93,10 @@
                 <i class="fa-solid fa-print"></i>
                 <span>Print (Single Page)</span>
             </button>
-            <a href="{{ route('marksheet.download', $registration->roll_no) }}" class="px-4 py-2 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-lg shadow-[#F1400C]/30 transition-all flex items-center gap-2">
+            <!-- <a href="{{ route('marksheet.download', $registration->roll_no) }}" class="px-4 py-2 rounded-xl bg-[#F1400C] hover:bg-orange-600 text-white font-bold text-xs shadow-lg shadow-[#F1400C]/30 transition-all flex items-center gap-2">
                 <i class="fa-solid fa-file-pdf"></i>
                 <span>Download PDF</span>
-            </a>
+            </a> -->
         </div>
     </div>
 

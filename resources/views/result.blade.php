@@ -169,10 +169,10 @@
                                            class="flex-1 text-center py-2.5 rounded-xl bg-[#340C6F] hover:bg-purple-900 text-white font-bold text-xs transition-all shadow-md">
                                             <i class="fa-solid fa-eye mr-1"></i> View Marksheet
                                         </a>
-                                        <a href="{{ route('marksheet.download', $searchedStudent->roll_no) }}"
+                                        <!-- <a href="{{ route('marksheet.download', $searchedStudent->roll_no) }}"
                                            class="px-3.5 py-2.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#340C6F] font-bold text-xs transition-all flex items-center gap-1">
                                             <i class="fa-solid fa-download"></i> PDF
-                                        </a>
+                                        </a> -->
                                     </div>
                                 </div>
                             @endif
