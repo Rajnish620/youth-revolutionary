@@ -377,7 +377,7 @@
                 </div>
 
                 <!-- Official Stamp / Seal -->
-                <div class="flex flex-col justify-end items-center">
+                <!-- <div class="flex flex-col justify-end items-center">
                     <div class="h-9 sm:h-10 print-seal flex items-center justify-center mb-1">
                         @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
                             <img src="{{ asset($setting->seal_path) }}" class="h-9 sm:h-10 max-w-[75px] object-contain" alt="Official Examination Seal">
@@ -386,7 +386,7 @@
                     <div class="w-full border-t border-transparent pt-1 text-center">
                         <span class="font-bold text-[#340C6F] uppercase text-[9px]">Official Examination Seal</span>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Controller / Authority Signature -->
                 <div class="flex flex-col justify-end items-center">
