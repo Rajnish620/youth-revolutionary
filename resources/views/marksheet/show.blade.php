@@ -376,7 +376,9 @@
                     </div>
                 </div>
 
-                <!-- Official Stamp / Seal -->
+                <!-- Official Stamp / Seal (Hidden - empty div preserves 3-column grid layout) -->
+                <div></div>
+                <!-- 
                 <div class="flex flex-col justify-end items-center">
                     <div class="h-9 sm:h-10 print-seal flex items-center justify-center mb-1">
                         @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
@@ -387,6 +389,7 @@
                         <span class="font-bold text-[#340C6F] uppercase text-[9px]">Official Examination Seal</span>
                     </div>
                 </div>
+                -->
 
                 <!-- Controller / Authority Signature -->
                 <div class="flex flex-col justify-end items-center">
