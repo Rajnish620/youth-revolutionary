@@ -198,16 +198,26 @@
 <div class="cert-body">
 
     <!-- TOP HEADER -->
-    <div class="logo-box">
-        @if(!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)))
-            <img src="{{ public_path($setting->logo_path) }}" class="logo-img" alt="Logo">
-        @elseif(file_exists(public_path('logo/logo.jpeg')))
-            <img src="{{ public_path('logo/logo.jpeg') }}" class="logo-img" alt="Logo">
-        @endif
-    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 2px;">
+        <tr>
+            <td style="width: 22%; text-align: left; vertical-align: middle; padding-left: 2mm;">
+                <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" style="height: 68px; width: auto;" alt="Excellence Medal">
+            </td>
+            <td style="width: 56%; text-align: center; vertical-align: middle;">
+                <div class="logo-box">
+                    @if(!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)))
+                        <img src="{{ public_path($setting->logo_path) }}" class="logo-img" alt="Logo">
+                    @elseif(file_exists(public_path('logo/logo.jpeg')))
+                        <img src="{{ public_path('logo/logo.jpeg') }}" class="logo-img" alt="Logo">
+                    @endif
+                </div>
 
-    <div class="title-main">{{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}</div>
-    <div class="title-sub">{{ $setting->header_subtitle ?? 'NASRIGANJ' }}</div>
+                <div class="title-main">{{ $setting->header_title ?? 'YOUTH REVOLUTIONARY' }}</div>
+                <div class="title-sub">{{ $setting->header_subtitle ?? 'NASRIGANJ' }}</div>
+            </td>
+            <td style="width: 22%;">&nbsp;</td>
+        </tr>
+    </table>
 
     <div class="cert-type">Certificate of Achievement in {{ $certSubject }}</div>
 
@@ -263,18 +273,21 @@
     <!-- BOTTOM SIGNATURES -->
     <table class="sig-table">
         <tr>
-            <td class="sig-col" style="width: 40%;">
+            <td class="sig-col" style="width: 38%;">
                 <div class="sig-line">{{ !empty($setting->president_name) ? $setting->president_name : 'NIKETAN SINGH' }}</div>
                 <div class="sig-role">{{ !empty($setting->president_role) ? $setting->president_role : 'अध्यक्ष' }}</div>
             </td>
-            <td class="sig-col" style="width: 20%; text-align: center;">
-                @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
-                    <img src="{{ public_path($setting->seal_path) }}" class="seal-img" style="height: 75px; width: auto; max-width: 90px; margin-bottom: -5px;" alt="Official Seal">
-                @else
-                    <img src="{{ public_path('images/certificate/gold_rosette.svg') }}" class="rosette-img" alt="Seal">
-                @endif
+            <td class="sig-col" style="width: 24%; text-align: center;">
+                <div style="height: 55px; margin-bottom: 2px;">
+                    @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
+                        <img src="{{ public_path($setting->seal_path) }}" class="seal-img" style="height: 55px; width: auto; max-width: 80px;" alt="Official Seal">
+                    @else
+                        &nbsp;
+                    @endif
+                </div>
+                <div style="font-size: 7.5pt; font-weight: bold; color: #340C6F; text-transform: uppercase;">Official Examination Seal</div>
             </td>
-            <td class="sig-col" style="width: 40%;">
+            <td class="sig-col" style="width: 38%;">
                 <div class="sig-line">{{ !empty($setting->secretary_name) ? $setting->secretary_name : 'SHYAM SUNDAR KR.' }}</div>
                 <div class="sig-role">{{ !empty($setting->secretary_role) ? $setting->secretary_role : 'सचिव' }}</div>
             </td>

@@ -90,7 +90,12 @@
             <div class="relative z-10 w-full h-full flex flex-col justify-between py-6 sm:py-10 px-6 sm:px-16 text-center select-none">
                 
                 <!-- TOP HEADER SECTION -->
-                <div class="space-y-1 sm:space-y-1.5 pt-1 sm:pt-2">
+                <div class="relative space-y-1 sm:space-y-1.5 pt-1 sm:pt-2">
+
+                    <!-- Luxury Golden Rosette Badge on Left of Youth Header -->
+                    <div class="absolute left-2 sm:left-6 top-1 sm:top-2 flex flex-col items-center pointer-events-none">
+                        <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-12 h-16 sm:w-16 sm:h-22 md:w-20 md:h-26 object-contain drop-shadow-md" alt="Excellence Medal">
+                    </div>
                     <!-- Circular Youth Revolutionary Logo -->
                     <div class="flex justify-center mb-1">
                         @if(!empty($setting->logo_path) && file_exists(public_path($setting->logo_path)))
@@ -205,13 +210,14 @@
                             </span>
                         </div>
 
-                        <!-- Center: Official Examination Seal / Stamp or Golden Rosette -->
-                        <div class="shrink-0 flex justify-center -mb-2">
-                            @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
-                                <img src="{{ asset($setting->seal_path) }}" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-md" alt="Official Examination Seal">
-                            @else
-                                <img src="{{ asset('images/certificate/gold_rosette.svg') }}" class="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 object-contain drop-shadow-md" alt="Golden Seal">
-                            @endif
+                        <!-- Center: Official Examination Seal / Stamp -->
+                        <div class="shrink-0 flex flex-col items-center justify-end w-32 sm:w-48 mb-0.5">
+                            <div class="h-14 sm:h-16 md:h-20 flex items-center justify-center">
+                                @if(!empty($setting->seal_path) && file_exists(public_path($setting->seal_path)))
+                                    <img src="{{ asset($setting->seal_path) }}" class="h-14 sm:h-16 md:h-20 max-w-[85px] sm:max-w-[100px] object-contain drop-shadow-sm" alt="Official Examination Seal">
+                                @endif
+                            </div>
+                            <span class="font-bold text-[#340C6F] uppercase text-[9px] sm:text-[10px] tracking-wider mt-1">Official Examination Seal</span>
                         </div>
 
                         <!-- Right Signatory: SHYAM SUNDAR KR. / सचिव -->
