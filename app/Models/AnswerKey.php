@@ -11,6 +11,7 @@ class AnswerKey extends Model
 
     protected $fillable = [
         'event_id',
+        'event_group_id',
         'title',
         'file_path',
         'is_active',
@@ -23,5 +24,10 @@ class AnswerKey extends Model
     public function event()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(EventGroup::class, 'event_group_id');
     }
 }
