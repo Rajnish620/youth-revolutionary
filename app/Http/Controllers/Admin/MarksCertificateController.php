@@ -40,8 +40,29 @@ class MarksCertificateController extends Controller
             });
         }
 
+        $selectedEvent = null;
         if ($request->filled('event_id') && $request->event_id !== 'All') {
-            $query->where('event_id', $request->event_id);
+            $selectedEvent = $events->firstWhere('id', $request->event_id);
+            if ($request->filled('season') && $request->season !== 'All' && $selectedEvent && $selectedEvent->season !== $request->season) {
+                $selectedEvent = null;
+            }
+            if ($selectedEvent) {
+                $query->where('event_id', $selectedEvent->id);
+            }
+        }
+
+        $groups = collect();
+        if ($selectedEvent) {
+            $groups = \App\Models\EventGroup::where('event_id', $selectedEvent->id)
+                ->withCount(['registrations as approved_registrations_count' => function ($q) {
+                    $q->where('payment_status', 'approved');
+                }])
+                ->get();
+        }
+
+        $groupId = $request->input('group_id', $request->input('event_group_id'));
+        if ($selectedEvent && $groupId && $groupId !== 'All') {
+            $query->where('event_group_id', $groupId);
         }
 
         if ($request->filled('search')) {
@@ -102,6 +123,7 @@ class MarksCertificateController extends Controller
             'registrations',
             'events',
             'seasons',
+            'groups',
             'totalApproved',
             'eventsWithMarks',
             'eventsWithCertificates',
@@ -209,6 +231,7 @@ class MarksCertificateController extends Controller
         $selectedIds = $request->input('selected_ids');
         $eventId = $request->input('event_id');
         $season = $request->input('season');
+        $groupId = $request->input('group_id', $request->input('event_group_id'));
         $status = $request->input('status'); // 'qualified', 'not_qualified', or 'pending'
 
         $query = EventRegistration::where('payment_status', 'approved');
@@ -225,6 +248,9 @@ class MarksCertificateController extends Controller
                 $query->whereHas('event', function ($q) use ($season) {
                     $q->where('season', $season);
                 });
+            }
+            if ($groupId && $groupId !== 'All') {
+                $query->where('event_group_id', $groupId);
             }
         }
 
@@ -289,6 +315,7 @@ class MarksCertificateController extends Controller
         $selectedIds = $request->input('selected_ids');
         $eventId = $request->input('event_id');
         $season = $request->input('season');
+        $groupId = $request->input('group_id', $request->input('event_group_id'));
         $enable = $request->input('enable') == '1';
 
         $query = EventRegistration::where('payment_status', 'approved');
@@ -305,6 +332,9 @@ class MarksCertificateController extends Controller
                 $query->whereHas('event', function ($q) use ($season) {
                     $q->where('season', $season);
                 });
+            }
+            if ($groupId && $groupId !== 'All') {
+                $query->where('event_group_id', $groupId);
             }
         }
 

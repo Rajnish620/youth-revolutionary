@@ -433,6 +433,8 @@
         @php
             $currentEventId = request('event_id');
             $selectedEvent = ($currentEventId && $currentEventId !== 'All') ? $events->firstWhere('id', $currentEventId) : null;
+            $currentGroupId = request('group_id', request('event_group_id'));
+            $selectedGroup = ($currentGroupId && $currentGroupId !== 'All' && isset($groups)) ? $groups->firstWhere('id', $currentGroupId) : null;
         @endphp
 
         <!-- Card 1: Search & Filter Toolbar -->
@@ -446,11 +448,11 @@
                     </span>
                     <div>
                         <h3 class="text-xs font-black text-gray-900 uppercase tracking-wider">Search & Filter Roster</h3>
-                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Result Status, or Search keywords</p>
+                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Group, Result Status, or Search keywords</p>
                     </div>
                 </div>
 
-                @if(request('event_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
+                @if(request('event_id') || request('group_id') || request('event_group_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
                     <a href="{{ route('admin.marks.index', ['tab' => 'students']) }}" 
                        style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #e2e8f0 !important;"
                        class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 hover:bg-gray-200">
@@ -470,7 +472,7 @@
                         <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                             <i class="fa-solid fa-calendar-week text-purple-600"></i> Season
                         </label>
-                        <select name="season" onchange="this.form.submit()" 
+                        <select name="season" onchange="const f = this.form; if(f.querySelector('[name=event_id]')) f.querySelector('[name=event_id]').value = 'All'; if(f.querySelector('[name=group_id]')) f.querySelector('[name=group_id]').value = 'All'; f.submit();" 
                             class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
                             <option value="All">All Seasons</option>
                             @foreach($seasons as $s)
@@ -481,11 +483,11 @@
                 @endif
 
                 <!-- Event Dropdown -->
-                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-4' : 'lg:col-span-5' }}">
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-3' : 'lg:col-span-4' }}">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-trophy text-amber-500"></i> Event
                     </label>
-                    <select name="event_id" onchange="this.form.submit()" 
+                    <select name="event_id" onchange="const f = this.form; if(f.querySelector('[name=group_id]')) f.querySelector('[name=group_id]').value = 'All'; f.submit();" 
                         class="w-full bg-purple-50/50 hover:bg-white text-xs font-black text-[#340C6F] rounded-xl px-3 py-2.5 border border-purple-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
                         <option value="All">All Events ({{ $events->count() }})</option>
                         @foreach($events as $e)
@@ -498,8 +500,37 @@
                     </select>
                 </div>
 
+                <!-- Group Dropdown -->
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-2' : 'lg:col-span-3' }}">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-users text-indigo-600"></i> Group
+                    </label>
+                    @if($selectedEvent && isset($groups) && $groups->count() > 0)
+                        <select name="group_id" onchange="this.form.submit()" 
+                            class="w-full bg-indigo-50/60 hover:bg-white text-xs font-bold text-indigo-900 rounded-xl px-3 py-2.5 border border-indigo-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
+                            <option value="All">All Groups ({{ $groups->count() }})</option>
+                            @foreach($groups as $g)
+                                <option value="{{ $g->id }}" {{ ($currentGroupId == $g->id) ? 'selected' : '' }}>
+                                    {{ $g->group_name }} @if($g->class_range)({{ $g->class_range }})@endif @if(isset($g->approved_registrations_count))({{ $g->approved_registrations_count }})@endif
+                                </option>
+                            @endforeach
+                        </select>
+                    @elseif($selectedEvent)
+                        <select name="group_id" disabled
+                            class="w-full bg-gray-50 text-xs font-medium text-gray-400 rounded-xl px-3 py-2.5 border border-gray-200 outline-none cursor-not-allowed">
+                            <option value="All">No Groups Defined</option>
+                        </select>
+                    @else
+                        <select name="group_id" disabled
+                            class="w-full bg-gray-50 text-xs font-medium text-gray-400 rounded-xl px-3 py-2.5 border border-gray-200 outline-none cursor-not-allowed"
+                            title="Select an event first to filter by group">
+                            <option value="All">Select Event First</option>
+                        </select>
+                    @endif
+                </div>
+
                 <!-- Status Filter -->
-                <div class="lg:col-span-3">
+                <div class="lg:col-span-2">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-clipboard-check text-emerald-600"></i> Result & Cert Status
                     </label>
@@ -516,7 +547,7 @@
                 </div>
 
                 <!-- Search Input + Go Button -->
-                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-3' : 'lg:col-span-4' }}">
+                <div class="lg:col-span-3">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-magnifying-glass text-gray-400"></i> Quick Search
                     </label>
@@ -551,6 +582,14 @@
                             <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Event:</span>
                             <span class="text-xs font-black text-gray-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">{{ $selectedEvent->title }}</span>
                         </div>
+                        @if($selectedGroup)
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Group:</span>
+                                <span class="text-xs font-black text-[#F1400C] bg-orange-50 px-2.5 py-1 rounded-lg border border-orange-200">
+                                    {{ $selectedGroup->group_name }} @if($selectedGroup->class_range)({{ $selectedGroup->class_range }})@endif
+                                </span>
+                            </div>
+                        @endif
                         @if($selectedEvent->show_marks && $selectedEvent->show_certificate)
                             <span style="background-color: #ecfdf5 !important; color: #065f46 !important; border: 1px solid #a7f3d0 !important;" 
                                   class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-2 shadow-xs">
@@ -640,6 +679,7 @@
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="group_id" value="{{ request('group_id', request('event_group_id')) }}">
                         <input type="hidden" name="status" value="qualified">
                         <button type="submit" onclick="return confirm('Mark all matching students in this selection as QUALIFIED?')" 
                                 style="background-color: #047857 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
@@ -655,6 +695,7 @@
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="group_id" value="{{ request('group_id', request('event_group_id')) }}">
                         <input type="hidden" name="status" value="not_qualified">
                         <button type="submit" onclick="return confirm('Mark all matching students in this selection as NOT QUALIFIED?')" 
                                 style="background-color: #be123c !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
@@ -670,6 +711,7 @@
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="group_id" value="{{ request('group_id', request('event_group_id')) }}">
                         <input type="hidden" name="status" value="pending">
                         <button type="submit" onclick="return confirm('Reset status for all matching students in this selection back to SET STATUS (Pending)?')" 
                                 style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1 !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
@@ -687,6 +729,7 @@
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="group_id" value="{{ request('group_id', request('event_group_id')) }}">
                         <input type="hidden" name="enable" value="1">
                         <button type="submit" onclick="return confirm('Enable certificates for all matching students in this event?')" 
                                 style="background-color: #0284c7 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
@@ -702,10 +745,11 @@
                         @csrf
                         <input type="hidden" name="season" value="{{ request('season') }}">
                         <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="group_id" value="{{ request('group_id', request('event_group_id')) }}">
                         <input type="hidden" name="enable" value="0">
                         <button type="submit" onclick="return confirm('Disable certificates for all matching students in this event?')" 
                                 style="background-color: #475569 !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 7px 13px !important; border-radius: 10px !important;"
-                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90"
+                                class="text-xs font-bold shadow-xs transition-all cursor-pointer hover:opacity-90" 
                                 title="Disable Certificates for all matching students">
                             <i class="fa-solid fa-ban" style="color: #cbd5e1 !important;"></i>
                             <span style="color: #ffffff !important; font-weight: 700;">Disable All Certs</span>
