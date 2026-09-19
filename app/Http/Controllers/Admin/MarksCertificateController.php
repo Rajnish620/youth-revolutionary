@@ -161,6 +161,7 @@ class MarksCertificateController extends Controller
             'marks' => 'nullable|numeric|min:0|max:10000',
             'is_qualified' => 'nullable|in:0,1,true,false',
             'rank' => 'nullable|string|max:100',
+            'total_attempted' => 'nullable|integer|min:0|max:1000',
             'correct_answers' => 'nullable|integer|min:0|max:1000',
             'wrong_answers' => 'nullable|integer|min:0|max:1000',
         ]);
@@ -168,6 +169,26 @@ class MarksCertificateController extends Controller
         if ($request->has('is_qualified')) {
             $val = $request->input('is_qualified');
             $validated['is_qualified'] = ($val === '' || $val === null) ? null : (bool)$val;
+        }
+
+        if ($request->has('total_attempted')) {
+            $val = $request->input('total_attempted');
+            $validated['total_attempted'] = ($val === '' || $val === null) ? null : (int)$val;
+        }
+
+        if ($request->has('wrong_answers')) {
+            $val = $request->input('wrong_answers');
+            $validated['wrong_answers'] = ($val === '' || $val === null) ? null : (int)$val;
+        }
+
+        if ($request->has('correct_answers')) {
+            $val = $request->input('correct_answers');
+            $validated['correct_answers'] = ($val === '' || $val === null) ? null : (int)$val;
+        }
+
+        // Auto-sync correct_answers when both total_attempted and wrong_answers are provided
+        if (isset($validated['total_attempted']) && isset($validated['wrong_answers']) && $validated['total_attempted'] !== null && $validated['wrong_answers'] !== null) {
+            $validated['correct_answers'] = max(0, $validated['total_attempted'] - $validated['wrong_answers']);
         }
 
         // Auto-activate certificate when marks or qualified status is entered

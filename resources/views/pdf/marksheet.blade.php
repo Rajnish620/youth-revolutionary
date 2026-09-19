@@ -317,17 +317,22 @@
         <table class="score-table">
             <thead>
                 <tr>
-                    <th style="width: 25%; text-align: left; padding-left: 8px;">Subject / Component</th>
+                    <th style="width: 20%; text-align: left; padding-left: 8px;">Subject / Component</th>
                     @if(!empty($registration->event->total_questions))
-                        <th style="width: 10%;">Questions</th>
-                        <th style="width: 10%;">Mark / Q</th>
+                        <th style="width: 7%;">Questions</th>
+                        <th style="width: 8%;">Attempted</th>
+                        <th style="width: 7%;">Wrong</th>
+                        <th style="width: 8%;">Mark / Q</th>
+                    @else
+                        <th style="width: 9%;">Attempted</th>
+                        <th style="width: 8%;">Wrong</th>
                     @endif
-                    <th style="width: 12%;">Max Marks</th>
-                    <th style="width: 12%;">Cutoff Score</th>
-                    <th style="width: 15%;">Marks Obtained</th>
-                    <th style="width: 12%;">Percentage</th>
-                    <th style="width: 14%;">Rank / Merit</th>
-                    <th style="width: 16%;">Result Status</th>
+                    <th style="width: 10%;">Max Marks</th>
+                    <th style="width: 10%;">Cutoff Score</th>
+                    <th style="width: 13%;">Marks Obtained</th>
+                    <th style="width: 9%;">Percentage</th>
+                    <th style="width: 9%;">Rank / Merit</th>
+                    <th style="width: 13%;">Result Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -337,7 +342,12 @@
                     </td>
                     @if(!empty($registration->event->total_questions))
                         <td>{{ $registration->event->total_questions }}</td>
+                        <td><strong>{{ $registration->total_attempted !== null ? $registration->total_attempted : '—' }}</strong></td>
+                        <td style="{{ ($registration->wrong_answers ?? 0) > 0 ? 'color: #dc2626; font-weight: bold;' : '' }}">{{ $registration->wrong_answers !== null ? $registration->wrong_answers : '—' }}</td>
                         <td>+{{ number_format($registration->event->marks_per_question ?? 1, 1) }}</td>
+                    @else
+                        <td><strong>{{ $registration->total_attempted !== null ? $registration->total_attempted : '—' }}</strong></td>
+                        <td style="{{ ($registration->wrong_answers ?? 0) > 0 ? 'color: #dc2626; font-weight: bold;' : '' }}">{{ $registration->wrong_answers !== null ? $registration->wrong_answers : '—' }}</td>
                     @endif
                     <td><strong>{{ $registration->event->total_marks !== null ? number_format($registration->event->total_marks, 2) : '100.00' }}</strong></td>
                     <td style="color: #b45309; font-weight: bold;">{{ $registration->event->cutoff_marks !== null ? number_format($registration->event->cutoff_marks, 2) : 'N/A' }}</td>

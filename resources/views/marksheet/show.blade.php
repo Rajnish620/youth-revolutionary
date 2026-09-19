@@ -266,7 +266,12 @@
                                     <th class="py-2 px-3">Subject / Event Component</th>
                                     @if(!empty($registration->event->total_questions))
                                         <th class="py-2 px-2 text-center">Questions</th>
+                                        <th class="py-2 px-2 text-center text-blue-900">Attempted</th>
+                                        <th class="py-2 px-2 text-center text-rose-700">Wrong</th>
                                         <th class="py-2 px-2 text-center">Mark / Q</th>
+                                    @else
+                                        <th class="py-2 px-2 text-center text-blue-900">Attempted</th>
+                                        <th class="py-2 px-2 text-center text-rose-700">Wrong</th>
                                     @endif
                                     <th class="py-2 px-2.5 text-center">Max Marks</th>
                                     <th class="py-2 px-2.5 text-center">Cutoff Score</th>
@@ -285,11 +290,24 @@
                                     
                                     @if(!empty($registration->event->total_questions))
                                         <td class="py-2.5 px-2 text-center font-mono font-bold">{{ $registration->event->total_questions }}</td>
+                                        <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-900 bg-blue-50/30">
+                                            {{ $registration->total_attempted !== null ? $registration->total_attempted : '—' }}
+                                        </td>
+                                        <td class="py-2.5 px-2 text-center font-mono font-bold {{ ($registration->wrong_answers ?? 0) > 0 ? 'text-rose-600 bg-rose-50/30' : 'text-gray-600' }}">
+                                            {{ $registration->wrong_answers !== null ? $registration->wrong_answers : '—' }}
+                                        </td>
                                         <td class="py-2.5 px-2 text-center font-mono text-gray-600 text-[11px]">
                                             +{{ number_format($registration->event->marks_per_question ?? 1, 1) }}
                                             @if($registration->event->negative_marks > 0)
                                                 <span class="text-[9px] text-rose-500 block">(-{{ number_format($registration->event->negative_marks, 2) }})</span>
                                             @endif
+                                        </td>
+                                    @else
+                                        <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-900 bg-blue-50/30">
+                                            {{ $registration->total_attempted !== null ? $registration->total_attempted : '—' }}
+                                        </td>
+                                        <td class="py-2.5 px-2 text-center font-mono font-bold {{ ($registration->wrong_answers ?? 0) > 0 ? 'text-rose-600 bg-rose-50/30' : 'text-gray-600' }}">
+                                            {{ $registration->wrong_answers !== null ? $registration->wrong_answers : '—' }}
                                         </td>
                                     @endif
 

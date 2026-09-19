@@ -884,15 +884,41 @@
                                         <!-- Inline Marks Edit Form -->
                                         <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}">
                                             @csrf
-                                            <div class="flex items-center gap-2">
-                                                <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="Marks"
-                                                    class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none">
-                                                <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Marks & Rank"
-                                                    style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;"
-                                                    class="w-8 h-8 rounded-lg text-white text-xs transition-all shadow-sm cursor-pointer shrink-0 hover:opacity-90">
-                                                    <i class="fa-solid fa-check"></i>
-                                                </button>
+                                            <div class="flex items-center gap-1.5">
+                                                <!-- Marks Input -->
+                                                <div>
+                                                    <span class="block text-[9px] font-black text-[#340C6F] uppercase tracking-wider mb-0.5">Marks</span>
+                                                    <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="0.00"
+                                                        class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none"
+                                                        title="Marks Obtained">
+                                                </div>
+
+                                                <!-- Attempt Input -->
+                                                <div>
+                                                    <span class="block text-[9px] font-black text-blue-700 uppercase tracking-wider mb-0.5">Attempt</span>
+                                                    <input type="number" name="total_attempted" value="{{ old('total_attempted', $reg->total_attempted) }}" placeholder="Att."
+                                                        class="w-16 bg-gray-50 border border-blue-200 rounded-lg px-2 py-1 text-xs font-bold text-blue-800 focus:bg-white focus:border-blue-500 outline-none"
+                                                        title="Total Questions Attempted">
+                                                </div>
+
+                                                <!-- Wrong Input -->
+                                                <div>
+                                                    <span class="block text-[9px] font-black text-rose-700 uppercase tracking-wider mb-0.5">Wrong</span>
+                                                    <input type="number" name="wrong_answers" value="{{ old('wrong_answers', $reg->wrong_answers) }}" placeholder="Wr."
+                                                        class="w-16 bg-gray-50 border border-rose-200 rounded-lg px-2 py-1 text-xs font-bold text-rose-800 focus:bg-white focus:border-rose-500 outline-none"
+                                                        title="Total Wrong / Negative Answers">
+                                                </div>
+
+                                                <!-- Submit Button -->
+                                                <div class="self-end pb-0.5">
+                                                    <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Evaluation (Marks, Attempt, Wrong, Rank)"
+                                                        style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;"
+                                                        class="w-7 h-7 rounded-lg text-white text-xs transition-all shadow-sm cursor-pointer shrink-0 hover:opacity-90">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                </div>
                                             </div>
+                                        </form>
                                     @endif
                                 </td>
 
@@ -908,9 +934,16 @@
                                             </button>
                                         </form>
                                     @else
-                                            <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st / Merit" form="form-marks-{{ $reg->id }}"
-                                                class="w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
-                                        </form>
+                                        <div>
+                                            <span class="block text-[9px] font-black text-gray-400 uppercase tracking-wider mb-0.5">Rank</span>
+                                            <div class="flex items-center gap-1">
+                                                <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st" form="form-marks-{{ $reg->id }}"
+                                                    class="w-24 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
+                                                <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Rank & Marks" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
 
