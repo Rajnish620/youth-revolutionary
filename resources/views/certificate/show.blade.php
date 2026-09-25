@@ -190,6 +190,13 @@
                                 <strong class="font-bold text-gray-900 tracking-wide">{{ $registration->school_name }}</strong>
                             </div>
                         @endif
+
+                        @if(!empty($registration->event->title))
+                            <div class="text-xs sm:text-sm md:text-[15px] text-gray-800 font-serif-title">
+                                <span class="text-gray-500 font-normal">Competition:</span>
+                                <strong class="font-bold text-gray-900 tracking-wide">{{ $registration->event->title }}</strong>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Commendation Quote -->

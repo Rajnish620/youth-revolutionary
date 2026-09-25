@@ -268,6 +268,12 @@
                 <span class="meta-val">{{ $registration->school_name }}</span>
             </div>
         @endif
+        @if(!empty($registration->event->title))
+            <div style="margin-top: 2px;">
+                <span class="meta-label">Competition:</span>
+                <span class="meta-val">{{ $registration->event->title }}</span>
+            </div>
+        @endif
     </div>
 
     <!-- COMMENDATION QUOTE -->
