@@ -448,11 +448,11 @@
                     </span>
                     <div>
                         <h3 class="text-xs font-black text-gray-900 uppercase tracking-wider">Search & Filter Roster</h3>
-                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Group, Result Status, or Search keywords</p>
+                        <p class="text-[11px] text-gray-500">Filter students by Season, Event, Group, Rank, Result Status, or Search keywords</p>
                     </div>
                 </div>
 
-                @if(request('event_id') || request('group_id') || request('event_group_id') || request('search') || request('status_filter') || (request('season') && request('season') !== 'All'))
+                @if(request('event_id') || request('group_id') || request('event_group_id') || request('search') || request('status_filter') || request()->boolean('ranked_only') || (request('season') && request('season') !== 'All'))
                     <a href="{{ route('admin.marks.index', ['tab' => 'students']) }}" 
                        style="background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #e2e8f0 !important;"
                        class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 hover:bg-gray-200">
@@ -468,7 +468,7 @@
                 
                 @if(isset($seasons) && $seasons->count() > 0)
                     <!-- Season Dropdown -->
-                    <div class="lg:col-span-2">
+                    <div class="sm:col-span-1 lg:col-span-2">
                         <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                             <i class="fa-solid fa-calendar-week text-purple-600"></i> Season
                         </label>
@@ -483,7 +483,7 @@
                 @endif
 
                 <!-- Event Dropdown -->
-                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-3' : 'lg:col-span-4' }}">
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'sm:col-span-1 lg:col-span-2' : 'sm:col-span-1 lg:col-span-3' }}">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-trophy text-amber-500"></i> Event
                     </label>
@@ -501,7 +501,7 @@
                 </div>
 
                 <!-- Group Dropdown -->
-                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'lg:col-span-2' : 'lg:col-span-3' }}">
+                <div class="{{ (isset($seasons) && $seasons->count() > 0) ? 'sm:col-span-1 lg:col-span-2' : 'sm:col-span-1 lg:col-span-2' }}">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-users text-indigo-600"></i> Group
                     </label>
@@ -529,14 +529,35 @@
                     @endif
                 </div>
 
+                <!-- Rank Filter Checkbox -->
+                <div class="sm:col-span-1 lg:col-span-2">
+                    <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-ranking-star text-amber-500"></i> Rank Filter
+                    </label>
+                    <label class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border transition-all cursor-pointer select-none {{ request()->boolean('ranked_only') ? 'bg-amber-50/90 border-amber-300 text-amber-900 shadow-xs ring-1 ring-amber-300' : 'bg-gray-50 hover:bg-white border-gray-200 text-gray-700' }}" 
+                           title="Check to filter only students who have a rank entered, sorted Rank 1st &uarr;">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <input type="checkbox" name="ranked_only" value="1" 
+                                   {{ request()->boolean('ranked_only') ? 'checked' : '' }} 
+                                   onchange="this.form.submit()" 
+                                   class="w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500 cursor-pointer accent-amber-600 shrink-0">
+                            <span class="text-xs font-black truncate">Rank 1&uarr;</span>
+                        </div>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded {{ request()->boolean('ranked_only') ? 'bg-amber-200 text-amber-900' : 'bg-gray-200/70 text-gray-500' }}">
+                            {{ request()->boolean('ranked_only') ? 'ON' : 'Only' }}
+                        </span>
+                    </label>
+                </div>
+
                 <!-- Status Filter -->
-                <div class="lg:col-span-2">
+                <div class="sm:col-span-1 lg:col-span-2">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-clipboard-check text-emerald-600"></i> Result & Cert Status
                     </label>
                     <select name="status_filter" onchange="this.form.submit()" 
                         class="w-full bg-gray-50 hover:bg-white text-xs font-bold text-gray-800 rounded-xl px-3 py-2.5 border border-gray-200 outline-none focus:border-[#340C6F] transition-all cursor-pointer">
                         <option value="">All Students ({{ $registrations->total() }})</option>
+                        <option value="ranked" {{ (request('status_filter') == 'ranked' || request()->boolean('ranked_only')) ? 'selected' : '' }}>Ranked Only (1st &uarr;)</option>
                         <option value="with_marks" {{ request('status_filter') == 'with_marks' ? 'selected' : '' }}>With Marks/Status</option>
                         <option value="without_marks" {{ request('status_filter') == 'without_marks' ? 'selected' : '' }}>Pending Evaluation</option>
                         <option value="qualified" {{ request('status_filter') == 'qualified' ? 'selected' : '' }}>Qualified Only</option>
@@ -547,7 +568,7 @@
                 </div>
 
                 <!-- Search Input + Go Button -->
-                <div class="lg:col-span-3">
+                <div class="sm:col-span-1 lg:col-span-2">
                     <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1 flex items-center gap-1">
                         <i class="fa-solid fa-magnifying-glass text-gray-400"></i> Quick Search
                     </label>
@@ -762,6 +783,18 @@
 
         <!-- Student Roster Table -->
         <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+            @if(request()->boolean('ranked_only') || request('status_filter') === 'ranked')
+                <div class="bg-amber-50/90 border-b border-amber-200 px-5 py-2.5 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 text-xs font-black text-amber-900">
+                        <i class="fa-solid fa-ranking-star text-amber-600"></i>
+                        <span>Rank Filter Active: Showing students with assigned rank, ordered from Rank 1st &uarr;</span>
+                        <span class="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[11px] font-extrabold">{{ $registrations->total() }} Ranked</span>
+                    </div>
+                    <a href="{{ request()->fullUrlWithQuery(['ranked_only' => null, 'status_filter' => (request('status_filter') === 'ranked' ? null : request('status_filter'))]) }}" class="text-[11px] font-bold text-amber-700 hover:text-amber-900 underline flex items-center gap-1">
+                        <i class="fa-solid fa-xmark"></i> Show All Students
+                    </a>
+                </div>
+            @endif
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -783,7 +816,16 @@
                                     </span>
                                 </div>
                             </th>
-                            <th class="py-4 px-4">Rank / Merit</th>
+                            <th class="py-4 px-4">
+                                <div class="flex items-center gap-1">
+                                    <span>Rank / Merit</span>
+                                    @if(request()->boolean('ranked_only') || request('status_filter') === 'ranked')
+                                        <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 text-[9px] font-black" title="Sorted 1st &uarr;">
+                                            <i class="fa-solid fa-arrow-down-1-9 text-[8px]"></i> 1st &uarr;
+                                        </span>
+                                    @endif
+                                </div>
+                            </th>
                             <th class="py-4 px-4">Result Status</th>
                             <th class="py-4 px-4 text-center">Certificate & Live</th>
                             <th class="py-4 px-6 text-right">View / Preview</th>

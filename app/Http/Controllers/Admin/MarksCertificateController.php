@@ -106,10 +106,21 @@ class MarksCertificateController extends Controller
                 $query->where('certificate_enabled', true);
             } elseif ($request->status_filter === 'cert_disabled') {
                 $query->where('certificate_enabled', false);
+            } elseif ($request->status_filter === 'ranked') {
+                $query->whereNotNull('event_registrations.rank')->where('event_registrations.rank', '!=', '');
             }
         }
 
-        $registrations = $query->orderBy('roll_no', 'asc')->paginate(25)->withQueryString();
+        $rankedOnly = $request->boolean('ranked_only') || ($request->status_filter === 'ranked');
+        if ($rankedOnly) {
+            $query->whereNotNull('event_registrations.rank')
+                  ->where('event_registrations.rank', '!=', '');
+            $query->orderByRaw('CASE WHEN CAST(event_registrations.rank AS UNSIGNED) > 0 THEN 0 ELSE 1 END ASC, CAST(event_registrations.rank AS UNSIGNED) ASC, event_registrations.rank ASC, event_registrations.roll_no ASC');
+        } else {
+            $query->orderBy('roll_no', 'asc');
+        }
+
+        $registrations = $query->paginate($request->integer('per_page', 25))->withQueryString();
 
         // Summary Statistics
         $totalApproved = EventRegistration::where('payment_status', 'approved')->count();
