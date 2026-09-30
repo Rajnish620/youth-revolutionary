@@ -775,7 +775,14 @@
                             </th>
                             <th class="py-4 px-5">Student / Roll No</th>
                             <th class="py-4 px-4">Event & Scheme</th>
-                            <th class="py-4 px-4">Marks / Evaluation</th>
+                            <th class="py-4 px-4">
+                                <div class="flex items-center gap-1.5">
+                                    <span>Marks / Evaluation</span>
+                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-black bg-purple-100 text-[#340C6F] border border-purple-200 normal-case tracking-normal" title="Marks save automatically as you type (does NOT make live)">
+                                        <i class="fa-solid fa-bolt text-[#340C6F] text-[8px]"></i> Auto-Save
+                                    </span>
+                                </div>
+                            </th>
                             <th class="py-4 px-4">Rank / Merit</th>
                             <th class="py-4 px-4">Result Status</th>
                             <th class="py-4 px-4 text-center">Certificate & Live</th>
@@ -787,7 +794,7 @@
                             @php
                                 $isQualify = ($reg->event && ($reg->event->evaluation_type ?? 'marks') === 'qualify_only');
                             @endphp
-                            <tr :class="selected.includes({{ $reg->id }}) ? 'bg-purple-50/70 border-l-4 border-[#340C6F] transition-all' : 'hover:bg-gray-50/60 transition-colors'">
+                            <tr id="row-reg-{{ $reg->id }}" data-reg-id="{{ $reg->id }}" data-roll-no="{{ $reg->roll_no }}" data-student-name="{{ $reg->student_name }}" :class="selected.includes({{ $reg->id }}) ? 'bg-purple-50/70 border-l-4 border-[#340C6F] transition-all' : 'hover:bg-gray-50/60 transition-colors'">
                                 
                                 <!-- Selection Checkbox -->
                                 <td class="py-4 px-3 text-center">
@@ -882,38 +889,41 @@
                                         </div>
                                     @else
                                         <!-- Inline Marks Edit Form -->
-                                        <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}">
+                                        <form id="form-marks-{{ $reg->id }}" method="POST" action="{{ route('admin.marks.update', $reg->id) }}" class="marks-eval-form" data-reg-id="{{ $reg->id }}">
                                             @csrf
                                             <div class="flex items-center gap-1.5">
                                                 <!-- Marks Input -->
                                                 <div>
                                                     <span class="block text-[9px] font-black text-[#340C6F] uppercase tracking-wider mb-0.5">Marks</span>
                                                     <input type="number" step="0.01" name="marks" value="{{ old('marks', $reg->marks) }}" placeholder="0.00"
-                                                        class="w-20 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none"
-                                                        title="Marks Obtained">
+                                                        class="auto-save-input w-20 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-black text-[#340C6F] focus:bg-white focus:border-[#340C6F] outline-none transition-all"
+                                                        data-reg-id="{{ $reg->id }}" data-field="marks"
+                                                        title="Marks Obtained (Auto-saved without going live)">
                                                 </div>
 
                                                 <!-- Attempt Input -->
                                                 <div>
                                                     <span class="block text-[9px] font-black text-blue-700 uppercase tracking-wider mb-0.5">Attempt</span>
                                                     <input type="number" name="total_attempted" value="{{ old('total_attempted', $reg->total_attempted) }}" placeholder="Att."
-                                                        class="w-16 bg-gray-50 border border-blue-200 rounded-lg px-2 py-1 text-xs font-bold text-blue-800 focus:bg-white focus:border-blue-500 outline-none"
-                                                        title="Total Questions Attempted">
+                                                        class="auto-save-input w-16 bg-gray-50 border border-blue-200 rounded-lg px-2 py-1 text-xs font-bold text-blue-800 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                                                        data-reg-id="{{ $reg->id }}" data-field="total_attempted"
+                                                        title="Total Questions Attempted (Auto-saved)">
                                                 </div>
 
                                                 <!-- Wrong Input -->
                                                 <div>
                                                     <span class="block text-[9px] font-black text-rose-700 uppercase tracking-wider mb-0.5">Wrong</span>
                                                     <input type="number" name="wrong_answers" value="{{ old('wrong_answers', $reg->wrong_answers) }}" placeholder="Wr."
-                                                        class="w-16 bg-gray-50 border border-rose-200 rounded-lg px-2 py-1 text-xs font-bold text-rose-800 focus:bg-white focus:border-rose-500 outline-none"
-                                                        title="Total Wrong / Negative Answers">
+                                                        class="auto-save-input w-16 bg-gray-50 border border-rose-200 rounded-lg px-2 py-1 text-xs font-bold text-rose-800 focus:bg-white focus:border-rose-500 outline-none transition-all"
+                                                        data-reg-id="{{ $reg->id }}" data-field="wrong_answers"
+                                                        title="Total Wrong Answers (Auto-saved)">
                                                 </div>
 
                                                 <!-- Submit Button -->
                                                 <div class="self-end pb-0.5">
-                                                    <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Evaluation (Marks, Attempt, Wrong, Rank)"
+                                                    <button type="submit" form="form-marks-{{ $reg->id }}" id="btn-save-marks-{{ $reg->id }}" data-reg-id="{{ $reg->id }}" title="Save Evaluation (Marks, Attempt, Wrong, Rank)"
                                                         style="background-color: #340C6F !important; color: #ffffff !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;"
-                                                        class="w-7 h-7 rounded-lg text-white text-xs transition-all shadow-sm cursor-pointer shrink-0 hover:opacity-90">
+                                                        class="btn-save-marks w-7 h-7 rounded-lg text-white text-xs transition-all shadow-sm cursor-pointer shrink-0 hover:opacity-90">
                                                         <i class="fa-solid fa-check"></i>
                                                     </button>
                                                 </div>
@@ -925,11 +935,12 @@
                                 <!-- Rank / Merit Column -->
                                 <td class="py-4 px-4">
                                     @if($isQualify)
-                                        <form method="POST" action="{{ route('admin.marks.update', $reg->id) }}" class="flex items-center gap-1">
+                                        <form method="POST" action="{{ route('admin.marks.update', $reg->id) }}" class="flex items-center gap-1 marks-eval-form" id="form-qualify-rank-{{ $reg->id }}" data-reg-id="{{ $reg->id }}">
                                             @csrf
                                             <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st / Merit"
-                                                class="w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
-                                            <button type="submit" title="Save Rank" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
+                                                class="auto-save-input w-28 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none transition-all"
+                                                data-reg-id="{{ $reg->id }}" data-field="rank" title="Rank / Merit (Auto-saved)">
+                                            <button type="submit" id="btn-save-rank-{{ $reg->id }}" data-reg-id="{{ $reg->id }}" title="Save Rank" class="btn-save-rank w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
                                                 <i class="fa-solid fa-check"></i>
                                             </button>
                                         </form>
@@ -938,8 +949,9 @@
                                             <span class="block text-[9px] font-black text-gray-400 uppercase tracking-wider mb-0.5">Rank</span>
                                             <div class="flex items-center gap-1">
                                                 <input type="text" name="rank" value="{{ old('rank', $reg->rank) }}" placeholder="e.g. 1st" form="form-marks-{{ $reg->id }}"
-                                                    class="w-24 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none">
-                                                <button type="submit" form="form-marks-{{ $reg->id }}" title="Save Rank & Marks" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
+                                                    class="auto-save-input w-24 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs font-bold text-gray-800 focus:bg-white focus:border-[#340C6F] outline-none transition-all"
+                                                    data-reg-id="{{ $reg->id }}" data-field="rank" title="Rank (Auto-saved)">
+                                                <button type="submit" form="form-marks-{{ $reg->id }}" id="btn-save-rank-{{ $reg->id }}" data-reg-id="{{ $reg->id }}" title="Save Rank & Marks" class="btn-save-rank w-7 h-7 rounded-lg bg-gray-200 hover:bg-[#340C6F] hover:text-white text-gray-700 flex items-center justify-center text-[11px] transition-all cursor-pointer shrink-0">
                                                     <i class="fa-solid fa-check"></i>
                                                 </button>
                                             </div>
@@ -948,7 +960,7 @@
                                 </td>
 
                                 <!-- Result Status Badge -->
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4" id="status-cell-{{ $reg->id }}">
                                     @if($isQualify)
                                         @if($reg->is_qualified === true)
                                             <span style="background-color: #d1fae5 !important; color: #065f46 !important; border: 1px solid #6ee7b7 !important;" class="px-2.5 py-1 rounded-full text-[10px] font-black inline-flex items-center gap-1">
@@ -1320,4 +1332,304 @@
     </div>
 
 </div>
+
+<!-- Floating Toast Container for Real-time Auto-Save Alerts -->
+<div id="autosave-toast-container" class="fixed bottom-6 right-6 z-[99999] flex flex-col gap-2.5 pointer-events-none"></div>
+
+@push('scripts')
+<script>
+(function() {
+    const activeControllers = {};
+    const pendingSaves = {};
+    const lastSavedValues = {};
+
+    function getRowPayload(regId) {
+        const row = document.getElementById(`row-reg-${regId}`);
+        const marksInput = document.querySelector(`input[name="marks"][data-reg-id="${regId}"]`);
+        const attemptInput = document.querySelector(`input[name="total_attempted"][data-reg-id="${regId}"]`);
+        const wrongInput = document.querySelector(`input[name="wrong_answers"][data-reg-id="${regId}"]`);
+        const rankInput = document.querySelector(`input[name="rank"][data-reg-id="${regId}"]`);
+
+        const data = {};
+        if (marksInput) data.marks = marksInput.value.trim();
+        if (attemptInput) data.total_attempted = attemptInput.value.trim();
+        if (wrongInput) data.wrong_answers = wrongInput.value.trim();
+        if (rankInput) data.rank = rankInput.value.trim();
+
+        return {
+            data,
+            marksInput,
+            attemptInput,
+            wrongInput,
+            rankInput,
+            row,
+            rollNo: row?.dataset?.rollNo || '',
+            studentName: row?.dataset?.studentName || ''
+        };
+    }
+
+    function showAutoSaveToast(message, type = 'success') {
+        const container = document.getElementById('autosave-toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold transition-all duration-300 transform translate-y-3 opacity-0 ${
+            type === 'success' 
+                ? 'bg-gray-900/95 text-white border border-purple-500/40 shadow-purple-950/20' 
+                : 'bg-rose-950/95 text-rose-100 border border-rose-500/50 shadow-rose-950/20'
+        }`;
+        
+        const icon = type === 'success' 
+            ? '<i class="fa-solid fa-circle-check text-purple-400 text-sm"></i>' 
+            : '<i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i>';
+        
+        toast.innerHTML = `${icon}<span>${message}</span>`;
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-3', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-2', 'opacity-0');
+            setTimeout(() => toast.remove(), 350);
+        }, 2000);
+    }
+
+    function initAutoSave() {
+        document.querySelectorAll('tr[data-reg-id]').forEach(row => {
+            const regId = row.dataset.regId;
+            const { data } = getRowPayload(regId);
+            lastSavedValues[regId] = JSON.stringify(data);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAutoSave);
+    } else {
+        initAutoSave();
+    }
+
+    async function saveRow(regId) {
+        if (pendingSaves[regId]) {
+            clearTimeout(pendingSaves[regId]);
+            delete pendingSaves[regId];
+        }
+
+        const { data, marksInput, attemptInput, wrongInput, rankInput, rollNo, studentName } = getRowPayload(regId);
+        const dataHash = JSON.stringify(data);
+
+        // Skip if identical to last successfully saved state
+        if (lastSavedValues[regId] === dataHash) {
+            return;
+        }
+
+        // Abort previous in-flight request if user is still actively updating
+        if (activeControllers[regId]) {
+            try { activeControllers[regId].abort(); } catch (_) {}
+        }
+        const controller = new AbortController();
+        activeControllers[regId] = controller;
+
+        const saveBtn = document.getElementById(`btn-save-marks-${regId}`);
+        const rankBtn = document.getElementById(`btn-save-rank-${regId}`);
+        const inputs = [marksInput, attemptInput, wrongInput, rankInput].filter(Boolean);
+
+        // Visual indicator: Saving state
+        [saveBtn, rankBtn].forEach(btn => {
+            if (!btn) return;
+            btn.dataset.originalHtml = btn.dataset.originalHtml || btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i>';
+            btn.disabled = true;
+        });
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                              document.querySelector(`form#form-marks-${regId} input[name="_token"]`)?.value ||
+                              '';
+
+            const formData = new FormData();
+            formData.append('_token', csrfToken);
+            Object.entries(data).forEach(([key, val]) => {
+                formData.append(key, val);
+            });
+
+            const response = await fetch(`/admin/marks/${regId}/update`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                let errorMsg = 'Failed to save marks';
+                try {
+                    const errJson = await response.json();
+                    if (errJson.message) errorMsg = errJson.message;
+                    if (errJson.errors) {
+                        const first = Object.values(errJson.errors).flat()[0];
+                        if (first) errorMsg = first;
+                    }
+                } catch (_) {}
+                throw new Error(errorMsg);
+            }
+
+            const resData = await response.json();
+            lastSavedValues[regId] = dataHash;
+
+            // Success state on buttons (turns green briefly then restores)
+            [saveBtn, rankBtn].forEach(btn => {
+                if (!btn) return;
+                btn.innerHTML = '<i class="fa-solid fa-check text-xs"></i>';
+                btn.style.setProperty('background-color', '#059669', 'important');
+                btn.style.setProperty('color', '#ffffff', 'important');
+                btn.disabled = false;
+                setTimeout(() => {
+                    btn.style.removeProperty('background-color');
+                    btn.style.removeProperty('color');
+                    if (btn.dataset.originalHtml) {
+                        btn.innerHTML = btn.dataset.originalHtml;
+                    }
+                }, 1600);
+            });
+
+            // Flash inputs with soft purple highlight
+            inputs.forEach(inp => {
+                inp.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/30');
+                inp.classList.add('border-[#340C6F]', 'ring-2', 'ring-purple-400/30');
+                setTimeout(() => {
+                    inp.classList.remove('border-[#340C6F]', 'ring-2', 'ring-purple-400/30');
+                }, 1400);
+            });
+
+            // NOTE: We do NOT touch the Live/Certificate toggle column here.
+            // Marks saving ONLY saves marks and never alters live status.
+
+            const label = rollNo ? `Roll: ${rollNo}` : (studentName || 'Student');
+            showAutoSaveToast(`Marks saved for ${label}`, 'success');
+
+        } catch (err) {
+            if (err.name === 'AbortError') return;
+
+            [saveBtn, rankBtn].forEach(btn => {
+                if (!btn) return;
+                btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-xs"></i>';
+                btn.style.setProperty('background-color', '#e11d48', 'important');
+                btn.style.setProperty('color', '#ffffff', 'important');
+                btn.disabled = false;
+                setTimeout(() => {
+                    btn.style.removeProperty('background-color');
+                    btn.style.removeProperty('color');
+                    if (btn.dataset.originalHtml) {
+                        btn.innerHTML = btn.dataset.originalHtml;
+                    }
+                }, 2500);
+            });
+
+            inputs.forEach(inp => {
+                inp.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+            });
+
+            showAutoSaveToast(`Error saving: ${err.message}`, 'error');
+        } finally {
+            if (activeControllers[regId] === controller) {
+                delete activeControllers[regId];
+            }
+        }
+    }
+
+    // 1. Debounced auto-save on input
+    document.addEventListener('input', function(e) {
+        if (!e.target.classList.contains('auto-save-input')) return;
+        const regId = e.target.dataset.regId;
+        if (!regId) return;
+
+        const saveBtn = document.getElementById(`btn-save-marks-${regId}`);
+        if (saveBtn) {
+            if (!saveBtn.dataset.originalHtml) {
+                saveBtn.dataset.originalHtml = saveBtn.innerHTML;
+            }
+            saveBtn.innerHTML = '<i class="fa-solid fa-pen text-white text-[10px] animate-pulse"></i>';
+        }
+
+        if (pendingSaves[regId]) {
+            clearTimeout(pendingSaves[regId]);
+        }
+        pendingSaves[regId] = setTimeout(() => {
+            saveRow(regId);
+        }, 600);
+    });
+
+    // 2. Immediate save on blur / focusout
+    document.addEventListener('focusout', function(e) {
+        if (!e.target.classList.contains('auto-save-input')) return;
+        const regId = e.target.dataset.regId;
+        if (!regId) return;
+
+        if (pendingSaves[regId]) {
+            clearTimeout(pendingSaves[regId]);
+            delete pendingSaves[regId];
+            saveRow(regId);
+        }
+    });
+
+    // 3. Fast Enter key navigation and immediate save
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        if (!e.target.classList.contains('auto-save-input')) return;
+
+        e.preventDefault();
+        const regId = e.target.dataset.regId;
+        const field = e.target.dataset.field;
+
+        if (pendingSaves[regId]) {
+            clearTimeout(pendingSaves[regId]);
+            delete pendingSaves[regId];
+        }
+        saveRow(regId);
+
+        const row = document.getElementById(`row-reg-${regId}`);
+        if (!row) return;
+
+        if (field === 'marks') {
+            const next = row.querySelector('input[data-field="total_attempted"]');
+            if (next) { next.focus(); next.select(); }
+        } else if (field === 'total_attempted') {
+            const next = row.querySelector('input[data-field="wrong_answers"]');
+            if (next) { next.focus(); next.select(); }
+        } else if (field === 'wrong_answers') {
+            const next = document.querySelector(`input[name="rank"][form="form-marks-${regId}"]`) || row.querySelector('input[data-field="rank"]');
+            if (next) { next.focus(); next.select(); }
+        } else if (field === 'rank') {
+            const nextRow = row.nextElementSibling;
+            if (nextRow) {
+                const nextMarks = nextRow.querySelector('input[data-field="marks"]');
+                if (nextMarks) { nextMarks.focus(); nextMarks.select(); }
+            }
+        }
+    });
+
+    // 4. Intercept form submit button clicks (saves marks only, no reload)
+    document.addEventListener('submit', function(e) {
+        if (e.target.classList.contains('marks-eval-form')) {
+            e.preventDefault();
+            const regId = e.target.dataset.regId;
+            if (regId) {
+                if (pendingSaves[regId]) {
+                    clearTimeout(pendingSaves[regId]);
+                    delete pendingSaves[regId];
+                }
+                saveRow(regId);
+            }
+        }
+    });
+})();
+</script>
+@endpush
 @endsection
