@@ -166,16 +166,6 @@ class MarksCertificateController extends Controller
             'wrong_answers' => 'nullable|integer|min:0|max:1000',
         ]);
 
-        if ($request->has('marks')) {
-            $val = $request->input('marks');
-            $validated['marks'] = ($val === '' || $val === null) ? null : (float)$val;
-        }
-
-        if ($request->has('rank')) {
-            $val = $request->input('rank');
-            $validated['rank'] = ($val === '' || $val === null) ? null : trim((string)$val);
-        }
-
         if ($request->has('is_qualified')) {
             $val = $request->input('is_qualified');
             $validated['is_qualified'] = ($val === '' || $val === null) ? null : (bool)$val;
@@ -207,24 +197,6 @@ class MarksCertificateController extends Controller
         }
 
         $registration->update($validated);
-        $registration->refresh();
-
-        if ($request->expectsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => "Saved for {$registration->student_name} (Roll: {$registration->roll_no})",
-                'registration' => [
-                    'id' => $registration->id,
-                    'marks' => $registration->marks !== null ? (float)$registration->marks : null,
-                    'total_attempted' => $registration->total_attempted,
-                    'wrong_answers' => $registration->wrong_answers,
-                    'correct_answers' => $registration->correct_answers,
-                    'rank' => $registration->rank,
-                    'certificate_enabled' => (bool)$registration->certificate_enabled,
-                    'qualification_status' => $registration->qualification_status,
-                ],
-            ]);
-        }
 
         return redirect()->back()->with('success', "Evaluation saved for {$registration->student_name} (Roll: {$registration->roll_no})! Certificate activated.");
     }
